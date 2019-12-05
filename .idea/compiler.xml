@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="nacos-demo" />
         <module name="nb-common" />
+        <module name="nb-auth" />
         <module name="nb-gateway" />
       </profile>
     </annotationProcessing>
@@ -15,6 +16,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="nacos-demo" options="-parameters" />
+      <module name="nb-auth" options="-parameters" />
       <module name="nb-common" options="-parameters" />
       <module name="nb-gateway" options="-parameters" />
     </option>

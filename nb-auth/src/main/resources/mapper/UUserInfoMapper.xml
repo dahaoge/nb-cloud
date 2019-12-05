@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hao.nb.cloud.auth.mapper.UUserInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.hao.nb.cloud.auth.entity.UUserInfo">
+        <id column="user_id" property="userId"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="wechat_unionid" property="wechatUnionid"/>
+        <result column="wechat_openid" property="wechatOpenid"/>
+        <result column="phone" property="phone"/>
+        <result column="wechat_nick_name" property="wechatNickName"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_icnum" property="userIcnum"/>
+        <result column="user_icon" property="userIcon"/>
+        <result column="login_id" property="loginId"/>
+        <result column="login_pwd" property="loginPwd"/>
+        <result column="user_sex" property="userSex"/>
+        <result column="email" property="email"/>
+        <result column="salt" property="salt"/>
+        <result column="has_netease_acc" property="hasNeteaseAcc"/>
+        <result column="netease_token" property="neteaseToken"/>
+        <result column="lock_state" property="lockState"/>
+        <result column="unlock_time" property="unlockTime"/>
+        <result column="lock_cnt" property="lockCnt"/>
+        <result column="invited_code" property="invitedCode"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="show_phone" property="showPhone"/>
+        <result column="user_type" property="userType"/>
+        <result column="commission_user_level" property="commissionUserLevel"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="real_name" property="realName"/>
+        <result column="is_anonymous" property="isAnonymous"/>
+        <result column="wechat_pn_openid" property="wechatPnOpenid"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            version, create_by, create_time, update_by, update_time, deleted, user_id, wechat_unionid, wechat_openid, phone, wechat_nick_name, user_name, user_icnum, user_icon, login_id, login_pwd, user_sex, email, salt, has_netease_acc, netease_token, lock_state, unlock_time, lock_cnt, invited_code, last_login_time, show_phone, user_type, commission_user_level, nick_name, real_name, is_anonymous, wechat_pn_openid
+        </sql>
+
+
+    <select id="pageMapData" parameterType="map" resultType="map">
+        select
+        <include refid="Base_Column_List"/>
+        from u_user_info
+    </select>
+</mapper>

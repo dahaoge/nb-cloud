@@ -11,6 +11,7 @@
         <module>nacos-demo</module>
         <module>nb-common</module>
         <module>nb-gateway</module>
+        <module>nb-auth</module>
     </modules>
     <packaging>pom</packaging>
 

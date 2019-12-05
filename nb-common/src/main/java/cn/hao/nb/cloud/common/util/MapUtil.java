@@ -35,7 +35,7 @@ public class MapUtil {
             for (Method method : methodArr) {
                 String methodName = method.getName();
 
-                if (methodName.startsWith("get")) {
+                if (methodName.startsWith("get") && !"getInstance".equals(methodName)) {
                     Object value = method.invoke(c);
 
                     // 从第三位开始截取

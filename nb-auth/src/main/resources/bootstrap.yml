@@ -1,8 +1,8 @@
 server:
-  port: 8888
+  port: 8081
 spring:
   application:
-    name: nb-gateway
+    name: nb-auth
   cloud:
     nacos:
       server-addr: 117.50.43.3:8848
@@ -17,7 +17,3 @@ spring:
             refresh: false
         shared-dataids: nb-log-public.yaml
         file-extension: yaml
-    gateway:
-      discovery:
-        locator:
-          enabled: true
