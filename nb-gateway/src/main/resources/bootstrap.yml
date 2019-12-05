@@ -1,0 +1,23 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: nb-gateway
+  cloud:
+    nacos:
+      server-addr: 117.50.43.3:8848
+      discovery:
+      config:
+        ext-config:
+          - data-id: nb-db.yaml
+            refresh: false
+          - data-id: nb-db-public.yaml
+            refresh: false
+          - data-id: nb-redis.yaml
+            refresh: false
+        shared-dataids: nb-log-public.yaml
+        file-extension: yaml
+    gateway:
+      discovery:
+        locator:
+          enabled: true
