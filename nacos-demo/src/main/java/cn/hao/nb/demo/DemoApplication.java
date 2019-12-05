@@ -15,12 +15,13 @@ import org.springframework.web.client.RestTemplate;
  */
 @Slf4j
 @SpringBootApplication
+@EnableDiscoveryClient
 public class DemoApplication {
 
     public static void main(String[] args) {
 //        try {
         SpringApplication.run(DemoApplication.class, args);
-        log.info("Server startup done.");
+        log.info("\033[1;93;32m【spring start up ok!!】\033[m");
 //        }catch (Exception e){
 //            log.error("服务xxx-support启动报错", e);
 //        }
