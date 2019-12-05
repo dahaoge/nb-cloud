@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.common.util;
 
-import cn.hao.nb.common.entity.NBException;
-import cn.hao.nb.common.entity.Qd;
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.Qd;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.base.CaseFormat;
 

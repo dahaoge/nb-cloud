@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.common.util;
 
-import cn.hao.nb.common.entity.PEnum;
-import cn.hao.nb.common.entity.Qd;
+import cn.hao.nb.cloud.common.entity.PEnum;
+import cn.hao.nb.cloud.common.entity.Qd;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

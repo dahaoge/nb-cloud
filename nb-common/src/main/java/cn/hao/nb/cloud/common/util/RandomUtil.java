@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.common.util;
 
 
-import cn.hao.nb.common.entity.Sb;
+import cn.hao.nb.cloud.common.entity.Sb;
 
 import java.math.BigDecimal;
 import java.util.Random;

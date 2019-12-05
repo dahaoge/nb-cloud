@@ -1,8 +1,8 @@
 package cn.hao.nb.cloud.common.component.convert;
 
-import cn.hao.nb.common.entity.NBException;
-import cn.hao.nb.common.penum.EErrorCode;
-import cn.hao.nb.common.util.CheckUtil;
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
+import cn.hao.nb.cloud.common.util.CheckUtil;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.core.convert.converter.Converter;

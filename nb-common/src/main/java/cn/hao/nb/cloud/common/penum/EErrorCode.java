@@ -1,6 +1,6 @@
 package cn.hao.nb.cloud.common.penum;
 
-import cn.hao.nb.common.entity.PEnum;
+import cn.hao.nb.cloud.common.entity.PEnum;
 
 /**
  * 错误码枚举

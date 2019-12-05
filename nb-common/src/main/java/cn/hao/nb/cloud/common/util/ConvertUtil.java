@@ -1,9 +1,9 @@
 package cn.hao.nb.cloud.common.util;
 
-import cn.hao.nb.common.entity.NBException;
-import cn.hao.nb.common.entity.Qd;
-import cn.hao.nb.common.penum.EErrorCode;
-import cn.hao.nb.common.penum.EMethod;
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.Qd;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
+import cn.hao.nb.cloud.common.penum.EMethod;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.CaseFormat;

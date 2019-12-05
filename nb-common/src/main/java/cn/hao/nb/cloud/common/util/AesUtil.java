@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.common.util;
 
 
-import cn.hao.nb.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.NBException;
 import com.google.common.base.Strings;
 import org.apache.commons.codec.binary.Base64;
 

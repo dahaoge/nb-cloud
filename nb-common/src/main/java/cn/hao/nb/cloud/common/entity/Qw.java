@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.common.entity;
 
-import cn.hao.nb.common.util.CheckUtil;
-import cn.hao.nb.common.util.ListUtil;
+import cn.hao.nb.cloud.common.util.CheckUtil;
+import cn.hao.nb.cloud.common.util.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.ISqlSegment;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.SerializationUtils;

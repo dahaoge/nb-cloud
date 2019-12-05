@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.common.util;
 
-import cn.hao.nb.common.entity.NBException;
-import cn.hao.nb.common.penum.EErrorCode;
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
