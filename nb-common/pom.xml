@@ -46,13 +46,6 @@
             <artifactId>jjwt</artifactId>
         </dependency>
 
-        <!-- lombok-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <!-- swagger -->
         <dependency>
             <groupId>io.springfox</groupId>

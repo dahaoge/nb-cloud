@@ -69,7 +69,6 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>1.16.20</version>
-                <optional>true</optional>
             </dependency>
 
             <!-- swagger API -->
@@ -137,6 +136,13 @@
 
     <!-- dependencies of project-->
     <dependencies>
+
+        <!-- lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>false</optional>
+        </dependency>
 
     </dependencies>
 
