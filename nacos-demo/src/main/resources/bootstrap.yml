@@ -1,0 +1,12 @@
+server:
+  port: 8091
+spring:
+  application:
+    name: nacos-demo
+  cloud:
+    nacos:
+      config:
+        server-addr: 117.50.43.3:8848
+        namespace: 49ebc0d9-2e10-46d0-a8f5-695c4a3c5f67
+        file-extension: yaml
+#        file-extension: properties
