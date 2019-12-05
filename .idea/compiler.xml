@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="nb-generator" />
         <module name="nacos-demo" />
         <module name="nb-common" />
         <module name="nb-auth" />
@@ -19,6 +20,7 @@
       <module name="nb-auth" options="-parameters" />
       <module name="nb-common" options="-parameters" />
       <module name="nb-gateway" options="-parameters" />
+      <module name="nb-generator" options="-parameters" />
     </option>
   </component>
 </project>

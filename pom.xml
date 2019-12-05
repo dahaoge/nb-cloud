@@ -12,6 +12,7 @@
         <module>nb-common</module>
         <module>nb-gateway</module>
         <module>nb-auth</module>
+        <module>nb-generator</module>
     </modules>
     <packaging>pom</packaging>
 
