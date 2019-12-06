@@ -1,15 +1,15 @@
 package cn.hao.nb.demo.controller;
 
+import cn.hao.nb.demo.Constant.SecurityProps;
+import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @Auther: hao
@@ -26,9 +26,13 @@ public class TempController {
 
     @Value("${app.name}")
     private String appName;
+    @Autowired
+    SecurityProps securityProps;
 
     @GetMapping("/appName")
     public String appName(){
+        log.info(JSON.toJSONString(securityProps.getIgnoreUrls()));
+        log.info(JSON.toJSONString(securityProps.getSourceClients()));
         return appName;
     }
 

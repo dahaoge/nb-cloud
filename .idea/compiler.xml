@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="nb-generator" />
         <module name="nacos-demo" />
         <module name="nb-common" />
-        <module name="nb-auth" />
+        <module name="nb-generator" />
         <module name="nb-gateway" />
+        <module name="nb-auth" />
       </profile>
     </annotationProcessing>
   </component>

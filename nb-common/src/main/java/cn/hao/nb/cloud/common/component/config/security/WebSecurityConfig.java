@@ -1,5 +1,6 @@
 package cn.hao.nb.cloud.common.component.config.security;
 
+import cn.hao.nb.cloud.common.props.SecurityProps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,7 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private IgnoreProperties ignoreProperties;
+    private SecurityProps securityProps;
 
     private UserDetailsService mcUserDetailService;
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
@@ -48,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = httpSecurity.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests();
 
-        ignoreProperties.getUrls().forEach(url -> registry.antMatchers(url).permitAll());
+        securityProps.getIgnoreUrls().forEach(url -> registry.antMatchers(url).permitAll());
 
         registry.anyRequest().authenticated();
         httpSecurity.headers().cacheControl();
