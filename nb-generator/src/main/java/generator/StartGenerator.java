@@ -22,7 +22,7 @@ public class StartGenerator {
     /**
      * 数据库url
      */
-    public static String url = "jdbc:mysql://47.96.174.93:13306/marketing?serverTimezone=GMT%2B8&characterEncoding=utf8&zeroDateTimeBehavior" +
+    public static String url = "jdbc:mysql://47.96.174.93:13306/eee?serverTimezone=GMT%2B8&characterEncoding=utf8&zeroDateTimeBehavior" +
             "=convertToNull";
     /**
      * 用户名
@@ -113,8 +113,17 @@ public class StartGenerator {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         strategy.setSuperControllerClass(null);
-        strategy.setInclude(scanner("表名"));
-//        strategy.setInclude("res_customer_broker", "res_cache_customer", "res_customer_view_log", "res_customer_call_log", "res_customer_limit_config", "res_customer_follow");
+//        strategy.setInclude(scanner("表名"));
+        strategy.setInclude(
+                "u_user_info"
+                , "u_login_channel"
+                , "sys_menu"
+                , "sys_role"
+                , "sys_permission"
+                , "sys_role_menu"
+                , "sys_role_permission"
+                , "u_user_role"
+        );
         strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");

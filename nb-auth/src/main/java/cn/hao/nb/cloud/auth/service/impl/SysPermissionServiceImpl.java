@@ -1,8 +1,8 @@
 package cn.hao.nb.cloud.auth.service.impl;
 
-import cn.hao.nb.cloud.auth.entity.UUserInfo;
-import cn.hao.nb.cloud.auth.mapper.UUserInfoMapper;
-import cn.hao.nb.cloud.auth.service.IUUserInfoService;
+import cn.hao.nb.cloud.auth.entity.SysPermission;
+import cn.hao.nb.cloud.auth.mapper.SysPermissionMapper;
+import cn.hao.nb.cloud.auth.service.ISysPermissionService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fgzy.mc.common.entity.Pg;
@@ -17,19 +17,19 @@ import java.util.Map;
 
 /**
  * <p>
- * 用户信息 服务实现类
+ * 权限表  服务实现类
  * </p>
  *
  * @author hao@179314039@qq.com
  * @since 2019-12-08
  */
 @Service
-public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo> implements IUUserInfoService {
+public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements ISysPermissionService {
 
     @Autowired
     IDUtil idUtil;
     @Autowired
-    UUserInfoMapper mapper;
+    SysPermissionMapper mapper;
 
     /**
      * 添加数据
@@ -38,9 +38,9 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @return
      */
     @Override
-    public UUserInfo addData(UUserInfo data) {
+    public SysPermission addData(SysPermission data) {
         this.validData(data);
-        data.setUserId(idUtil.nextId());
+        data.setPermissionId(idUtil.nextId());
         data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
@@ -58,7 +58,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @return
      */
     @Override
-    public boolean modifyData(UUserInfo data) {
+    public boolean modifyData(SysPermission data) {
         this.validData(data);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
@@ -88,7 +88,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @return
      */
     @Override
-    public UUserInfo getDetail(String id) {
+    public SysPermission getDetail(String id) {
         if (CheckUtil.strIsEmpty(id))
             throw PangException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
@@ -102,7 +102,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @return
      */
     @Override
-    public IPage<UUserInfo> pageData(Pg pg, UUserInfo.SearchParams searchParams) {
+    public IPage<SysPermission> pageData(Pg pg, SysPermission.SearchParams searchParams) {
         return this.prepareReturnModel(this.page(pg.page(), searchParams.preWrapper(pg.wrapper())));
     }
 
@@ -113,7 +113,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @return
      */
     @Override
-    public List<UUserInfo> listData(UUserInfo.SearchParams searchParams) {
+    public List<SysPermission> listData(SysPermission.SearchParams searchParams) {
         return this.prepareReturnModel(this.list(searchParams.preWrapper(null)));
     }
 
@@ -127,7 +127,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     @Override
     public IPage
             <Map
-                    <String, Object>> pageMapData(Pg pg, UUserInfo.SearchParams searchParams) {
+                    <String, Object>> pageMapData(Pg pg, SysPermission.SearchParams searchParams) {
         return mapper.pageMapData(pg.page(), searchParams);
     }
 
@@ -139,7 +139,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      */
     @Override
     @JoinCreateUser
-    public UUserInfo prepareReturnModel(UUserInfo data) {
+    public SysPermission prepareReturnModel(SysPermission data) {
         return data;
     }
 
@@ -150,7 +150,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @return
      */
     @Override
-    public IPage<UUserInfo> prepareReturnModel(IPage<UUserInfo> page) {
+    public IPage<SysPermission> prepareReturnModel(IPage<SysPermission> page) {
         if (CheckUtil.objIsNotEmpty(page) && CheckUtil.collectionIsNotEmpty(page.getRecords()))
             this.prepareReturnModel(page.getRecords());
         return page;
@@ -163,7 +163,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @return
      */
     @Override
-    public List<UUserInfo> prepareReturnModel(List<UUserInfo> list) {
+    public List<SysPermission> prepareReturnModel(List<SysPermission> list) {
         if (CheckUtil.collectionIsNotEmpty(list))
             list.forEach(item -> {
                 this.prepareReturnModel(item);
@@ -194,7 +194,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @param data
      */
     @Override
-    public void validData(UUserInfo data) {
+    public void validData(SysPermission data) {
         if (CheckUtil.objIsEmpty(data))
             throw PangException.create(EErrorCode.missingArg);
     }

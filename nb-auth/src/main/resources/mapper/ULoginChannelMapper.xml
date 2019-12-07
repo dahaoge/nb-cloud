@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.hao.nb.cloud.auth.mapper.UUserInfoMapper">
+<mapper namespace="cn.hao.nb.cloud.auth.mapper.ULoginChannelMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.hao.nb.cloud.auth.entity.UUserInfo">
-        <id column="user_id" property="userId"/>
+    <resultMap id="BaseResultMap" type="cn.hao.nb.cloud.auth.entity.ULoginChannel">
+        <id column="t_id" property="tId"/>
         <result column="version" property="version"/>
         <result column="create_by" property="createBy"/>
         <result column="create_time" property="createTime"/>
         <result column="update_by" property="updateBy"/>
         <result column="update_time" property="updateTime"/>
         <result column="deleted" property="deleted"/>
-        <result column="user_name" property="userName"/>
-        <result column="phone" property="phone"/>
-        <result column="icnum" property="icnum"/>
-        <result column="icon" property="icon"/>
+        <result column="user_id" property="userId"/>
+        <result column="login_type" property="loginType"/>
         <result column="login_id" property="loginId"/>
-        <result column="login_pwd" property="loginPwd"/>
-        <result column="salt" property="salt"/>
-        <result column="is_locked" property="isLocked"/>
-        <result column="unlock_time" property="unlockTime"/>
+        <result column="login_channel_scope" property="loginChannelScope"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-            version, create_by, create_time, update_by, update_time, deleted, user_id, user_name, phone, icnum, icon, login_id, login_pwd, salt, is_locked, unlock_time
+            version, create_by, create_time, update_by, update_time, deleted, t_id, user_id, login_type, login_id, login_channel_scope
         </sql>
 
 
     <select id="pageMapData" parameterType="map" resultType="map">
         select
         <include refid="Base_Column_List"/>
-        from u_user_info
+        from u_login_channel
     </select>
 </mapper>

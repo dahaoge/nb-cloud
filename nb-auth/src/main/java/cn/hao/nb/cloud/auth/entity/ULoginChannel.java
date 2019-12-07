@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 用户信息
+ * 登录渠道
  * </p>
  *
  * @author hao@179314039@qq.com
@@ -25,8 +25,8 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value = "UUserInfo对象", description = "用户信息")
-public class UUserInfo implements Serializable {
+@ApiModel(value = "ULoginChannel对象", description = "登录渠道")
+public class ULoginChannel implements Serializable {
 
     public static final String VERSION = "version";
     public static final String CREATE_BY = "create_by";
@@ -34,16 +34,11 @@ public class UUserInfo implements Serializable {
     public static final String UPDATE_BY = "update_by";
     public static final String UPDATE_TIME = "update_time";
     public static final String DELETED = "deleted";
+    public static final String T_ID = "t_id";
     public static final String USER_ID = "user_id";
-    public static final String USER_NAME = "user_name";
-    public static final String PHONE = "phone";
-    public static final String ICNUM = "icnum";
-    public static final String ICON = "icon";
+    public static final String LOGIN_TYPE = "login_type";
     public static final String LOGIN_ID = "login_id";
-    public static final String LOGIN_PWD = "login_pwd";
-    public static final String SALT = "salt";
-    public static final String IS_LOCKED = "is_locked";
-    public static final String UNLOCK_TIME = "unlock_time";
+    public static final String LOGIN_CHANNEL_SCOPE = "login_channel_scope";
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "创建人信息")
     @TableField(exist = false)
@@ -68,26 +63,16 @@ public class UUserInfo implements Serializable {
     @TableLogic
     private Integer deleted = 0;
     @ApiModelProperty(value = "ID")
-    @TableId(value = "user_id", type = IdType.INPUT)
+    @TableId(value = "t_id", type = IdType.INPUT)
+    private String tId;
+    @ApiModelProperty(value = "用户id")
     private String userId;
-    @ApiModelProperty(value = "用户名")
-    private String userName;
-    @ApiModelProperty(value = "手机号")
-    private String phone;
-    @ApiModelProperty(value = "身份证号")
-    private String icnum;
-    @ApiModelProperty(value = "头像")
-    private String icon;
+    @ApiModelProperty(value = "登录类型")
+    private String loginType;
     @ApiModelProperty(value = "登录id")
     private String loginId;
-    @ApiModelProperty(value = "登录密码")
-    private String loginPwd;
-    @ApiModelProperty(value = "加密盐")
-    private String salt;
-    @ApiModelProperty(value = "是否被锁定")
-    private Integer isLocked;
-    @ApiModelProperty(value = "解锁时间")
-    private Date unlockTime;
+    @ApiModelProperty(value = "登录渠道")
+    private String loginChannelScope;
 
     @Data
     public class SearchParams {
@@ -99,7 +84,7 @@ public class UUserInfo implements Serializable {
         @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
         private EOrder order = EOrder.DESC;
 
-        public Qw<UUserInfo> preWrapper(Qw<UUserInfo> qw) {
+        public Qw<ULoginChannel> preWrapper(Qw<ULoginChannel> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
             return qw;
