@@ -1,9 +1,9 @@
 package cn.hao.nb.cloud.auth.entity;
 
+import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.penum.ESqlOrder;
+import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
-import com.fgzy.mc.common.entity.Qw;
-import com.fgzy.mc.common.penum.EOrder;
-import com.fgzy.mc.common.util.CheckUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,10 +33,18 @@ public class SysRoleMenu implements Serializable {
     public static final String CREATE_TIME = "create_time";
     public static final String UPDATE_BY = "update_by";
     public static final String UPDATE_TIME = "update_time";
+
+    private String createBy;
     public static final String DELETED = "deleted";
+
+    private String updateBy;
     public static final String ROLE_MENU_ID = "role_menu_id";
     public static final String ROLE_CODE = "role_code";
     public static final String MENU_CODE = "menu_code";
+
+    private String roleCode;
+
+    private String menuCode;
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "创建人信息")
     @TableField(exist = false)
@@ -49,10 +57,8 @@ public class SysRoleMenu implements Serializable {
     @ApiModelProperty(value = "乐观锁")
     @Version
     private Integer version;
-    private String createBy;
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
-    private String updateBy;
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
     @ApiModelProperty(value = "删除标记")
@@ -60,8 +66,6 @@ public class SysRoleMenu implements Serializable {
     private Integer deleted = 0;
     @TableId(value = "role_menu_id", type = IdType.INPUT)
     private String roleMenuId;
-    private String roleCode;
-    private String menuCode;
 
     @Data
     public class SearchParams {
@@ -71,7 +75,7 @@ public class SysRoleMenu implements Serializable {
         private String sort = "update_time";
 
         @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
-        private EOrder order = EOrder.DESC;
+        private ESqlOrder order = ESqlOrder.DESC;
 
         public Qw<SysRoleMenu> preWrapper(Qw<SysRoleMenu> qw) {
             if (CheckUtil.objIsEmpty(qw))

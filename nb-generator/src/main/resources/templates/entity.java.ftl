@@ -12,13 +12,14 @@ package ${package.Entity};
     import lombok.EqualsAndHashCode;
     import lombok.experimental.Accessors;
 </#if>
-import java.util.Date;
+import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.penum.ESqlOrder;
+import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
+
+import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
-import com.fgzy.mc.common.entity.Qw;
-import com.fgzy.mc.common.util.CheckUtil;
-import lombok.Data;
-import com.fgzy.mc.common.penum.EOrder;
 
 /**
 * <p>
@@ -59,7 +60,7 @@ public class SearchParams{
 private String sort = "update_time";
 
 @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
-private EOrder order = EOrder.DESC;
+private ESqlOrder order = ESqlOrder.DESC;
 
 public Qw<${entity}> preWrapper(Qw<${entity}> qw){
 if (CheckUtil.objIsEmpty(qw))

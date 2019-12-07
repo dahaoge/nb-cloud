@@ -1,9 +1,9 @@
 package cn.hao.nb.cloud.auth.entity;
 
+import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.penum.ESqlOrder;
+import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
-import com.fgzy.mc.common.entity.Qw;
-import com.fgzy.mc.common.penum.EOrder;
-import com.fgzy.mc.common.util.CheckUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -97,7 +97,7 @@ public class UUserInfo implements Serializable {
         private String sort = "update_time";
 
         @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
-        private EOrder order = EOrder.DESC;
+        private ESqlOrder order = ESqlOrder.DESC;
 
         public Qw<UUserInfo> preWrapper(Qw<UUserInfo> qw) {
             if (CheckUtil.objIsEmpty(qw))
