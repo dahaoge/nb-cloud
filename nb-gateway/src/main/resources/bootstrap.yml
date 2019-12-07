@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 9999
 spring:
   application:
     name: nb-gateway
@@ -15,9 +15,11 @@ spring:
             refresh: false
           - data-id: nb-redis.yaml
             refresh: false
-        shared-dataids: nb-log-public.yaml,shared-dataids: security-public.yaml
+        shared-dataids: security-public.yaml
         file-extension: yaml
     gateway:
       discovery:
         locator:
           enabled: true
+  logging:
+    config: classpath:log4j2.xml

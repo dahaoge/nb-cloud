@@ -1,4 +1,4 @@
-package cn.hao.nb.cloud.common.Constant;
+package cn.hao.nb.cloud.common.constant;
 
 /**
  * @Auther: hao

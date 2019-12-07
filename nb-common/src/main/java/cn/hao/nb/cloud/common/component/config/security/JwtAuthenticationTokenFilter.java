@@ -27,9 +27,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
 
     @Autowired
-    private IgnoreProperties ignoreProperties;
-
-    @Autowired
     public JwtAuthenticationTokenFilter(JwtTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
     }

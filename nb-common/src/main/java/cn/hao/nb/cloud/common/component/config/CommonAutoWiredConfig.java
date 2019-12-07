@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CommonAutoWiredConfig {
 
-    @Value("${pang.serviceId}")
+    @Value("${nb.serviceId}")
     private long serviceId;
 
     /**

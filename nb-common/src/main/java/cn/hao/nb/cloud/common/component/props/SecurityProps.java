@@ -1,4 +1,4 @@
-package cn.hao.nb.cloud.common.props;
+package cn.hao.nb.cloud.common.component.props;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

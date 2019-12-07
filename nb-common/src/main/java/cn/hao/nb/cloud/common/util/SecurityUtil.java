@@ -1,11 +1,11 @@
 package cn.hao.nb.cloud.common.util;
 
-import cn.hao.nb.cloud.common.Constant.SecurityConstants;
 import cn.hao.nb.cloud.common.component.SpringUtil;
+import cn.hao.nb.cloud.common.component.props.SecurityProps;
+import cn.hao.nb.cloud.common.constant.SecurityConstants;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.ESourceClient;
-import cn.hao.nb.cloud.common.props.SecurityProps;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;

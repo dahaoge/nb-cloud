@@ -15,5 +15,7 @@ spring:
             refresh: false
           - data-id: nb-redis.yaml
             refresh: false
-        shared-dataids: nb-log-public.yaml
+        shared-dataids: security-public.yaml
         file-extension: yaml
+logging:
+  config: classpath:log4j2.xml

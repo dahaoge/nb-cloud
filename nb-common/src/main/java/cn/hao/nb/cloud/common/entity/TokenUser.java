@@ -76,6 +76,7 @@ public class TokenUser implements Serializable, UserDetails {
     private List<String> serviceAreas;
 
 
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (permissionList == null) {
             return Lists.newArrayList();
@@ -89,10 +90,12 @@ public class TokenUser implements Serializable, UserDetails {
         return list;
     }
 
+    @Override
     public String getPassword() {
         return this.loginPwd;
     }
 
+    @Override
     public String getUsername() {
         return this.loginId;
     }
@@ -101,18 +104,22 @@ public class TokenUser implements Serializable, UserDetails {
         return this.userName;
     }
 
+    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @Override
     public boolean isAccountNonLocked() {
         return lockState == null ? true : (lockState.intValue() == 0 ? true : false);
     }
 
+    @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @Override
     public boolean isEnabled() {
         return lockState == null ? true : (lockState.intValue() == 0 ? true : false);
     }

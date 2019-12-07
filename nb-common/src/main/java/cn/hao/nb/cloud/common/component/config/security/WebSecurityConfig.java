@@ -1,6 +1,6 @@
 package cn.hao.nb.cloud.common.component.config.security;
 
-import cn.hao.nb.cloud.common.props.SecurityProps;
+import cn.hao.nb.cloud.common.component.props.SecurityProps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
