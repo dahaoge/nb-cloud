@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @Auther: hao
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @Description:
  */
 @Slf4j
+@EnableSwagger2
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {"cn.hao.nb.cloud"})
