@@ -3,12 +3,17 @@ package cn.hao.nb.cloud.auth.service.impl;
 import cn.hao.nb.cloud.auth.entity.ULoginChannel;
 import cn.hao.nb.cloud.auth.mapper.ULoginChannelMapper;
 import cn.hao.nb.cloud.auth.service.IULoginChannelService;
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
+import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
+import cn.hao.nb.cloud.common.penum.ELoginType;
+import cn.hao.nb.cloud.common.util.CheckUtil;
+import cn.hao.nb.cloud.common.util.IDUtil;
+import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fgzy.mc.common.entity.Pg;
-import com.fgzy.mc.common.exception.PangException;
-import com.fgzy.mc.common.penum.EErrorCode;
-import com.fgzy.mc.core.component.annotation.JoinCreateUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +45,7 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     @Override
     public ULoginChannel addData(ULoginChannel data) {
         this.validData(data);
-        data.settId(idUtil.nextId());
+        data.setTId(idUtil.nextId());
         data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
@@ -49,6 +54,25 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
         data.setCreateTime(null);
         this.save(data);
         return data;
+    }
+
+    @Override
+    public ULoginChannel addLoginChannel(String userId, ELoginType loginType, String loginId, ELoginChannelScop loginChannelScop) {
+        if (CheckUtil.objIsEmpty(userId, loginId, loginType, loginChannelScop))
+            throw NBException.create(EErrorCode.missingArg);
+        ULoginChannel loginChannel = new ULoginChannel();
+        loginChannel.setUserId(userId);
+        loginChannel.setLoginType(loginType);
+        loginChannel.setLoginId(loginId);
+        loginChannel.setLoginChannelScope(loginChannelScop);
+        return this.addData(loginChannel);
+    }
+
+    @Override
+    public boolean addPhoneChannel(String userId, String phone, ELoginChannelScop loginChannelScop) {
+        this.addLoginChannel(userId, ELoginType.checkSms, phone, loginChannelScop);
+        this.addLoginChannel(userId, ELoginType.pwd, phone, loginChannelScop);
+        return true;
     }
 
     /**
@@ -77,8 +101,15 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     @Override
     public boolean delData(String id) {
         if (CheckUtil.strIsEmpty(id))
-            throw PangException.create(EErrorCode.missingArg);
+            throw NBException.create(EErrorCode.missingArg);
         return this.removeById(id);
+    }
+
+    @Override
+    public boolean delByUserId(String userId) {
+        if (CheckUtil.objIsEmpty(userId))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.delByUserId(userId);
     }
 
     /**
@@ -90,8 +121,18 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     @Override
     public ULoginChannel getDetail(String id) {
         if (CheckUtil.strIsEmpty(id))
-            throw PangException.create(EErrorCode.missingArg);
+            throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
+    }
+
+    @Override
+    public ULoginChannel getByTypeAndChannelScope(String loginId, ELoginType loginType, ELoginChannelScop loginChannelScop) {
+        if (CheckUtil.objIsEmpty(loginId, loginType, loginChannelScop))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.getOne(Qw.create()
+                .eq(ULoginChannel.LOGIN_ID, loginId)
+                .eq(ULoginChannel.LOGIN_TYPE, loginType)
+                .eq(ULoginChannel.LOGIN_CHANNEL_SCOPE, loginChannelScop));
     }
 
     /**
@@ -138,7 +179,6 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
      * @return
      */
     @Override
-    @JoinCreateUser
     public ULoginChannel prepareReturnModel(ULoginChannel data) {
         return data;
     }
@@ -178,7 +218,6 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
      * @return
      */
     @Override
-    @JoinCreateUser
     public IPage
             <Map
                     <String, Object>> prepareReturnMapModel(IPage
@@ -195,7 +234,7 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
      */
     @Override
     public void validData(ULoginChannel data) {
-        if (CheckUtil.objIsEmpty(data))
-            throw PangException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getLoginId(), data.getUserId(), data.getLoginType(), data.getLoginChannelScope()))
+            throw NBException.create(EErrorCode.missingArg);
     }
 }

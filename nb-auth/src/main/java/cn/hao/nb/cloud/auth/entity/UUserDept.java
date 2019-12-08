@@ -1,8 +1,6 @@
 package cn.hao.nb.cloud.auth.entity;
 
 import cn.hao.nb.cloud.common.entity.Qw;
-import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
-import cn.hao.nb.cloud.common.penum.ELoginType;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
@@ -18,7 +16,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 登录渠道
+ * 用户所属组织机构
  * </p>
  *
  * @author hao@179314039@qq.com
@@ -27,8 +25,8 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value = "ULoginChannel对象", description = "登录渠道")
-public class ULoginChannel implements Serializable {
+@ApiModel(value = "UUserDept对象", description = "用户所属组织机构")
+public class UUserDept implements Serializable {
 
     public static final String VERSION = "version";
     public static final String CREATE_BY = "create_by";
@@ -38,9 +36,7 @@ public class ULoginChannel implements Serializable {
     public static final String DELETED = "deleted";
     public static final String T_ID = "t_id";
     public static final String USER_ID = "user_id";
-    public static final String LOGIN_TYPE = "login_type";
-    public static final String LOGIN_ID = "login_id";
-    public static final String LOGIN_CHANNEL_SCOPE = "login_channel_scope";
+    public static final String DEPT_ID = "dept_id";
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "创建人信息")
     @TableField(exist = false)
@@ -69,12 +65,8 @@ public class ULoginChannel implements Serializable {
     private String tId;
     @ApiModelProperty(value = "用户id")
     private String userId;
-    @ApiModelProperty(value = "登录类型")
-    private ELoginType loginType;
-    @ApiModelProperty(value = "登录id")
-    private String loginId;
-    @ApiModelProperty(value = "登录渠道")
-    private ELoginChannelScop loginChannelScope;
+    @ApiModelProperty(value = "组织id")
+    private String deptId;
 
     @Data
     public class SearchParams {
@@ -86,7 +78,7 @@ public class ULoginChannel implements Serializable {
         @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
         private ESqlOrder order = ESqlOrder.DESC;
 
-        public Qw<ULoginChannel> preWrapper(Qw<ULoginChannel> qw) {
+        public Qw<UUserDept> preWrapper(Qw<UUserDept> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
             return qw;

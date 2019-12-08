@@ -129,7 +129,7 @@ public class ConvertUtil {
     }
 
     public static List<Map<String, Object>> convertEnum2MapNonException(String enumName) {
-        String packageName = "com.fgzy.mc.common.penum.";
+        String packageName = "cn.hao.nb.cloud.common.penum.";
         //需要的参数
         Class<?> clazz1 = null;
         List<Map<String, Object>> result = Lists.newArrayList();
@@ -159,7 +159,7 @@ public class ConvertUtil {
     }
 
     public static List<Object> convertEnumVal2ObjNonException(String enumName) {
-        String packageName = "com.fgzy.mc.common.penum.";
+        String packageName = "cn.hao.nb.cloud.common.penum.";
         //需要的参数
         Class<?> clazz1 = null;
         List<Object> result = Lists.newArrayList();

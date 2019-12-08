@@ -4,20 +4,17 @@ import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
-import org.springframework.stereotype.Service;
+import cn.hao.nb.cloud.common.util.CheckUtil;
+import cn.hao.nb.cloud.common.util.IDUtil;
+import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fgzy.mc.common.entity.Pg;
-import com.fgzy.mc.common.entity.Qd;
-import com.fgzy.mc.common.entity.Qw;
-import com.fgzy.mc.common.exception.PangException;
-import com.fgzy.mc.common.util.*;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.fgzy.mc.common.penum.EErrorCode;
-import com.fgzy.mc.core.component.annotation.JoinCreateUser;
+import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -89,7 +86,7 @@ import java.util.Map;
     @Override
     public boolean delData(String id) {
     if (CheckUtil.strIsEmpty(id))
-    throw PangException.create(EErrorCode.missingArg);
+    throw NBException.create(EErrorCode.missingArg);
     return this.removeById(id);
     }
 
@@ -101,7 +98,7 @@ import java.util.Map;
     @Override
     public ${entity} getDetail(String id) {
     if (CheckUtil.strIsEmpty(id))
-    throw PangException.create(EErrorCode.missingArg);
+    throw NBException.create(EErrorCode.missingArg);
     return this.prepareReturnModel(this.getById(id));
     }
 
@@ -145,7 +142,6 @@ import java.util.Map;
     * @return
     */
     @Override
-    @JoinCreateUser
     public ${entity} prepareReturnModel(${entity} data) {
     return data;
     }
@@ -182,7 +178,6 @@ import java.util.Map;
     * @return
     */
     @Override
-    @JoinCreateUser
     public IPage
     <Map
     <String, Object>> prepareReturnMapModel(IPage
@@ -199,7 +194,7 @@ import java.util.Map;
     @Override
     public void validData(${entity} data) {
     if (CheckUtil.objIsEmpty(data))
-    throw PangException.create(EErrorCode.missingArg);
+    throw NBException.create(EErrorCode.missingArg);
     }
     }
 </#if>

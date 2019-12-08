@@ -1,9 +1,11 @@
 package cn.hao.nb.cloud.auth.service;
 
 import cn.hao.nb.cloud.auth.entity.ULoginChannel;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
+import cn.hao.nb.cloud.common.penum.ELoginType;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fgzy.mc.common.entity.Pg;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,8 @@ import java.util.Map;
  * @since 2019-12-08
  */
 public interface IULoginChannelService extends IService<ULoginChannel> {
+
+
     /**
      * 添加数据
      *
@@ -24,6 +28,10 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      * @return
      */
     ULoginChannel addData(ULoginChannel data);
+
+    ULoginChannel addLoginChannel(String userId, ELoginType loginType, String loginId, ELoginChannelScop loginChannelScop);
+
+    boolean addPhoneChannel(String userId, String phone, ELoginChannelScop loginChannelScop);
 
     /**
      * 修改数据
@@ -41,6 +49,8 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      */
     boolean delData(String id);
 
+    boolean delByUserId(String userId);
+
     /**
      * 查询详情
      *
@@ -48,6 +58,8 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      * @return
      */
     ULoginChannel getDetail(String id);
+
+    ULoginChannel getByTypeAndChannelScope(String loginId, ELoginType loginType, ELoginChannelScop loginChannelScop);
 
     /**
      * 分页查询数据
@@ -124,8 +136,8 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
 }
 /*
 
-import com.fgzy.mc.common.entity.Pg;
-import com.fgzy.mc.common.entity.Rv;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Rv;
 import com.fgzy.mc.core.entity.ULoginChannel;
 import com.fgzy.mc.core.service.IULoginChannelService;
 import io.swagger.annotations.Api;

@@ -24,7 +24,7 @@ public class PEnumUtil implements InitializingBean {
     /**
      * package
      */
-    private final String findEnumPackage = "com.fgzy.mc.common.penum";
+    private final String findEnumPackage = "cn.hao.nb.cloud.common.penum";
     /**
      * 最后更新时间
      */

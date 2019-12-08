@@ -34,36 +34,27 @@ public class TokenUser implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "用户id")
+    @ApiModelProperty(value = "ID")
     @TableId(value = "user_id", type = IdType.INPUT)
     private String userId;
-
-    @ApiModelProperty(value = "手机号")
-    private String phone;
-
     @ApiModelProperty(value = "用户名")
     private String userName;
-
-    @ApiModelProperty(value = "用户头像")
-    private String userIcon;
-
-    @ApiModelProperty(value = "登录账号")
+    @ApiModelProperty(value = "手机号")
+    private String phone;
+    @ApiModelProperty(value = "身份证号")
+    private String icnum;
+    @ApiModelProperty(value = "头像")
+    private String icon;
+    @ApiModelProperty(value = "登录id")
     private String loginId;
-
-    @ApiModelProperty(value = "登陆密码")
+    @ApiModelProperty(value = "登录密码")
     private String loginPwd;
-
     @ApiModelProperty(value = "加密盐")
     private String salt;
-
-    @ApiModelProperty(value = "锁定状态")
-    private Integer lockState;
-
+    @ApiModelProperty(value = "是否被锁定")
+    private Integer isLocked;
     @ApiModelProperty(value = "解锁时间")
     private Date unlockTime;
-
-    @ApiModelProperty(value = "锁定计数")
-    private Integer lockCnt;
 
 
     @TableField(exist = false)
@@ -73,8 +64,7 @@ public class TokenUser implements Serializable, UserDetails {
     @TableField(exist = false)
     private List<String> menuList;
     @TableField(exist = false)
-    private List<String> serviceAreas;
-
+    private List<String> authDeptList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -100,10 +90,6 @@ public class TokenUser implements Serializable, UserDetails {
         return this.loginId;
     }
 
-    public String getUserName() {
-        return this.userName;
-    }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -111,7 +97,7 @@ public class TokenUser implements Serializable, UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return lockState == null ? true : (lockState.intValue() == 0 ? true : false);
+        return isLocked == null ? true : (isLocked.intValue() == 0 ? true : false);
     }
 
     @Override
@@ -121,6 +107,6 @@ public class TokenUser implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return lockState == null ? true : (lockState.intValue() == 0 ? true : false);
+        return isLocked == null ? true : (isLocked.intValue() == 0 ? true : false);
     }
 }

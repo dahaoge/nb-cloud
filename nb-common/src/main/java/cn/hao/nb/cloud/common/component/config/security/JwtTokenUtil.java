@@ -54,7 +54,7 @@ public class JwtTokenUtil implements Serializable {
      * @param token 令牌
      * @return 用户名
      */
-    public TokenUser getUserFromToken(String token) {
+    public static TokenUser getUserFromToken(String token) {
         TokenUser tokenUser;
         try {
             Claims claims = getClaimsFromToken(token);

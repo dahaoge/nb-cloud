@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hao.nb.cloud.auth.mapper.AuthMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.hao.nb.cloud.common.entity.TokenUser">
+        <id column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="phone" property="phone"/>
+        <result column="icnum" property="icnum"/>
+        <result column="icon" property="icon"/>
+        <result column="login_id" property="loginId"/>
+        <result column="login_pwd" property="loginPwd"/>
+        <result column="salt" property="salt"/>
+        <result column="is_locked" property="isLocked"/>
+        <result column="unlock_time" property="unlockTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            version, create_by, create_time, update_by, update_time, deleted, user_id, user_name, phone, icnum, icon, login_id, login_pwd, salt, is_locked, unlock_time
+        </sql>
+
+    <resultMap id="RoleResultMap" type="cn.hao.nb.cloud.auth.entity.SysRole">
+        <id column="role_id" property="roleId"/>
+        <result column="role_code" property="roleCode"/>
+        <result column="role_name" property="roleName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Role_Column_List">
+    role_id, role_name, role_code
+    </sql>
+
+    <resultMap id="PermissionResultMap" type="cn.hao.nb.cloud.auth.entity.SysPermission">
+        <id column="permission_id" property="permissionId"/>
+        <result column="permission_code" property="permissionCode"/>
+        <result column="permission_name" property="permissionName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Permission_Column_List">
+    permission_id, permission_code, permission_name
+    </sql>
+
+    <resultMap id="MenuResultMap" type="cn.hao.nb.cloud.auth.entity.SysMenu">
+        <id column="menu_id" property="menuId"/>
+        <result column="parent_menu_code" property="parentMenuCode"/>
+        <result column="menu_code" property="menuCode"/>
+        <result column="menu_name" property="menuName"/>
+        <result column="menu_path" property="menuPath"/>
+        <result column="menu_index" property="menuIndex"/>
+        <result column="menu_icon" property="menuIcon"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Menu_Column_List">
+    menu_id, parent_menu_code, menu_code, menu_name, menu_path, menu_index, menu_icon
+    </sql>
+
+    <select id="getTokenUserById" resultMap="BaseResultMap">
+        select * from u_user_info where deleted = 0 AND user_id = #{userId} AND lock_state = 0
+    </select>
+
+    <select id="getTokenUserByLoginId" resultMap="BaseResultMap">
+            select * from u_user_info where deleted = 0 AND login_id = #{loginId}
+    </select>
+
+    <select id="getUserPermission" resultMap="PermissionResultMap">
+        SELECT
+        <include refid="Permission_Column_List"></include>
+        FROM
+        sys_permission
+        WHERE
+        deleted = 0
+        AND permission_code IN ( SELECT permission_code FROM sys_role_permission WHERE deleted = 0 AND role_code IN (
+        SELECT role_code FROM
+        u_user_role WHERE deleted = 0 AND user_id = #{userId} ) )
+    </select>
+
+    <select id="getUserRoles" resultMap="RoleResultMap">
+        SELECT
+        <include refid="Role_Column_List"></include>
+        FROM sys_role where deleted=0 and role_code in (select role_code from u_user_role WHERE deleted = 0 AND user_id
+        = #{userId})
+    </select>
+
+    <select id="getUserMenus" resultMap="MenuResultMap">
+        select
+        <include refid="Menu_Column_List"></include>
+        from sys_menu
+        where deleted = 0
+        and menu_code in (select menu_code
+        from sys_role_menu
+        where deleted = 0
+        and role_code in (select role_code from u_user_role where deleted = 0 and user_id = #{userId}))
+    </select>
+
+
+</mapper>

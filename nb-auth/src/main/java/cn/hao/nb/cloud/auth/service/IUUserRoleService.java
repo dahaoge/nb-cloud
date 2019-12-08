@@ -1,9 +1,9 @@
 package cn.hao.nb.cloud.auth.service;
 
 import cn.hao.nb.cloud.auth.entity.UUserRole;
+import cn.hao.nb.cloud.common.entity.Pg;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fgzy.mc.common.entity.Pg;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,6 @@ import java.util.Map;
 public interface IUUserRoleService extends IService<UUserRole> {
     /**
      * 添加数据
-     *
      * @param data
      * @return
      */
@@ -27,7 +26,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 修改数据
-     *
      * @param data
      * @return
      */
@@ -35,7 +33,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 删除数据
-     *
      * @param id
      * @return
      */
@@ -43,7 +40,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 查询详情
-     *
      * @param id
      * @return
      */
@@ -51,7 +47,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 分页查询数据
-     *
      * @param pg
      * @param searchParams
      * @return
@@ -60,7 +55,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 列表查询数据
-     *
      * @param searchParams
      * @return
      */
@@ -68,7 +62,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 分页查询Map数据
-     *
      * @param pg
      * @param searchParams
      * @return
@@ -79,7 +72,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 处理返回值
-     *
      * @param data
      * @return
      */
@@ -87,7 +79,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 处理返回值
-     *
      * @param page
      * @return
      */
@@ -95,7 +86,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 处理返回值
-     *
      * @param list
      * @return
      */
@@ -103,7 +93,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
 
     /**
      * 处理返回值
-     *
      * @param page
      * @return
      */
@@ -116,7 +105,6 @@ public interface IUUserRoleService extends IService<UUserRole> {
     /**
      * 添加/修改数据前校验数据有效性(强制抛出异常)
      * 如果不需要抛出异常请不用调用该服务
-     *
      * @param data
      */
     void validData(UUserRole data);
@@ -124,8 +112,8 @@ public interface IUUserRoleService extends IService<UUserRole> {
 }
 /*
 
-import com.fgzy.mc.common.entity.Pg;
-import com.fgzy.mc.common.entity.Rv;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Rv;
 import com.fgzy.mc.core.entity.UUserRole;
 import com.fgzy.mc.core.service.IUUserRoleService;
 import io.swagger.annotations.Api;

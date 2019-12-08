@@ -3,12 +3,14 @@ package cn.hao.nb.cloud.auth.service.impl;
 import cn.hao.nb.cloud.auth.entity.SysRoleMenu;
 import cn.hao.nb.cloud.auth.mapper.SysRoleMenuMapper;
 import cn.hao.nb.cloud.auth.service.ISysRoleMenuService;
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
+import cn.hao.nb.cloud.common.util.CheckUtil;
+import cn.hao.nb.cloud.common.util.IDUtil;
+import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fgzy.mc.common.entity.Pg;
-import com.fgzy.mc.common.exception.PangException;
-import com.fgzy.mc.common.penum.EErrorCode;
-import com.fgzy.mc.core.component.annotation.JoinCreateUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +35,6 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
     /**
      * 添加数据
-     *
      * @param data
      * @return
      */
@@ -53,7 +54,6 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
     /**
      * 修改数据
-     *
      * @param data
      * @return
      */
@@ -70,33 +70,30 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
     /**
      * 删除数据
-     *
      * @param id
      * @return
      */
     @Override
     public boolean delData(String id) {
         if (CheckUtil.strIsEmpty(id))
-            throw PangException.create(EErrorCode.missingArg);
+            throw NBException.create(EErrorCode.missingArg);
         return this.removeById(id);
     }
 
     /**
      * 获取详情
-     *
      * @param id
      * @return
      */
     @Override
     public SysRoleMenu getDetail(String id) {
         if (CheckUtil.strIsEmpty(id))
-            throw PangException.create(EErrorCode.missingArg);
+            throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }
 
     /**
      * 分页查询
-     *
      * @param pg
      * @param searchParams
      * @return
@@ -108,7 +105,6 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
     /**
      * 列表查询
-     *
      * @param searchParams
      * @return
      */
@@ -119,7 +115,6 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
     /**
      * 连表分页查询map数据
-     *
      * @param pg
      * @param searchParams
      * @return
@@ -133,19 +128,16 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
     /**
      * 处理返回值
-     *
      * @param data
      * @return
      */
     @Override
-    @JoinCreateUser
     public SysRoleMenu prepareReturnModel(SysRoleMenu data) {
         return data;
     }
 
     /**
      * 处理返回值
-     *
      * @param page
      * @return
      */
@@ -158,7 +150,6 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
     /**
      * 处理返回值
-     *
      * @param list
      * @return
      */
@@ -173,12 +164,10 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
     /**
      * 处理返回值
-     *
      * @param page
      * @return
      */
     @Override
-    @JoinCreateUser
     public IPage
             <Map
                     <String, Object>> prepareReturnMapModel(IPage
@@ -190,12 +179,11 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
     /**
      * 添加/修改数据前校验数据有效性(强制抛出异常)
      * 如果不需要抛出异常请不用调用该服务
-     *
      * @param data
      */
     @Override
     public void validData(SysRoleMenu data) {
         if (CheckUtil.objIsEmpty(data))
-            throw PangException.create(EErrorCode.missingArg);
+            throw NBException.create(EErrorCode.missingArg);
     }
 }

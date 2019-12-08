@@ -3,16 +3,16 @@ package cn.hao.nb.cloud.common.penum;
 import cn.hao.nb.cloud.common.entity.PEnum;
 
 /**
- * @Auther: hao
- * @Date: 2019-12-06 21:34
+ * @Auther: sunhao
+ * @Date: 2019-07-19 14:46
  * @Description:
  */
-public enum ESourceClient implements PEnum<String> {
-    clientApp("客户端APP"), webManageClient("web管理端");
+public enum EMenuType implements PEnum<String> {
+    module("模块"), func_group("功能组"), func("功能");
 
     private String desc;
 
-    ESourceClient(String desc) {
+    EMenuType(String desc) {
         this.desc = desc;
     }
 

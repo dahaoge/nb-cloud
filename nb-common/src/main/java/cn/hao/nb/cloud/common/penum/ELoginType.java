@@ -4,15 +4,15 @@ import cn.hao.nb.cloud.common.entity.PEnum;
 
 /**
  * @Auther: hao
- * @Date: 2019-12-06 21:34
+ * @Date: 2019-12-08 14:01
  * @Description:
  */
-public enum ESourceClient implements PEnum<String> {
-    clientApp("客户端APP"), webManageClient("web管理端");
+public enum ELoginType implements PEnum<String> {
+    checkSms("短信验证码登录"), pwd("密码登录");
 
     private String desc;
 
-    ESourceClient(String desc) {
+    ELoginType(String desc) {
         this.desc = desc;
     }
 

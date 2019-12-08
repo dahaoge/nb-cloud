@@ -5,8 +5,8 @@ import ${superServiceClassPackage};
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fgzy.mc.common.entity.Pg;
-import com.fgzy.mc.common.entity.Qd;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qd;
 
 import java.util.Date;
 import java.util.List;
@@ -120,8 +120,8 @@ import java.util.Map;
 </#if>
 /*
 
-import com.fgzy.mc.common.entity.Pg;
-import com.fgzy.mc.common.entity.Rv;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Rv;
 import com.fgzy.mc.core.entity.${entity};
 import com.fgzy.mc.core.service.${table.serviceName};
 import io.swagger.annotations.Api;

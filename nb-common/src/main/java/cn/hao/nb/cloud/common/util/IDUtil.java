@@ -65,44 +65,9 @@ public class IDUtil {
      * @return
      */
     public synchronized String nextId() {
-        return nextOne("XC");
+        return nextOne("NB");
     }
 
-    /**
-     * 获取用户房源id
-     *
-     * @return
-     */
-    public synchronized String nextUserHouseId() {
-        return nextOne("YHF");
-    }
-
-    /**
-     * 获取爬虫房源id
-     *
-     * @return
-     */
-    public synchronized String nextCrawlerHouseId() {
-        return nextOne("PCF");
-    }
-
-    /**
-     * 获取平台房源id
-     *
-     * @return
-     */
-    public synchronized String nextPlatformHouseId() {
-        return nextOne("PTF");
-    }
-
-    /**
-     * 获取经纪人房源id
-     *
-     * @return
-     */
-    public synchronized String nextBrokerHouseId() {
-        return nextOne("JJF");
-    }
 
     private synchronized String nextOne(String prefix) {
         long timestamp = timeGen();

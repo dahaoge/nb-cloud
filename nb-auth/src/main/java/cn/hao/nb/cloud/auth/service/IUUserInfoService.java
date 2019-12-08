@@ -1,9 +1,11 @@
 package cn.hao.nb.cloud.auth.service;
 
 import cn.hao.nb.cloud.auth.entity.UUserInfo;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qd;
+import cn.hao.nb.cloud.common.penum.EYn;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fgzy.mc.common.entity.Pg;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,19 @@ import java.util.Map;
  * @since 2019-12-08
  */
 public interface IUUserInfoService extends IService<UUserInfo> {
+
+    UUserInfo clientUserRegistByPhone(String phone, String userName);
+
+    UUserInfo clientUserRegistByPhone(String phone, String userName, String deptId);
+
+    UUserInfo webManagerRegistByPhone(String phone, String userName, String deptIds, String roleCodes);
+
+    UUserInfo loginByPhoneAndPwd(String phone, String pwd);
+
+    Qd getLoginInfo(String userId);
+
+    boolean changeUserLock(String userId, EYn isLocked);
+
     /**
      * 添加数据
      *
@@ -124,8 +139,8 @@ public interface IUUserInfoService extends IService<UUserInfo> {
 }
 /*
 
-import com.fgzy.mc.common.entity.Pg;
-import com.fgzy.mc.common.entity.Rv;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Rv;
 import com.fgzy.mc.core.entity.UUserInfo;
 import com.fgzy.mc.core.service.IUUserInfoService;
 import io.swagger.annotations.Api;

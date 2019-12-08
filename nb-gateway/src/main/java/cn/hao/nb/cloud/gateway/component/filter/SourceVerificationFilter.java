@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.gateway.component.filter;
 
 import cn.hao.nb.cloud.common.constant.SecurityConstants;
-import cn.hao.nb.cloud.common.util.SecurityUtil;
+import cn.hao.nb.cloud.common.util.UserUtil;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
@@ -20,7 +20,7 @@ public class SourceVerificationFilter implements GatewayFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String sourceAk = exchange.getRequest().getHeaders().getFirst(SecurityConstants.HEADER_SOURCE_AK_KEY);
         String sourceSign = exchange.getRequest().getHeaders().getFirst(SecurityConstants.HEADER_SOURCE_SIGN_KEY);
-        SecurityUtil.getAndValidRequestClient(sourceAk, sourceSign);
+        UserUtil.getAndValidRequestClient(sourceAk, sourceSign);
         return chain.filter(exchange);
     }
 
