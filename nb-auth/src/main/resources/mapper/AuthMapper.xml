@@ -59,7 +59,7 @@
     </sql>
 
     <select id="getTokenUserById" resultMap="BaseResultMap">
-        select * from u_user_info where deleted = 0 AND user_id = #{userId} AND lock_state = 0
+        select * from u_user_info where deleted = 0 AND user_id = #{userId} AND is_locked = 0
     </select>
 
     <select id="getTokenUserByLoginId" resultMap="BaseResultMap">

@@ -23,6 +23,64 @@ import java.util.Map;
  */
 public class UserUtil {
 
+    public static long PWD_EXPIRE_TIME = 300000;
+    public static long SOURCE_SIGN_EXPIRE_TIME = 86400000;
+
+    public static String encodePwd(String pwd, String salt) {
+        if (CheckUtil.objIsEmpty(pwd, salt))
+            throw NBException.create(EErrorCode.missingArg);
+        return MD5Util.MD5(pwd + salt).toUpperCase();
+    }
+
+    public static String decodePwd(String aesPwd, String salt) {
+        if (CheckUtil.objIsEmpty(aesPwd, salt))
+            throw NBException.create(EErrorCode.missingArg);
+        String sk = UserUtil.getSourceVerificationEntity().get(SecurityConstants.SOURCE_VERIFICATION_ENTITY_SK_KEY);
+        String decodeStr = AesUtil.decrypt(aesPwd, sk);
+        if (decodeStr.indexOf("$$") < 0)
+            throw NBException.create(EErrorCode.authIdentityErr);
+        String[] ss = decodeStr.split("\\$\\$");
+        if (Long.parseLong(ss[1]) < (Calendar.getInstance().getTimeInMillis() - UserUtil.PWD_EXPIRE_TIME))
+            throw NBException.create(EErrorCode.authIdentityErr, "认证信息已过期");
+        return UserUtil.encodePwd(ss[0], salt);
+    }
+
+    // 测试用
+    public static String aesPwd(String pwd) {
+        String sk = UserUtil.getSourceVerificationEntity().get(SecurityConstants.SOURCE_VERIFICATION_ENTITY_SK_KEY);
+        return AesUtil.encrypt(pwd + "$$" + Calendar.getInstance().getTimeInMillis(), sk);
+    }
+
+    /**
+     * 获取来源加密参数
+     *
+     * @param httpServletRequest
+     * @return
+     */
+    public static Map<String, String> getSourceVerificationEntity(HttpServletRequest httpServletRequest) {
+        String sourceAk = httpServletRequest.getHeader(SecurityConstants.HEADER_SOURCE_AK_KEY);
+        if (CheckUtil.objIsEmpty(sourceAk))
+            throw NBException.create(EErrorCode.missingAuthArgs);
+        Map<String, String> result = SpringUtil.getBean(SecurityProps.class).getSourceClients().get(sourceAk);
+        if (CheckUtil.objIsEmpty(result))
+            throw NBException.create(EErrorCode.authIdentityErr, "无法获取签名");
+        return result;
+    }
+
+    /**
+     * 获取来源加密参数
+     *
+     * @return
+     */
+    public static Map<String, String> getSourceVerificationEntity() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            throw NBException.create(EErrorCode.c500);
+        }
+        return UserUtil.getSourceVerificationEntity(requestAttributes.getRequest());
+    }
+
+
     /**
      * 获取并验证请求来源
      *
@@ -56,8 +114,8 @@ public class UserUtil {
      */
     public static ESourceClient getAndValidRequestClient(String sourceAk, String sourceSign) {
         Map<String, String> sourceClientMap = SpringUtil.getBean(SecurityProps.class).getSourceClients().get(sourceAk);
-        String client = sourceClientMap.get("name");
-        String sk = sourceClientMap.get("sk");
+        String client = sourceClientMap.get(SecurityConstants.SOURCE_VERIFICATION_ENTITY_NAME_KEY);
+        String sk = sourceClientMap.get(SecurityConstants.SOURCE_VERIFICATION_ENTITY_SK_KEY);
         UserUtil.validSourceSign(sk, sourceSign);
         return ESourceClient.valueOf(client);
     }
@@ -75,8 +133,8 @@ public class UserUtil {
             String decodeSign = AesUtil.decrypt(sign, sk);
             if (CheckUtil.objIsEmpty(decodeSign) || decodeSign.indexOf("$$") < 0)
                 throw NBException.create(EErrorCode.authDecodeError);
-            String[] ss = decodeSign.split("$$");
-            if (Long.parseLong(ss[1]) < Calendar.getInstance().getTimeInMillis()) {
+            String[] ss = decodeSign.split("\\$\\$");
+            if (Long.parseLong(ss[1]) < (Calendar.getInstance().getTimeInMillis() - UserUtil.SOURCE_SIGN_EXPIRE_TIME)) {
                 throw NBException.create(EErrorCode.authDenied, "权限已过期");
             }
             if (!sk.equals(ss[0])) {

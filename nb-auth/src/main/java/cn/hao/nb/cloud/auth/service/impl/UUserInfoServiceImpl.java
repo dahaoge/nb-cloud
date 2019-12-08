@@ -90,12 +90,20 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         UUserInfo result = this.getById(loginChannel.getUserId());
         if (CheckUtil.objIsEmpty(result))
             throw NBException.create(EErrorCode.authIdentityErr, "错误的用户信息");
+
+        //锁定状态
         if (EYn.y.getValue().equals(result.getIsLocked())) {
             if (CheckUtil.objIsNotEmpty(result.getUnlockTime()) && Calendar.getInstance().getTimeInMillis() < result.getUnlockTime().getTime())
                 this.changeUserLock(result.getUserId(), EYn.n);
             else
                 throw NBException.create(EErrorCode.authDenied, "账户锁定");
         }
+
+        // 验证密码
+        String md5Pwd = UserUtil.decodePwd(pwd, result.getSalt());
+        if (!md5Pwd.equals(result.getLoginPwd()))
+            throw NBException.create(EErrorCode.authIdentityErr, "用户名或密码错误");
+
         return result;
     }
 
@@ -106,7 +114,6 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             throw NBException.create(EErrorCode.authIdentityErr, "查询不到用户信息");
         Qd result = Qd.create();
 
-        // TODO 用户权限啥的放上
         if (UserUtil.getAndValidRequestClient() == ESourceClient.webManageClient) {
             List<String> roleList = ListUtil.getPkList(authMapper.getUserRoles(tokenUser.getUserId()), SysRole.ROLE_CODE);
             tokenUser.setRoleList(roleList);
@@ -136,7 +143,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         UUserInfo userInfo = this.preUser();
         userInfo.setPhone(phone);
         userInfo.setUserName(userName);
-        userInfo.setLoginPwd(phone.substring(3));
+        userInfo.setLoginPwd(UserUtil.encodePwd(phone.substring(3), userInfo.getSalt()));
         this.addData(userInfo);
         loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, ELoginChannelScop.CClient);
         return userInfo;

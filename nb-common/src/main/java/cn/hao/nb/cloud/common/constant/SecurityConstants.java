@@ -14,4 +14,10 @@ public class SecurityConstants {
     public static final String HEADER_SOURCE_AK_KEY = "sourceAk";
 
     public static final String HEADER_SOURCE_SIGN_KEY = "sourceSign";
+
+    public static final String SOURCE_VERIFICATION_ENTITY_AK_KEY = "ak";
+
+    public static final String SOURCE_VERIFICATION_ENTITY_SK_KEY = "sk";
+
+    public static final String SOURCE_VERIFICATION_ENTITY_NAME_KEY = "name";
 }
