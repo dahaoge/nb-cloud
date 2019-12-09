@@ -1,6 +1,7 @@
 package cn.hao.nb.cloud.auth.entity;
 
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.penum.EMenuType;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
@@ -12,6 +13,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -91,7 +93,10 @@ public class SysMenu implements Serializable {
 
     private String menuIcon;
 
-    private String menuType;
+    @ApiModelProperty(value = "菜单类型")
+    private EMenuType menuType;
+    @TableField(exist = false)
+    private List<SysMenu> children;
 
 
     public static final String VERSION = "version";

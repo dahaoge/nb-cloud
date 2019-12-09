@@ -82,6 +82,9 @@ public class SysRole implements Serializable {
 
     private String roleName;
 
+    @TableField(exist = false)
+    private UUserRole userRole;
+
 
     public static final String VERSION = "version";
 

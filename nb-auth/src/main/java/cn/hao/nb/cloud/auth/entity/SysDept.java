@@ -28,15 +28,22 @@ import java.util.Map;
 @ApiModel(value = "SysDept对象", description = "组织机构")
 public class SysDept implements Serializable {
 
-    public static final String VERSION = "version";
-    public static final String CREATE_BY = "create_by";
-    public static final String CREATE_TIME = "create_time";
-    public static final String UPDATE_BY = "update_by";
-    public static final String UPDATE_TIME = "update_time";
-    public static final String DELETED = "deleted";
-    public static final String DEPT_ID = "dept_id";
-    public static final String DEPT_NAME = "dept_name";
-    public static final String P_ID = "p_id";
+    @Data
+    public class SearchParams {
+
+        @ApiModelProperty(value = "排序字段")
+        private String sort = "update_time";
+
+        @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
+        private ESqlOrder order = ESqlOrder.DESC;
+
+        public Qw<SysDept> preWrapper(Qw<SysDept> qw) {
+            if (CheckUtil.objIsEmpty(qw))
+                qw = Qw.create();
+            return qw;
+        }
+    }
+
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "创建人信息")
     @TableField(exist = false)
@@ -68,21 +75,14 @@ public class SysDept implements Serializable {
     @ApiModelProperty(value = "父节点id")
     private String pId;
 
-    @Data
-    public class SearchParams {
-
-
-        @ApiModelProperty(value = "排序字段")
-        private String sort = "update_time";
-
-        @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
-        private ESqlOrder order = ESqlOrder.DESC;
-
-        public Qw<SysDept> preWrapper(Qw<SysDept> qw) {
-            if (CheckUtil.objIsEmpty(qw))
-                qw = Qw.create();
-            return qw;
-        }
-    }
+    public static final String VERSION = "version";
+    public static final String CREATE_BY = "create_by";
+    public static final String CREATE_TIME = "create_time";
+    public static final String UPDATE_BY = "update_by";
+    public static final String UPDATE_TIME = "update_time";
+    public static final String DELETED = "deleted";
+    public static final String DEPT_ID = "dept_id";
+    public static final String DEPT_NAME = "dept_name";
+    public static final String P_ID = "p_id";
 
 }

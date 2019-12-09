@@ -31,7 +31,6 @@ public class UUserRole implements Serializable {
     @Data
     public class SearchParams {
 
-
         @ApiModelProperty(value = "排序字段")
         private String sort = "update_time";
 

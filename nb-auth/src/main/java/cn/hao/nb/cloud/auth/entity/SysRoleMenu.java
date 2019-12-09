@@ -82,6 +82,9 @@ public class SysRoleMenu implements Serializable {
 
     private String menuCode;
 
+    @TableField(exist = false)
+    private SysMenu menu;
+
 
     public static final String VERSION = "version";
 

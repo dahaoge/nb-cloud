@@ -82,6 +82,9 @@ public class SysRolePermission implements Serializable {
 
     private String permissionCode;
 
+    @TableField(exist = false)
+    private SysPermission permission;
+
 
     public static final String VERSION = "version";
 

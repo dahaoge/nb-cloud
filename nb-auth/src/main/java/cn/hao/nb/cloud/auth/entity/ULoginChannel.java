@@ -30,17 +30,22 @@ import java.util.Map;
 @ApiModel(value = "ULoginChannel对象", description = "登录渠道")
 public class ULoginChannel implements Serializable {
 
-    public static final String VERSION = "version";
-    public static final String CREATE_BY = "create_by";
-    public static final String CREATE_TIME = "create_time";
-    public static final String UPDATE_BY = "update_by";
-    public static final String UPDATE_TIME = "update_time";
-    public static final String DELETED = "deleted";
-    public static final String T_ID = "t_id";
-    public static final String USER_ID = "user_id";
-    public static final String LOGIN_TYPE = "login_type";
-    public static final String LOGIN_ID = "login_id";
-    public static final String LOGIN_CHANNEL_SCOPE = "login_channel_scope";
+    @Data
+    public class SearchParams {
+
+        @ApiModelProperty(value = "排序字段")
+        private String sort = "update_time";
+
+        @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
+        private ESqlOrder order = ESqlOrder.DESC;
+
+        public Qw<ULoginChannel> preWrapper(Qw<ULoginChannel> qw) {
+            if (CheckUtil.objIsEmpty(qw))
+                qw = Qw.create();
+            return qw;
+        }
+    }
+
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "创建人信息")
     @TableField(exist = false)
@@ -76,21 +81,16 @@ public class ULoginChannel implements Serializable {
     @ApiModelProperty(value = "登录渠道")
     private ELoginChannelScop loginChannelScope;
 
-    @Data
-    public class SearchParams {
-
-
-        @ApiModelProperty(value = "排序字段")
-        private String sort = "update_time";
-
-        @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
-        private ESqlOrder order = ESqlOrder.DESC;
-
-        public Qw<ULoginChannel> preWrapper(Qw<ULoginChannel> qw) {
-            if (CheckUtil.objIsEmpty(qw))
-                qw = Qw.create();
-            return qw;
-        }
-    }
+    public static final String VERSION = "version";
+    public static final String CREATE_BY = "create_by";
+    public static final String CREATE_TIME = "create_time";
+    public static final String UPDATE_BY = "update_by";
+    public static final String UPDATE_TIME = "update_time";
+    public static final String DELETED = "deleted";
+    public static final String T_ID = "t_id";
+    public static final String USER_ID = "user_id";
+    public static final String LOGIN_TYPE = "login_type";
+    public static final String LOGIN_ID = "login_id";
+    public static final String LOGIN_CHANNEL_SCOPE = "login_channel_scope";
 
 }
