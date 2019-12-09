@@ -102,7 +102,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         // 验证密码
         String md5Pwd = UserUtil.decodePwd(pwd, result.getSalt());
         if (!md5Pwd.equals(result.getLoginPwd()))
-            throw NBException.create(EErrorCode.authIdentityErr, "用户名或密码错误");
+            throw NBException.create(EErrorCode.authIdentityErr, "用户名或密码错误 ");
 
         return result;
     }
