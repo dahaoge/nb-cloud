@@ -40,15 +40,7 @@ public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
      * @param errorMessage 异常信息
      * @return
      */
-    public static Rv response(int status, String errorMessage) {
-        EErrorCode eErrorCode =
-                status == 400 ? EErrorCode.missingArg :
-                        status == 401 ? EErrorCode.authErr :
-                                status == 403 ? EErrorCode.authDenied :
-                                        status == 404 ? EErrorCode.c404 :
-                                                status == 500 ? EErrorCode.c500 :
-                                                        EErrorCode.c500;
-
+    public static Rv response(EErrorCode eErrorCode, String errorMessage) {
         return Rv.getInstance(eErrorCode, errorMessage, null);
     }
 
@@ -62,7 +54,11 @@ public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
         if (error instanceof org.springframework.cloud.gateway.support.NotFoundException) {
             code = 404;
         }
-        return MapUtil.getMapFromEntity(response(code, this.buildMessage(request, error)));
+        Map<String, Object> errMap = MapUtil.getMapFromEntity(error);
+        if (errMap.get("errorCode") instanceof EErrorCode) {
+            return MapUtil.getMapFromEntity(response(((EErrorCode) errMap.get("errorCode")), (String) errMap.get("meMessage")));
+        }
+        return MapUtil.getMapFromEntity(response(EErrorCode.c500, this.buildMessage(request, error)));
     }
 
     /**

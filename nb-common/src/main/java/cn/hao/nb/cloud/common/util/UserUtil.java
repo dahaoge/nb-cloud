@@ -113,6 +113,8 @@ public class UserUtil {
      * @return
      */
     public static ESourceClient getAndValidRequestClient(String sourceAk, String sourceSign) {
+        if (CheckUtil.objIsEmpty(sourceAk, sourceSign))
+            throw NBException.create(EErrorCode.missingAuthArgs);
         Map<String, String> sourceClientMap = SpringUtil.getBean(SecurityProps.class).getSourceClients().get(sourceAk);
         String client = sourceClientMap.get(SecurityConstants.SOURCE_VERIFICATION_ENTITY_NAME_KEY);
         String sk = sourceClientMap.get(SecurityConstants.SOURCE_VERIFICATION_ENTITY_SK_KEY);

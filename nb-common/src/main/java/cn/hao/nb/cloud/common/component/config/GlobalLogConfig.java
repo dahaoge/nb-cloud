@@ -30,7 +30,7 @@ public class GlobalLogConfig {
     // 非记录日志
     private final String[] IPACKAGE = new String[]{"request", "session", "response", "file", "byte"};
 
-    @Pointcut("execution(public * cn.hao..controller.*.*(..))")
+    @Pointcut("execution(public * cn.hao.nb.cloud..controller.*.*(..))")
     public void logPointCut() {
     }
 

@@ -13,6 +13,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @Slf4j
 @SpringBootApplication
 @EnableDiscoveryClient
+//@ComponentScan(basePackages = {"cn.hao.nb.cloud.common.component.props"})
 public class GatewayApplication {
 
     public static void main(String[] args) {

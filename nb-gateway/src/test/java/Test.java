@@ -2,6 +2,7 @@ import cn.hao.nb.cloud.common.penum.ESourceClient;
 import cn.hao.nb.cloud.common.util.AesUtil;
 
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 /**
  * @Auther: hao
@@ -11,6 +12,15 @@ import java.util.Calendar;
 public class Test {
 
     public static void main(String[] args) {
+
+
+        String url = "";
+        String str = "";
+        System.out.println(Pattern.matches("/v2/\\*\\*", "/v2/api-docs"));
+
+    }
+
+    public static void aes() {
         String ak = "CHPGTP6OQ6AYVWMV";
         String sk = "AI7KMUMW8CJ3PEPT";
         long timeSalt = Calendar.getInstance().getTimeInMillis();
@@ -22,6 +32,5 @@ public class Test {
         System.out.println(sign);
         System.out.println(decodeSign);
         System.out.println(ESourceClient.valueOf("enterpriseApp"));
-
     }
 }

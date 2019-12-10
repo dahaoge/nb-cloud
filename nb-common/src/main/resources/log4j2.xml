@@ -22,7 +22,7 @@
         <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd HH:mm:ss.SSS</Property>
         <!-- 控制台默认输出格式,"%-5level":日志级别,"%l":输出完整的错误位置,是小写的L,因为有行号显示,所以影响日志输出的性能 -->
         <property name="console_log_pattern">
-            %clr{%d{${LOG_DATEFORMAT_PATTERN}}}{blue} %clr{${LOG_LEVEL_PATTERN}}%clr{${sys:PID}} {magenta}%clr{--}{faint} %clr{[%15.15t]}{faint} %clr{%l}{cyan} %clr{:}{faint}%m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}
+            %clr{%d{${LOG_DATEFORMAT_PATTERN}}}{blue} %clr{${LOG_LEVEL_PATTERN}} %clr{${sys:PID}} {magenta} %clr{--}{faint} %clr{[%15.15t]}{faint} %clr{%l}{cyan} %clr{:}{faint}%m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}
         </property>
         <!-- 日志文件默认输出格式,不带行号输出(行号显示会影响日志输出性能);%C:大写,类名;%M:方法名;%m:错误信息;%n:换行 -->
         <!-- <property name="log_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %C.%M - %m%n</property> -->
@@ -96,7 +96,7 @@
 
         <!-- ============================================控制台显示控制============================================ -->
         <!-- 控制台显示的日志最低级别 -->
-        <property name="console_print_level">info</property>
+        <property name="console_print_level">debug</property>
 
     </Properties>
 
@@ -189,29 +189,41 @@
         <!--            <appender-ref ref="ErrorFile"/>-->
         <!--        </logger>-->
 
-        <logger name="org.springframework.jdbc.datasource.DataSourceUtils" level="warn" additivity="false">
+        <!--        <logger name="org.springframework.jdbc.datasource.DataSourceUtils" level="warn" additivity="false">-->
+        <!--            <appender-ref ref="Console"/>-->
+        <!--            <appender-ref ref="RollingFile"/>-->
+        <!--            <appender-ref ref="ErrorFile"/>-->
+        <!--        </logger>-->
+
+        <!--        <logger name="org.apache.ibatis.logging.jdbc.BaseJdbcLogger" level="warn" additivity="false">-->
+        <!--            <appender-ref ref="Console"/>-->
+        <!--            <appender-ref ref="RollingFile"/>-->
+        <!--            <appender-ref ref="ErrorFile"/>-->
+        <!--        </logger>-->
+
+        <!--        <logger name="org.mybatis.spring.transaction.SpringManagedTransaction" level="warn" additivity="false">-->
+        <!--            <appender-ref ref="Console"/>-->
+        <!--            <appender-ref ref="RollingFile"/>-->
+        <!--            <appender-ref ref="ErrorFile"/>-->
+        <!--        </logger>-->
+
+        <!--        <logger name="org.apache.rocketmq" level="warn" additivity="false">-->
+        <!--            <appender-ref ref="Console"/>-->
+        <!--            <appender-ref ref="RollingFile"/>-->
+        <!--            <appender-ref ref="ErrorFile"/>-->
+        <!--        </logger>-->
+
+        <logger name="cn.hao.nb.cloud" level="debug" additivity="false">
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFile"/>
             <appender-ref ref="ErrorFile"/>
         </logger>
 
-        <logger name="org.apache.ibatis.logging.jdbc.BaseJdbcLogger" level="warn" additivity="false">
+        <!-- druid配置 -->
+        <logger name="druid.sql.Statement" level="debug" additivity="false">
             <appender-ref ref="Console"/>
-            <appender-ref ref="RollingFile"/>
-            <appender-ref ref="ErrorFile"/>
         </logger>
 
-        <logger name="org.mybatis.spring.transaction.SpringManagedTransaction" level="warn" additivity="false">
-            <appender-ref ref="Console"/>
-            <appender-ref ref="RollingFile"/>
-            <appender-ref ref="ErrorFile"/>
-        </logger>
-
-        <logger name="org.apache.rocketmq" level="warn" additivity="false">
-            <appender-ref ref="Console"/>
-            <appender-ref ref="RollingFile"/>
-            <appender-ref ref="ErrorFile"/>
-        </logger>
         <!-- 设置打印sql语句配置结束 -->
 
         <!--建立一个默认的root的logger-->
