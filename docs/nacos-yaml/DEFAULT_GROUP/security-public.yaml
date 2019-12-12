@@ -1,0 +1,33 @@
+customize:
+  security:
+    ignoreUrls:
+      #control 配置
+      # swagger 配置
+      - /swagger-ui.html**
+      - /swagger-resources/**
+      - /swagger-ui.html
+      - /v2/api-docs
+      - /swagger/api-docs
+      - /webjars/**
+      - /druid/**
+      - /temp/**
+      # 权限验证配置
+      - /actuator/**
+      - /pauth/**
+      - /cm/**
+      - /error/**
+      # 爬虫
+      - /crawler/**
+      # 晓致
+      - /rest/**
+      # 公众号验证文件
+      - /static/**
+    sourceClients:
+      CHPGTP6OQ6AYVWMV:
+        ak: CHPGTP6OQ6AYVWMV
+        sk: AI7KMUMW8CJ3PEPT
+        name: clientApp
+      0N9O4XMGTP1XOV30:
+        ak: 0N9O4XMGTP1XOV30
+        sk: 28X335DCZ864VGG9
+        name: webManageClient

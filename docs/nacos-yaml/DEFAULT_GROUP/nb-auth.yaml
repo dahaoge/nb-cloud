@@ -1,0 +1,14 @@
+nb:
+  serviceId: 0
+server:
+  tomcat:
+    max-threads: 500 # Maximum amount of worker threads.
+    min-spare-threads: 32 # Minimum amount of worker threads
+    max-http-header-size: 4048576
+#spring config
+spring:
+  resources:
+    add-mappings: false
+    static-locations: /resources/static
+  mvc:
+    throw-exception-if-no-handler-found: true

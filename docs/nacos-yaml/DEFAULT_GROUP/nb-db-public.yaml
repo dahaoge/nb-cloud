@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    druid:
+      stat-view-servlet:
+        login-password: 123456
+        login-username: druid
+      filter:
+        commons-log:
+          statement-executable-sql-log-enable: true
+          statement-log-enabled: true
+          enabled: true
+          statement-sql-pretty-format: true
+          statement-execute-after-log-enabled: false
+          statement-execute-batch-after-log-enabled: false
+          statement-execute-query-after-log-enabled: false
+          statement-execute-update-after-log-enabled: false
+          statement-log-error-enabled: true
+          statement-create-after-log-enabled: false
+          statement-close-after-log-enabled: false
+          statement-parameter-clear-log-enable: false
+          statement-parameter-set-log-enabled: false
+          statement-prepare-after-log-enabled: false
+          statement-prepare-call-after-log-enabled: false
+        stat:
+          enabled: true
+          merge-sql: true
+          slow-sql-millis: 5000
+          log-slow-sql: true
+        wall:
+          enabled: true
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  #  typeAliasesPackage: com.fgzy.mc.core.entity
+  #枚举存在包
+  typeEnumsPackage: cn.hao.nb.cloud.common.penum
+  global-config:
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 1
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull
+    jdbc-type-for-null: 'null'
+    call-setters-on-nulls: true
