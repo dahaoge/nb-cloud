@@ -41,6 +41,34 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-security</artifactId>
                 </exclusion>
+                <!-- druid数据库连接池 -->
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>druid-spring-boot-starter</artifactId>
+                </exclusion>
+
+                <!-- mysql驱动 -->
+                <exclusion>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </exclusion>
+
+                <!-- jdbc依赖 -->
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-jdbc</artifactId>
+                </exclusion>
+
+                <!-- mybatis plus -->
+                <exclusion>
+                    <groupId>com.baomidou</groupId>
+                    <artifactId>mybatis-plus-boot-starter</artifactId>
+                </exclusion>
+                <!-- mybatis-plus -->
+                <!--                <exclusion>-->
+                <!--                    <groupId>com.baomidou</groupId>-->
+                <!--                    <artifactId>mybatis-plus</artifactId>-->
+                <!--                </exclusion>-->
             </exclusions>
         </dependency>
 

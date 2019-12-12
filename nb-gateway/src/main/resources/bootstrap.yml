@@ -11,8 +11,8 @@ spring:
         ext-config:
           - data-id: nb-db.yaml
             refresh: false
-          - data-id: nb-db-public.yaml
-            refresh: false
+          #          - data-id: nb-db-public.yaml
+          #            refresh: false
           - data-id: nb-redis.yaml
             refresh: false
         shared-dataids: security-public.yaml
