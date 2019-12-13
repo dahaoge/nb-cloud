@@ -1,6 +1,9 @@
 package cn.hao.nb.cloud.common.penum;
 
 import cn.hao.nb.cloud.common.entity.PEnum;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 /**
  * @Auther: hao
@@ -8,11 +11,14 @@ import cn.hao.nb.cloud.common.entity.PEnum;
  * @Description:
  */
 public enum ELoginChannelScop implements PEnum<String> {
-    CClient("C端客户端"), manageClient("管理端");
+    CClient(Lists.newArrayList(ESourceClient.clientApp), "C端客户端"),
+    manageClient(Lists.newArrayList(ESourceClient.webManageClient), "管理端");
 
     private String desc;
+    private List<ESourceClient> clients;
 
-    ELoginChannelScop(String desc) {
+    ELoginChannelScop(List<ESourceClient> clients, String desc) {
+        this.clients = clients;
         this.desc = desc;
     }
 
@@ -29,5 +35,9 @@ public enum ELoginChannelScop implements PEnum<String> {
     @Override
     public String toChString() {
         return desc;
+    }
+
+    public List<ESourceClient> getClients() {
+        return clients;
     }
 }

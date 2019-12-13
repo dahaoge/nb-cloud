@@ -7,6 +7,7 @@ import cn.hao.nb.cloud.common.constant.SecurityConstants;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
+import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
 import cn.hao.nb.cloud.common.penum.ESourceClient;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -106,8 +107,26 @@ public class UserUtil {
         return UserUtil.getAndValidRequestClient(sourceAk, sourceSign);
     }
 
+    public static ELoginChannelScop getLoginChannelScop(HttpServletRequest httpServletRequest) {
+        ESourceClient sourceClient = UserUtil.getAndValidRequestClient(httpServletRequest);
+        for (ELoginChannelScop loginChannelScop : ELoginChannelScop.class.getEnumConstants()) {
+            if (loginChannelScop.getClients().contains(sourceClient))
+                return loginChannelScop;
+        }
+        throw NBException.create(EErrorCode.authIdentityErr, "未获取到登录渠道");
+    }
+
+    public static ELoginChannelScop getLoginChannelScop() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            throw NBException.create(EErrorCode.c500);
+        }
+        return UserUtil.getLoginChannelScop(requestAttributes.getRequest());
+    }
+
     /**
      * 获取并验证请求来源
+     *
      * @param sourceAk
      * @param sourceSign
      * @return
@@ -124,6 +143,7 @@ public class UserUtil {
 
     /**
      * 获取并验证请求来源
+     *
      * @param sk
      * @param sign
      */

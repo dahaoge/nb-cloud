@@ -41,6 +41,12 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      */
     boolean modifyData(ULoginChannel data);
 
+    boolean modifyLoginId(ULoginChannel data);
+
+    boolean modifyLoginId(String tId, String loginId, String userId);
+
+    boolean modifyLoginId(String tId, String loginId);
+
     /**
      * 删除数据
      *
@@ -77,6 +83,8 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      * @return
      */
     List<ULoginChannel> listData(ULoginChannel.SearchParams searchParams);
+
+    List<ULoginChannel> listByUserId(String userId);
 
     /**
      * 分页查询Map数据
@@ -132,6 +140,8 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      * @param data
      */
     void validData(ULoginChannel data);
+
+    void validLoginId(ULoginChannel data);
 
 }
 /*

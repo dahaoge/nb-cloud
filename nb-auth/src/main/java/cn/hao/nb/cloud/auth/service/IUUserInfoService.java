@@ -22,7 +22,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
 
     UUserInfo clientUserRegistByPhone(String phone, String userName);
 
-    UUserInfo clientUserRegistByPhone(String phone, String userName, String deptId);
+    UUserInfo clientUserRegistByPhone(String phone, String userName, String deptIds);
 
     UUserInfo webManagerRegistByPhone(String phone, String userName, String deptIds, String roleCodes);
 
@@ -41,12 +41,23 @@ public interface IUUserInfoService extends IService<UUserInfo> {
     UUserInfo addData(UUserInfo data);
 
     /**
-     * 修改数据
+     * 增量更新数据
+     * @param data
+     * @return
+     */
+    boolean incrementModifyData(UUserInfo data);
+
+    /**
+     * 全量更新数据
      *
      * @param data
      * @return
      */
-    boolean modifyData(UUserInfo data);
+    boolean totalAmountModifyData(UUserInfo data);
+
+    boolean modifyNormalInfo(UUserInfo data);
+
+    boolean modifyUserPhone(String userId, String phone);
 
     /**
      * 删除数据
@@ -63,6 +74,10 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @return
      */
     UUserInfo getDetail(String id);
+
+    UUserInfo getOtherExistUserByPhone(String userId, String phone);
+
+    UUserInfo getExistUserByPhone(String phone);
 
     /**
      * 分页查询数据
@@ -135,6 +150,8 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param data
      */
     void validData(UUserInfo data);
+
+    void validUserPhone(UUserInfo data);
 
 }
 /*

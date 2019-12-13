@@ -5,13 +5,11 @@ import cn.hao.nb.cloud.auth.mapper.AuthMapper;
 import cn.hao.nb.cloud.auth.mapper.UUserInfoMapper;
 import cn.hao.nb.cloud.auth.service.*;
 import cn.hao.nb.cloud.common.component.config.security.JwtTokenUtil;
-import cn.hao.nb.cloud.common.entity.NBException;
-import cn.hao.nb.cloud.common.entity.Pg;
-import cn.hao.nb.cloud.common.entity.Qd;
-import cn.hao.nb.cloud.common.entity.TokenUser;
+import cn.hao.nb.cloud.common.entity.*;
 import cn.hao.nb.cloud.common.penum.*;
 import cn.hao.nb.cloud.common.util.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,28 +50,38 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UUserInfo clientUserRegistByPhone(String phone, String userName) {
-        return this.clientUserRegistByPhone(phone, userName);
+        return this.clientUserRegistByPhone(phone, userName, null);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UUserInfo clientUserRegistByPhone(String phone, String userName, String deptId) {
-        if (CheckUtil.objIsEmpty(phone, userName, deptId))
+    public UUserInfo clientUserRegistByPhone(String phone, String userName, String deptIds) {
+        if (CheckUtil.objIsEmpty(phone, userName, deptIds))
             throw NBException.create(EErrorCode.missingArg);
+        // 添加用户信息
         UUserInfo userInfo = this.phoneRegist(phone, userName);
-        if (CheckUtil.objIsNotEmpty(deptId))
-            userDeptService.addData(userInfo.getUserId(), deptId);
+        // 添加C端登录渠道
+        loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, ELoginChannelScop.CClient);
+        if (CheckUtil.objIsNotEmpty(deptIds))
+            userDeptService.addUser2Depts(userInfo.getUserId(), deptIds);
         return userInfo;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UUserInfo webManagerRegistByPhone(String phone, String userName, String deptIds, String roleCodes) {
-        if (CheckUtil.objIsEmpty(phone, userName, deptIds, roleCodes))
+        if (CheckUtil.objIsEmpty(phone, userName))
             throw NBException.create(EErrorCode.missingArg);
+        // 添加用户信息
         UUserInfo userInfo = this.phoneRegist(phone, userName);
-        userDeptService.addUser2Depts(userInfo.getUserId(), deptIds);
-        authService.addUserRoles(userInfo.getUserId(), roleCodes);
+        //添加管理端登录渠道
+        loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, ELoginChannelScop.manageClient);
+        // 添加端登录渠道
+        loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, ELoginChannelScop.CClient);
+        if (CheckUtil.objIsNotEmpty(deptIds))
+            userDeptService.addUser2Depts(userInfo.getUserId(), deptIds);
+        if (CheckUtil.objIsNotEmpty(roleCodes))
+            authService.addUserRoles(userInfo.getUserId(), roleCodes);
         return userInfo;
     }
 
@@ -145,7 +153,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         userInfo.setUserName(userName);
         userInfo.setLoginPwd(UserUtil.encodePwd(phone.substring(3), userInfo.getSalt()));
         this.addData(userInfo);
-        loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, ELoginChannelScop.CClient);
+
         return userInfo;
     }
 
@@ -178,13 +186,12 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     /**
-     * 修改数据
-     *
+     * 增量更新数据
      * @param data
      * @return
      */
     @Override
-    public boolean modifyData(UUserInfo data) {
+    public boolean incrementModifyData(UUserInfo data) {
         this.validData(data);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
@@ -192,6 +199,56 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         data.setUpdateTime(null);
         data.setCreateTime(null);
         return this.updateById(data);
+    }
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public boolean totalAmountModifyData(UUserInfo data) {
+        this.validData(data);
+        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        data.setVersion(null);
+        data.setDeleted(null);
+        data.setUpdateTime(null);
+        data.setCreateTime(null);
+        return this.update(data, Wrappers.<UUserInfo>lambdaUpdate()
+                .set(UUserInfo::getUpdateBy, data.getUpdateBy())
+                .set(UUserInfo::getUserName, data.getUserName())
+                .set(UUserInfo::getIcnum, data.getIcnum())
+                .set(UUserInfo::getIcon, data.getIcon())
+                .eq(UUserInfo::getUserId, data.getUserId())
+        );
+    }
+
+    @Override
+    public boolean modifyNormalInfo(UUserInfo data) {
+        return this.totalAmountModifyData(data);
+    }
+
+    @Override
+    public boolean modifyUserPhone(String userId, String phone) {
+        if (CheckUtil.objIsEmpty(userId, phone))
+            throw NBException.create(EErrorCode.missingArg);
+        TokenUser tokenUser = UserUtil.getTokenUser(true);
+        ELoginChannelScop loginChannelScop = UserUtil.getLoginChannelScop();
+        if (ELoginChannelScop.CClient == loginChannelScop && !userId.equals(tokenUser.getUserId())) {
+            throw NBException.create(EErrorCode.authErr, "只能修改自己的手机号");
+        }
+        UUserInfo data = new UUserInfo();
+        data.setUserId(userId);
+        data.setPhone(phone);
+        this.validUserPhone(data);
+        this.incrementModifyData(data);
+        List<ULoginChannel> loginChannelList = loginChannelService.listByUserId(userId);
+        loginChannelList.forEach(item -> {
+            if (tokenUser.getPhone().equals(item.getLoginId()))
+                loginChannelService.modifyLoginId(item.getTId(), phone, userId);
+        });
+        return this.incrementModifyData(data);
     }
 
     /**
@@ -220,6 +277,20 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         if (CheckUtil.strIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
+    }
+
+    @Override
+    public UUserInfo getOtherExistUserByPhone(String userId, String phone) {
+        if (CheckUtil.objIsEmpty(phone, userId))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.getOne(Qw.create().eq(UUserInfo.PHONE, phone).ne(UUserInfo.USER_ID, userId));
+    }
+
+    @Override
+    public UUserInfo getExistUserByPhone(String phone) {
+        if (CheckUtil.objIsEmpty(phone))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.getOne(Qw.create().eq(UUserInfo.PHONE, phone));
     }
 
     /**
@@ -321,7 +392,25 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      */
     @Override
     public void validData(UUserInfo data) {
-        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getPhone(), data.getUserName(), data.getIsLocked(), data.getSalt()))
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getUserId())) {
+            if (CheckUtil.objIsEmpty(data.getPhone(), data.getUserName(), data.getIsLocked(), data.getIsLocked()))
+                throw NBException.create(EErrorCode.missingArg);
+            this.validUserPhone(data);
+        }
+    }
+
+    @Override
+    public void validUserPhone(UUserInfo data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getPhone()))
+            throw NBException.create(EErrorCode.missingArg);
+        UUserInfo existUser = null;
+        if (CheckUtil.objIsNotEmpty(data.getUserId()))
+            existUser = this.getOtherExistUserByPhone(data.getUserId(), data.getPhone());
+        else
+            existUser = this.getExistUserByPhone(data.getPhone());
+        if (CheckUtil.objIsNotEmpty(existUser))
+            throw NBException.create(EErrorCode.beUsed, "手机号已被使用");
     }
 }

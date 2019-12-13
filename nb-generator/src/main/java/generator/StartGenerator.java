@@ -113,19 +113,19 @@ public class StartGenerator {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         strategy.setSuperControllerClass(null);
-//        strategy.setInclude(scanner("表名"));
-        strategy.setInclude(
+        strategy.setInclude(scanner("表名"));
+//        strategy.setInclude(
 //                "u_user_info",
 //                "u_login_channel",
-                "sys_menu",
-                "sys_role",
-                "sys_permission",
-                "sys_role_menu",
-                "sys_role_permission",
-                "u_user_role"
+//                "sys_menu",
+//                "sys_role",
+//                "sys_permission",
+//                "sys_role_menu",
+//                "sys_role_permission",
+//                "u_user_role"
 //                "u_user_dept",
 //                "sys_dept"
-        );
+//        );
         strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");

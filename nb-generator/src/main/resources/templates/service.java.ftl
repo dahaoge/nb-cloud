@@ -32,11 +32,19 @@ import java.util.Map;
     ${entity} addData(${entity} data);
 
     /**
-    * 修改数据
+    * 增量更新数据
     * @param data
     * @return
     */
-    boolean modifyData(${entity} data);
+    boolean incrementModifyData(${entity} data);
+
+    /**
+    * 全量更新数据
+    *
+    * @param data
+    * @return
+    */
+    boolean totalAmountModifyData(${entity} data);
 
     /**
     * 删除数据

@@ -83,13 +83,50 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
      */
     @Override
     public boolean modifyData(ULoginChannel data) {
-        this.validData(data);
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getTId()))
+            throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsNotEmpty(data.getLoginId()))
+            this.validLoginId(data);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
         return this.updateById(data);
+    }
+
+    @Override
+    public boolean modifyLoginId(ULoginChannel data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getTId(), data.getLoginId(), data.getUserId()))
+            throw NBException.create(EErrorCode.missingArg);
+        this.validLoginId(data);
+
+        ULoginChannel temp = new ULoginChannel();
+        temp.setTId(data.getTId());
+        temp.setLoginId(data.getLoginId());
+        temp.setUserId(data.getUserId());
+        return this.modifyData(temp);
+    }
+
+    @Override
+    public boolean modifyLoginId(String tId, String loginId, String userId) {
+        if (CheckUtil.objIsEmpty(tId, loginId))
+            throw NBException.create(EErrorCode.missingArg);
+        ULoginChannel loginChannel = new ULoginChannel();
+        loginChannel.setTId(tId);
+        loginChannel.setLoginId(loginId);
+        loginChannel.setUserId(userId);
+        return this.modifyLoginId(loginChannel);
+    }
+
+    @Override
+    public boolean modifyLoginId(String tId, String loginId) {
+        if (CheckUtil.objIsEmpty(tId, loginId))
+            throw NBException.create(EErrorCode.missingArg);
+        ULoginChannel dbData = this.getById(tId);
+        if (CheckUtil.objIsEmpty(dbData))
+            throw NBException.create(EErrorCode.noData);
+        return this.modifyLoginId(tId, loginId, dbData.getUserId());
     }
 
     /**
@@ -156,6 +193,13 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     @Override
     public List<ULoginChannel> listData(ULoginChannel.SearchParams searchParams) {
         return this.prepareReturnModel(this.list(searchParams.preWrapper(null)));
+    }
+
+    @Override
+    public List<ULoginChannel> listByUserId(String userId) {
+        if (CheckUtil.objIsEmpty(userId))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.list(Qw.create().eq(ULoginChannel.USER_ID, userId));
     }
 
     /**
@@ -236,5 +280,17 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     public void validData(ULoginChannel data) {
         if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getLoginId(), data.getUserId(), data.getLoginType(), data.getLoginChannelScope()))
             throw NBException.create(EErrorCode.missingArg);
+        this.validLoginId(data);
+    }
+
+    @Override
+    public void validLoginId(ULoginChannel data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getLoginId()))
+            throw NBException.create(EErrorCode.missingArg);
+        Qw qw = Qw.create().eq(ULoginChannel.LOGIN_ID, data.getLoginId());
+        if (CheckUtil.objIsNotEmpty(data.getUserId()))
+            qw.ne(ULoginChannel.USER_ID, data.getUserId());
+        if (this.count(qw) > 0)
+            throw NBException.create(EErrorCode.beUsed, "该登录id已被使用");
     }
 }

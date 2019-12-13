@@ -14,6 +14,8 @@ import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+
 
 import java.util.List;
 import java.util.Map;
@@ -49,7 +51,11 @@ import java.util.Map;
     this.validData(data);
     <#list table.fields as field>
         <#if field.keyFlag>
-            data.set${field.capitalName}(idUtil.nextId());
+            <#if field.name=='t_id'>
+                data.setTId(idUtil.nextId());
+            <#else>
+                data.set${field.capitalName}(idUtil.nextId());
+            </#if>
         </#if>
     </#list>
     data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
@@ -63,19 +69,72 @@ import java.util.Map;
     }
 
     /**
-    * 修改数据
+    * 增量更新数据
     * @param data
     * @return
     */
     @Override
-    public boolean modifyData(${entity} data) {
-    this.validData(data);
+    public boolean incrementModifyData(${entity} data) {
+    if (CheckUtil.objIsEmpty(data)||CheckUtil.objIsEmpty(
+    <#list table.fields as field>
+        <#if field.keyFlag>
+            <#if field.name=='t_id'>
+                data.getTId();
+            <#else>
+                data.get${field.capitalName}();
+            </#if>
+        </#if>
+    </#list>
+    ))
+    throw NBException.create(EErrorCode.missingArg);
     data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
     data.setVersion(null);
     data.setDeleted(null);
     data.setUpdateTime(null);
     data.setCreateTime(null);
     return this.updateById(data);
+    }
+
+    /**
+    * 全量更新数据
+    * @param data
+    * @return
+    */
+    @Override
+    public boolean totalAmountModifyData(${entity} data) {
+    if (CheckUtil.objIsEmpty(data)||CheckUtil.objIsEmpty(
+    <#list table.fields as field>
+        <#if field.keyFlag>
+            <#if field.name=='t_id'>
+                data.getTId();
+            <#else>
+                data.get${field.capitalName}();
+            </#if>
+        </#if>
+    </#list>
+    ))
+    throw NBException.create(EErrorCode.missingArg);
+    data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+    data.setVersion(null);
+    data.setDeleted(null);
+    data.setUpdateTime(null);
+    data.setCreateTime(null);
+    return this.update(data, Wrappers.<${entity}>lambdaUpdate()
+    <#list table.fields as field>
+        <#if !field.keyFlag && "version" != field.name && "create_by" != field.name && "create_time" != field.name && "update_time" != field.name && "deleted" != field.name>
+            .set(${entity}::get${field.capitalName}, data.get${field.capitalName}())
+        </#if>
+    </#list>
+    <#list table.fields as field>
+        <#if field.keyFlag>
+            <#if field.name=='t_id'>
+                .eq(${entity}::getTId, data.getTId())
+            <#else>
+                .eq(${entity}::get${field.capitalName}, data.get${field.capitalName}())
+            </#if>
+        </#if>
+    </#list>
+    );
     }
 
     /**

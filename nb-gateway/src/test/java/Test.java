@@ -1,8 +1,9 @@
 import cn.hao.nb.cloud.common.penum.ESourceClient;
 import cn.hao.nb.cloud.common.util.AesUtil;
+import com.google.common.collect.Lists;
 
 import java.util.Calendar;
-import java.util.regex.Pattern;
+import java.util.List;
 
 /**
  * @Auther: hao
@@ -12,11 +13,8 @@ import java.util.regex.Pattern;
 public class Test {
 
     public static void main(String[] args) {
-
-
-        String url = "";
-        String str = "";
-        System.out.println(Pattern.matches("/v2/\\*\\*", "/v2/api-docs"));
+        List list = Lists.newArrayList(ESourceClient.webManageClient, ESourceClient.clientApp);
+        System.out.println(list.contains(ESourceClient.webManageClient));
 
     }
 
