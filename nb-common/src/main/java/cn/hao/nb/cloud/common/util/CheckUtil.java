@@ -1,5 +1,7 @@
 package cn.hao.nb.cloud.common.util;
 
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.Collection;
@@ -261,6 +263,16 @@ public class CheckUtil {
         if (phone > 13000000000L && phone < 19999999999L)
             return true;
         return false;
+    }
+
+    public static boolean isPhone(String phone, boolean isThrowEXP) {
+        boolean isP = CheckUtil.isPhone(phone);
+        if (isP)
+            return isP;
+        if (isThrowEXP)
+            throw NBException.create(EErrorCode.argCheckErr, "请输入正确的手机号码");
+        else
+            return isP;
     }
 
     public static boolean isDateBetween(Date date, Date start, Date end) {

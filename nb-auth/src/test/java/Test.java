@@ -2,6 +2,7 @@ import cn.hao.nb.cloud.auth.AuthApplication;
 import cn.hao.nb.cloud.auth.entity.UUserInfo;
 import cn.hao.nb.cloud.auth.service.IUUserInfoService;
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.util.AliSmsUtil;
 import com.google.common.collect.Lists;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class Test {
 
     @Autowired
     IUUserInfoService userInfoService;
+    @Autowired
+    AliSmsUtil smsUtil;
 
     public static void main(String[] args) {
         List list = Lists.newArrayList("a", "b");
@@ -30,6 +33,7 @@ public class Test {
 
     @org.junit.Test
     public void test() {
+        smsUtil.sendLoginCheckCode("17686688903");
         System.out.println(userInfoService.count(Qw.create().eq(UUserInfo.USER_ID, "999")));
     }
 }

@@ -46,6 +46,8 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     JwtTokenUtil jwtTokenUtil;
     @Autowired
     ISysDeptService deptService;
+    @Autowired
+    AliSmsUtil smsUtil;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -250,6 +252,15 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         });
         return this.incrementModifyData(data);
     }
+
+    @Override
+    public boolean modifyUserPhone(String userId, String phone, String smsCheckCode) {
+        if (CheckUtil.objIsEmpty(userId, phone, smsCheckCode))
+            throw NBException.create(EErrorCode.missingArg);
+        smsUtil.checkSms(phone, smsCheckCode);
+        return this.modifyUserPhone(userId, phone);
+    }
+
 
     /**
      * 删除数据

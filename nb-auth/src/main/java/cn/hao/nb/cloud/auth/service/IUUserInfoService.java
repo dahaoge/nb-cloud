@@ -59,6 +59,8 @@ public interface IUUserInfoService extends IService<UUserInfo> {
 
     boolean modifyUserPhone(String userId, String phone);
 
+    boolean modifyUserPhone(String userId, String phone, String smsCheckCode);
+
     /**
      * 删除数据
      *
