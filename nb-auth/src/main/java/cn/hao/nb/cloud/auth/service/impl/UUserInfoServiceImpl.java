@@ -89,31 +89,49 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
-    public UUserInfo loginByPhoneAndPwd(String phone, String pwd) {
-        ESourceClient sourceClient = UserUtil.getAndValidRequestClient();
-        ELoginChannelScop loginChannelScop = ESourceClient.clientApp == sourceClient ? ELoginChannelScop.CClient :
-                ESourceClient.webManageClient == sourceClient ? ELoginChannelScop.manageClient : null;
+    public UUserInfo loginByPwd(String loginId, String pwd) {
+        ELoginChannelScop loginChannelScop = UserUtil.getLoginChannelScop();
         if (CheckUtil.objIsEmpty(loginChannelScop))
-            throw NBException.create(EErrorCode.authDenied, "未开通登录的来源");
-        ULoginChannel loginChannel = loginChannelService.getByTypeAndChannelScope(phone, ELoginType.pwd, loginChannelScop);
+            throw NBException.create(EErrorCode.authDenied, "未开通的登录渠道");
+        ULoginChannel loginChannel = loginChannelService.getByTypeAndChannelScope(loginId, ELoginType.pwd, loginChannelScop);
         if (CheckUtil.objIsEmpty(loginChannel))
-            throw NBException.create(EErrorCode.authIdentityErr, "错误的登录信息");
+            throw NBException.create(EErrorCode.authIdentityErr, "账号或密码错误");
         UUserInfo result = this.getById(loginChannel.getUserId());
         if (CheckUtil.objIsEmpty(result))
-            throw NBException.create(EErrorCode.authIdentityErr, "错误的用户信息");
+            throw NBException.create(EErrorCode.authIdentityErr, "数据错误,没有有效的用户信息");
 
-        //锁定状态
-        if (EYn.y.getValue().equals(result.getIsLocked())) {
-            if (CheckUtil.objIsNotEmpty(result.getUnlockTime()) && Calendar.getInstance().getTimeInMillis() < result.getUnlockTime().getTime())
-                this.unLockUser(result.getUserId());
-            else
-                throw NBException.create(EErrorCode.authDenied, "账户锁定");
-        }
+        this.loginLockCheck(result);
 
         if (!this.isMatchDBPwd(result, pwd))
             throw NBException.create(EErrorCode.authIdentityErr, "用户名或密码错误 ");
 
         return result;
+    }
+
+    @Override
+    public UUserInfo loginByCheckSms(String phone, String smsCheckCode) {
+        if (CheckUtil.objIsEmpty(phone, smsCheckCode))
+            throw NBException.create(EErrorCode.missingArg);
+        if (!smsUtil.checkSms(phone, smsCheckCode))
+            throw NBException.create(EErrorCode.argCheckErr, "短信验证码错误");
+        ULoginChannel loginChannel = loginChannelService.getByTypeAndChannelScope(phone, ELoginType.checkSms, UserUtil.getLoginChannelScop());
+        if (CheckUtil.objIsEmpty(loginChannel))
+            throw NBException.create(EErrorCode.authIdentityErr, "请先注册");
+
+        UUserInfo result = this.getById(loginChannel.getUserId());
+        this.loginLockCheck(result);
+
+        return result;
+    }
+
+    private void loginLockCheck(UUserInfo uUserInfo) {
+        //锁定状态
+        if (EYn.y.getValue().equals(uUserInfo.getIsLocked())) {
+            if (CheckUtil.objIsNotEmpty(uUserInfo.getUnlockTime()) && Calendar.getInstance().getTimeInMillis() < uUserInfo.getUnlockTime().getTime())
+                this.unLockUser(uUserInfo.getUserId());
+            else
+                throw NBException.create(EErrorCode.authDenied, "账户锁定");
+        }
     }
 
     @Override
@@ -202,6 +220,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
 
     /**
      * 增量更新数据
+     *
      * @param data
      * @return
      */
@@ -226,6 +245,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
 
     /**
      * 全量更新数据
+     *
      * @param data
      * @return
      */
@@ -250,7 +270,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
-    public boolean modifyNormalInfo(UUserInfo data) {
+    public boolean modifyOrdinaryInfo(UUserInfo data) {
         return this.totalAmountModifyData(data);
     }
 
@@ -282,7 +302,8 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     public boolean modifyUserPhone(String userId, String phone, String smsCheckCode) {
         if (CheckUtil.objIsEmpty(userId, phone, smsCheckCode))
             throw NBException.create(EErrorCode.missingArg);
-        smsUtil.checkSms(phone, smsCheckCode);
+        if (!smsUtil.checkSms(phone, smsCheckCode))
+            throw NBException.create(EErrorCode.argCheckErr, "短信验证码错误");
         return this.modifyUserPhone(userId, phone);
     }
 

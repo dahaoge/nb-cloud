@@ -99,7 +99,7 @@ public class TempController {
 
     @GetMapping("/LoginByPhonePwd")
     public Rv LoginByPhonePwd(String phone, String pwd) {
-        UUserInfo userInfo = userInfoService.loginByPhoneAndPwd(phone, UserUtil.aesPwd(pwd));
+        UUserInfo userInfo = userInfoService.loginByPwd(phone, UserUtil.aesPwd(pwd));
         return Rv.getInstance(userInfoService.getLoginInfo(userInfo.getUserId()));
     }
 

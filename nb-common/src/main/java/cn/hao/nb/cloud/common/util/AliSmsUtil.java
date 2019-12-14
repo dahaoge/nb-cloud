@@ -206,6 +206,10 @@ public class AliSmsUtil {
     }
 
     public Boolean sendCheckCode(String phone, ESmsCheckCodeChannel checkCodeChannel) {
+        if (CheckUtil.objIsEmpty(phone))
+            throw NBException.create(EErrorCode.missingArg, "请输入正确的手机号码");
+        if (CheckUtil.objIsEmpty(checkCodeChannel))
+            throw NBException.create(EErrorCode.missingArg);
         CheckUtil.isPhone(phone, true);
 
         if (redisUtil.hasKey(this.REDIS_SMS_SEND_LIMIT + checkCodeChannel.getValue() + phone)) {
@@ -223,10 +227,14 @@ public class AliSmsUtil {
     }
 
     public Boolean sendLoginCheckCode(String phone) {
+        if (CheckUtil.objIsEmpty(phone))
+            throw NBException.create(EErrorCode.missingArg, "请输入正确的手机号码");
         return sendCheckCode(phone, ESmsCheckCodeChannel.login);
     }
 
     public Boolean sendRegisteCheckCode(String phone) {
+        if (CheckUtil.objIsEmpty(phone))
+            throw NBException.create(EErrorCode.missingArg, "请输入正确的手机号码");
         return sendCheckCode(phone, ESmsCheckCodeChannel.registe);
     }
 

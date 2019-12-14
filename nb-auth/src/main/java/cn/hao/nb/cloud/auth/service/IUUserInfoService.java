@@ -54,7 +54,9 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param pwd
      * @return
      */
-    UUserInfo loginByPhoneAndPwd(String phone, String pwd);
+    UUserInfo loginByPwd(String loginId, String pwd);
+
+    UUserInfo loginByCheckSms(String phone, String smsCheckCode);
 
     /**
      * 获取登录信息(会刷新token)
@@ -115,7 +117,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param data
      * @return
      */
-    boolean modifyNormalInfo(UUserInfo data);
+    boolean modifyOrdinaryInfo(UUserInfo data);
 
     /**
      * 修改用户手机号

@@ -31,6 +31,11 @@ public class UUserInfo implements Serializable {
     @Data
     public class SearchParams {
 
+        @ApiModelProperty(value = "用户名|手机号|身份证号")
+        private String q;
+        @ApiModelProperty(value = "是否被锁定")
+        private Integer isLocked;
+
         @ApiModelProperty(value = "排序字段")
         private String sort = "update_time";
 
@@ -40,6 +45,18 @@ public class UUserInfo implements Serializable {
         public Qw<UUserInfo> preWrapper(Qw<UUserInfo> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
+            if (CheckUtil.objIsNotEmpty(this.getQ()))
+                qw.and(wrapper -> {
+                    wrapper.or().like(UUserInfo.USER_NAME, this.getQ());
+                    wrapper.or().like(UUserInfo.PHONE, this.getQ());
+                    wrapper.or().like(UUserInfo.ICNUM, this.getQ());
+                });
+            if (CheckUtil.objIsNotEmpty(this.getIsLocked()))
+                qw.eq(UUserInfo.IS_LOCKED, this.getIsLocked());
+            if (ESqlOrder.DESC.equals(this.getOrder()))
+                qw.orderByDesc(this.getSort());
+            else
+                qw.orderByAsc(this.getSort());
             return qw;
         }
     }
