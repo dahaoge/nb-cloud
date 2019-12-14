@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class PAuthController {
 
     @Autowired
-    IUUserInfoService userInfoService;
+    IUUserInfoService iUUserInfoService;
     @Autowired
     AliSmsUtil smsUtil;
     @Autowired
@@ -37,34 +37,34 @@ public class PAuthController {
     @ApiOperation(value = "手机号或账号+密码登录(默认密码为手机号后8位)")
     @GetMapping("/login/byPwd")
     public Rv loginByPwd(@RequestParam String loginId, @RequestParam String pwd) {
-        UUserInfo userInfo = userInfoService.loginByPwd(loginId, UserUtil.aesPwd(pwd));
-        return Rv.getInstance(userInfoService.getLoginInfo(userInfo.getUserId()));
+        UUserInfo userInfo = iUUserInfoService.loginByPwd(loginId, UserUtil.aesPwd(pwd));
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(userInfo.getUserId()));
     }
 
     @ApiOperation(value = "短信验证码登录(默认密码为手机号后8位)")
     @GetMapping("/login/bySmsCheckCode")
     public Rv loginBySmsCheckCode(@RequestParam String phone, @RequestParam String smsCheckCode) {
-        UUserInfo userInfo = userInfoService.loginByCheckSms(phone, smsCheckCode);
-        return Rv.getInstance(userInfoService.getLoginInfo(userInfo.getUserId()));
+        UUserInfo userInfo = iUUserInfoService.loginByCheckSms(phone, smsCheckCode);
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(userInfo.getUserId()));
     }
 
     @ApiOperation(value = "姓名+手机号+组织机构编码注册(添加)C端用户")
     @PostMapping("/regist/clientUser/byPhoneWithDept")
-    public Rv clientUserRegistByPhone(@RequestParam(required = true) String phone, @RequestParam(required = true) String userName, String deptIds) {
-        return Rv.getInstance(userInfoService.getLoginInfo(userInfoService.clientUserRegistByPhone(phone, userName, deptIds).getUserId()));
+    public Rv clientUserRegistByPhone(@RequestParam String phone, @RequestParam String userName, String deptIds) {
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.clientUserRegistByPhone(phone, userName, deptIds).getUserId()));
     }
 
     @ApiOperation(value = "姓名+手机号+组织机构+角色编码注册(添加)管理员用户")
     @PostMapping("/regist/webManager/byPudr")
-    public Rv webManagerRegistByPhone(@RequestParam(required = true) String phone, @RequestParam(required = true) String userName,
+    public Rv webManagerRegistByPhone(@RequestParam String phone, @RequestParam String userName,
                                       String deptIds, String roleCodes) {
-        return Rv.getInstance(userInfoService.getLoginInfo(userInfoService.webManagerRegistByPhone(phone, userName, deptIds, roleCodes).getUserId()));
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.webManagerRegistByPhone(phone, userName, deptIds, roleCodes).getUserId()));
     }
 
     @ApiOperation(value = "获取登录信息(会刷新token)")
     @GetMapping("/refreshLoginInfo")
     public Rv refreshLoginInfo() {
-        return Rv.getInstance(userInfoService.getLoginInfo(UserUtil.getTokenUser(true).getUserId()));
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(UserUtil.getTokenUser(true).getUserId()));
     }
 
     /**
