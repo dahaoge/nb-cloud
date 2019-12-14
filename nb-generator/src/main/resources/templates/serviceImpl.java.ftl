@@ -79,9 +79,9 @@ import java.util.Map;
     <#list table.fields as field>
         <#if field.keyFlag>
             <#if field.name=='t_id'>
-                data.getTId();
+                data.getTId()
             <#else>
-                data.get${field.capitalName}();
+                data.get${field.capitalName}()
             </#if>
         </#if>
     </#list>
@@ -106,9 +106,9 @@ import java.util.Map;
     <#list table.fields as field>
         <#if field.keyFlag>
             <#if field.name=='t_id'>
-                data.getTId();
+                data.getTId()
             <#else>
-                data.get${field.capitalName}();
+                data.get${field.capitalName}()
             </#if>
         </#if>
     </#list>

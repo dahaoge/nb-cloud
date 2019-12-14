@@ -12,6 +12,7 @@ import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,20 +78,48 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     /**
-     * 修改数据
+     * 增量更新数据
      *
      * @param data
      * @return
      */
     @Override
-    public boolean modifyData(SysDept data) {
-        this.validData(data);
+    public boolean incrementModifyData(SysDept data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getDeptId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
         return this.updateById(data);
+    }
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public boolean totalAmountModifyData(SysDept data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getDeptId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
+        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        data.setVersion(null);
+        data.setDeleted(null);
+        data.setUpdateTime(null);
+        data.setCreateTime(null);
+        return this.update(data, Wrappers.<SysDept>lambdaUpdate()
+                .set(SysDept::getUpdateBy, data.getUpdateBy())
+                .set(SysDept::getDeptName, data.getDeptName())
+                .set(SysDept::getPId, data.getPId())
+                .eq(SysDept::getDeptId, data.getDeptId())
+        );
     }
 
     /**

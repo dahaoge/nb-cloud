@@ -25,11 +25,19 @@ public interface ISysMenuService extends IService<SysMenu> {
     SysMenu addData(SysMenu data);
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
-    boolean modifyData(SysMenu data);
+    boolean incrementModifyData(SysMenu data);
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    boolean totalAmountModifyData(SysMenu data);
 
     /**
      * 删除数据

@@ -11,6 +11,7 @@ import cn.hao.nb.cloud.common.util.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,14 +105,12 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         //锁定状态
         if (EYn.y.getValue().equals(result.getIsLocked())) {
             if (CheckUtil.objIsNotEmpty(result.getUnlockTime()) && Calendar.getInstance().getTimeInMillis() < result.getUnlockTime().getTime())
-                this.changeUserLock(result.getUserId(), EYn.n);
+                this.unLockUser(result.getUserId());
             else
                 throw NBException.create(EErrorCode.authDenied, "账户锁定");
         }
 
-        // 验证密码
-        String md5Pwd = UserUtil.decodePwd(pwd, result.getSalt());
-        if (!md5Pwd.equals(result.getLoginPwd()))
+        if (!this.isMatchDBPwd(result, pwd))
             throw NBException.create(EErrorCode.authIdentityErr, "用户名或密码错误 ");
 
         return result;
@@ -147,16 +146,30 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         return this.updateById(data);
     }
 
+    @Override
+    public boolean lockUser(String userId) {
+        return this.changeUserLock(userId, EYn.y);
+    }
+
+    @Override
+    public boolean unLockUser(String userId) {
+        return this.changeUserLock(userId, EYn.n);
+    }
+
     private UUserInfo phoneRegist(String phone, String userName) {
         if (CheckUtil.objIsEmpty(phone, userName))
             throw NBException.create(EErrorCode.missingArg);
         UUserInfo userInfo = this.preUser();
         userInfo.setPhone(phone);
         userInfo.setUserName(userName);
-        userInfo.setLoginPwd(UserUtil.encodePwd(phone.substring(3), userInfo.getSalt()));
+        userInfo.setLoginPwd(this.getDefaultPwd(phone, userInfo.getSalt()));
         this.addData(userInfo);
 
         return userInfo;
+    }
+
+    private String getDefaultPwd(String phone, String salt) {
+        return UserUtil.encodePwd(phone.substring(3), salt);
     }
 
 
@@ -194,24 +207,34 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      */
     @Override
     public boolean incrementModifyData(UUserInfo data) {
-        this.validData(data);
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getUserId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
-        return this.updateById(data);
+        if (this.updateById(data)) {
+            if (CheckUtil.objIsNotEmpty(data.getPhone()) || CheckUtil.objIsNotEmpty(data.getLoginId()))
+                this.getLoginInfo(data.getUserId());
+        }
+
+        return true;
     }
 
     /**
      * 全量更新数据
-     *
      * @param data
      * @return
      */
     @Override
     public boolean totalAmountModifyData(UUserInfo data) {
-        this.validData(data);
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getUserId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
@@ -232,6 +255,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modifyUserPhone(String userId, String phone) {
         if (CheckUtil.objIsEmpty(userId, phone))
             throw NBException.create(EErrorCode.missingArg);
@@ -254,11 +278,81 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modifyUserPhone(String userId, String phone, String smsCheckCode) {
         if (CheckUtil.objIsEmpty(userId, phone, smsCheckCode))
             throw NBException.create(EErrorCode.missingArg);
         smsUtil.checkSms(phone, smsCheckCode);
         return this.modifyUserPhone(userId, phone);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean initLoginId(String loginId) {
+        if (CheckUtil.objIsEmpty(loginId))
+            throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.isPhone(loginId))
+            throw NBException.create(EErrorCode.argCheckErr, "请不要将手机号码设置为登录id");
+        TokenUser tokenUser = UserUtil.getTokenUser(true);
+        UUserInfo userInfo = this.getById(tokenUser.getUserId());
+        if (CheckUtil.objIsEmpty(userInfo))
+            throw NBException.create(EErrorCode.authIdentityErr, "账号异常,无法查询用户信息");
+        if (CheckUtil.objIsNotEmpty(userInfo.getLoginId()))
+            throw NBException.create(EErrorCode.repeat, "您之前设置过登录ID,无法修改");
+        // 验证登录id唯一性
+        if (loginChannelService.countByLoginId(loginId) > 0)
+            throw NBException.create(EErrorCode.beUsed, "很抱歉,你输入的用户ID已被占用");
+
+        UUserInfo temp = new UUserInfo();
+        temp.setUserId(userInfo.getUserId());
+        temp.setLoginId(loginId);
+        this.incrementModifyData(temp);
+        List<ULoginChannel> loginChannelList = loginChannelService.listByUserId(tokenUser.getUserId());
+        List<ELoginChannelScop> loginChannelScops = Lists.newArrayList();
+        if (CheckUtil.objIsEmpty(loginChannelList))
+            throw NBException.create(EErrorCode.authErr, "数据异常,没有登录渠道数据");
+        for (ULoginChannel loginChannel : loginChannelList) {
+            if (!loginChannelScops.contains(loginChannel.getLoginChannelScope()))
+                loginChannelScops.add(loginChannel.getLoginChannelScope());
+        }
+        loginChannelScops.forEach(item -> {
+            loginChannelService.addLoginChannel(tokenUser.getUserId(), ELoginType.pwd, loginId, item);
+        });
+
+        return false;
+    }
+
+    @Override
+    public boolean modifySelfPwd(String oldPwd, String newPwd1, String newPwd2) {
+        if (CheckUtil.objIsEmpty(oldPwd, newPwd1, newPwd2))
+            throw NBException.create(EErrorCode.missingArg);
+        if (!newPwd1.equals(newPwd2))
+            throw NBException.create(EErrorCode.argCheckErr, "两次输入的密码不一致");
+        TokenUser tokenUser = UserUtil.getTokenUser(true);
+        if (!this.isMatchDBPwd(tokenUser.getUserId(), oldPwd))
+            throw NBException.create(EErrorCode.argCheckErr, "原始密码错误");
+        UUserInfo temp = new UUserInfo();
+        temp.setUserId(tokenUser.getUserId());
+        temp.setLoginPwd(newPwd1);
+        return this.incrementModifyData(temp);
+    }
+
+    @Override
+    public boolean managerResetUserPwd(String userId) {
+        if (CheckUtil.objIsEmpty(userId))
+            throw NBException.create(EErrorCode.missingArg);
+        UUserInfo uUserInfo = this.getById(userId);
+        if (CheckUtil.objIsEmpty(uUserInfo))
+            throw NBException.create(EErrorCode.noData);
+        UUserInfo temp = new UUserInfo();
+        temp.setUserId(userId);
+        temp.setLoginPwd(this.getDefaultPwd(uUserInfo.getPhone(), uUserInfo.getSalt()));
+        return this.incrementModifyData(temp);
+    }
+
+    @Override
+    public boolean resetSelfPwd() {
+        return this.managerResetUserPwd(UserUtil.getTokenUser(true).getUserId());
     }
 
 
@@ -288,20 +382,6 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         if (CheckUtil.strIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
-    }
-
-    @Override
-    public UUserInfo getOtherExistUserByPhone(String userId, String phone) {
-        if (CheckUtil.objIsEmpty(phone, userId))
-            throw NBException.create(EErrorCode.missingArg);
-        return this.getOne(Qw.create().eq(UUserInfo.PHONE, phone).ne(UUserInfo.USER_ID, userId));
-    }
-
-    @Override
-    public UUserInfo getExistUserByPhone(String phone) {
-        if (CheckUtil.objIsEmpty(phone))
-            throw NBException.create(EErrorCode.missingArg);
-        return this.getOne(Qw.create().eq(UUserInfo.PHONE, phone));
     }
 
     /**
@@ -416,12 +496,34 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     public void validUserPhone(UUserInfo data) {
         if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getPhone()))
             throw NBException.create(EErrorCode.missingArg);
-        UUserInfo existUser = null;
+        Qw qw = Qw.create().eq(UUserInfo.PHONE, data.getPhone());
         if (CheckUtil.objIsNotEmpty(data.getUserId()))
-            existUser = this.getOtherExistUserByPhone(data.getUserId(), data.getPhone());
-        else
-            existUser = this.getExistUserByPhone(data.getPhone());
-        if (CheckUtil.objIsNotEmpty(existUser))
+            qw.ne(UUserInfo.USER_ID, data.getUserId());
+        if (this.count(qw) > 0)
             throw NBException.create(EErrorCode.beUsed, "手机号已被使用");
     }
+
+    @Override
+    public boolean isMatchDBPwd(String pwd) {
+        return this.isMatchDBPwd(UserUtil.getTokenUser(true).getUserId(), pwd);
+    }
+
+    @Override
+    public boolean isMatchDBPwd(String userId, String pwd) {
+        if (CheckUtil.objIsEmpty(userId, pwd))
+            throw NBException.create(EErrorCode.missingArg);
+        UUserInfo userInfo = this.getById(userId);
+        if (CheckUtil.objIsEmpty(userInfo))
+            throw NBException.create(EErrorCode.noData);
+        return this.isMatchDBPwd(userInfo, pwd);
+    }
+
+    @Override
+    public boolean isMatchDBPwd(UUserInfo userInfo, String pwd) {
+        if (CheckUtil.objIsEmpty(userInfo, pwd))
+            throw NBException.create(EErrorCode.missingArg);
+        String md5Pwd = UserUtil.decodePwd(pwd, userInfo.getSalt());
+        return md5Pwd.equals(userInfo.getLoginPwd());
+    }
+
 }

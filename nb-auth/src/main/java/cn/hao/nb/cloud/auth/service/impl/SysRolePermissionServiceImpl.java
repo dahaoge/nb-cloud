@@ -10,6 +10,7 @@ import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,19 +54,47 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
     }
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
     @Override
-    public boolean modifyData(SysRolePermission data) {
-        this.validData(data);
+    public boolean incrementModifyData(SysRolePermission data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getRolePermissionId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
         return this.updateById(data);
+    }
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public boolean totalAmountModifyData(SysRolePermission data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getRolePermissionId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
+        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        data.setVersion(null);
+        data.setDeleted(null);
+        data.setUpdateTime(null);
+        data.setCreateTime(null);
+        return this.update(data, Wrappers.<SysRolePermission>lambdaUpdate()
+                .set(SysRolePermission::getUpdateBy, data.getUpdateBy())
+                .set(SysRolePermission::getRoleCode, data.getRoleCode())
+                .set(SysRolePermission::getPermissionCode, data.getPermissionCode())
+                .eq(SysRolePermission::getRolePermissionId, data.getRolePermissionId())
+        );
     }
 
     /**

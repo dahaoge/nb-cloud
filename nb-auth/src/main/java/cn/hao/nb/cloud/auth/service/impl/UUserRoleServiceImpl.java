@@ -10,6 +10,7 @@ import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,19 +54,47 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
     }
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
     @Override
-    public boolean modifyData(UUserRole data) {
-        this.validData(data);
+    public boolean incrementModifyData(UUserRole data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getUrId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
         return this.updateById(data);
+    }
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public boolean totalAmountModifyData(UUserRole data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getUrId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
+        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        data.setVersion(null);
+        data.setDeleted(null);
+        data.setUpdateTime(null);
+        data.setCreateTime(null);
+        return this.update(data, Wrappers.<UUserRole>lambdaUpdate()
+                .set(UUserRole::getUpdateBy, data.getUpdateBy())
+                .set(UUserRole::getUserId, data.getUserId())
+                .set(UUserRole::getRoleCode, data.getRoleCode())
+                .eq(UUserRole::getUrId, data.getUrId())
+        );
     }
 
     /**

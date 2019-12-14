@@ -25,11 +25,19 @@ public interface ISysRolePermissionService extends IService<SysRolePermission> {
     SysRolePermission addData(SysRolePermission data);
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
-    boolean modifyData(SysRolePermission data);
+    boolean incrementModifyData(SysRolePermission data);
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    boolean totalAmountModifyData(SysRolePermission data);
 
     /**
      * 删除数据

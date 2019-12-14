@@ -20,17 +20,72 @@ import java.util.Map;
  */
 public interface IUUserInfoService extends IService<UUserInfo> {
 
+    /**
+     * C端用户注册(添加)
+     *
+     * @param phone
+     * @param userName
+     * @return
+     */
     UUserInfo clientUserRegistByPhone(String phone, String userName);
 
+    /**
+     * C端用户注册(添加)
+     * @param phone
+     * @param userName
+     * @param deptIds
+     * @return
+     */
     UUserInfo clientUserRegistByPhone(String phone, String userName, String deptIds);
 
+    /**
+     * 管理端用户注册(添加)
+     * @param phone
+     * @param userName
+     * @param deptIds
+     * @param roleCodes
+     * @return
+     */
     UUserInfo webManagerRegistByPhone(String phone, String userName, String deptIds, String roleCodes);
 
+    /**
+     * 根据手机号和密码登录
+     * @param phone
+     * @param pwd
+     * @return
+     */
     UUserInfo loginByPhoneAndPwd(String phone, String pwd);
 
+    /**
+     * 获取登录信息(会刷新token)
+     * @param userId
+     * @return
+     */
     Qd getLoginInfo(String userId);
 
+    /**
+     * 改变用户锁定状态
+     * @param userId
+     * @param isLocked
+     * @return
+     */
     boolean changeUserLock(String userId, EYn isLocked);
+
+    /**
+     * 锁定用户账号
+     *
+     * @param userId
+     * @return
+     */
+    boolean lockUser(String userId);
+
+    /**
+     * 解锁用户账号
+     *
+     * @param userId
+     * @return
+     */
+    boolean unLockUser(String userId);
 
     /**
      * 添加数据
@@ -55,11 +110,43 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      */
     boolean totalAmountModifyData(UUserInfo data);
 
+    /**
+     * 修改用户基本信息
+     * @param data
+     * @return
+     */
     boolean modifyNormalInfo(UUserInfo data);
 
+    /**
+     * 修改用户手机号
+     * @param userId
+     * @param phone
+     * @return
+     */
     boolean modifyUserPhone(String userId, String phone);
 
+    /**
+     * 根据短信验证码修改用户手机号
+     * @param userId
+     * @param phone
+     * @param smsCheckCode
+     * @return
+     */
     boolean modifyUserPhone(String userId, String phone, String smsCheckCode);
+
+    /**
+     * 初始化登录id(登录id一旦添加无法修改)
+     *
+     * @param loginId
+     * @return
+     */
+    boolean initLoginId(String loginId);
+
+    boolean modifySelfPwd(String oldPwd, String newPwd1, String newPwd2);
+
+    boolean managerResetUserPwd(String userId);
+
+    boolean resetSelfPwd();
 
     /**
      * 删除数据
@@ -76,10 +163,6 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @return
      */
     UUserInfo getDetail(String id);
-
-    UUserInfo getOtherExistUserByPhone(String userId, String phone);
-
-    UUserInfo getExistUserByPhone(String phone);
 
     /**
      * 分页查询数据
@@ -153,7 +236,29 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      */
     void validData(UUserInfo data);
 
+    /**
+     * 验证用户手机号是否可用
+     * @param data
+     */
     void validUserPhone(UUserInfo data);
+
+    /**
+     * 验证明文密码是否匹配登录账号
+     *
+     * @param pwd
+     */
+    boolean isMatchDBPwd(String pwd);
+
+    /**
+     * 验证明文密码是否匹配登录账号
+     *
+     * @param userId
+     * @param pwd
+     * @return
+     */
+    boolean isMatchDBPwd(String userId, String pwd);
+
+    boolean isMatchDBPwd(UUserInfo userInfo,String pwd);
 
 }
 /*

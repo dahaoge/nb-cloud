@@ -30,12 +30,19 @@ public interface ISysDeptService extends IService<SysDept> {
     SysDept addData(String deptName);
 
     /**
-     * 修改数据
+     * 增量更新数据
+     * @param data
+     * @return
+     */
+    boolean incrementModifyData(SysDept data);
+
+    /**
+     * 全量更新数据
      *
      * @param data
      * @return
      */
-    boolean modifyData(SysDept data);
+    boolean totalAmountModifyData(SysDept data);
 
     /**
      * 删除数据

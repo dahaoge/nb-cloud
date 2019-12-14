@@ -25,11 +25,19 @@ public interface ISysPermissionService extends IService<SysPermission> {
     SysPermission addData(SysPermission data);
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
-    boolean modifyData(SysPermission data);
+    boolean incrementModifyData(SysPermission data);
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    boolean totalAmountModifyData(SysPermission data);
 
     /**
      * 删除数据

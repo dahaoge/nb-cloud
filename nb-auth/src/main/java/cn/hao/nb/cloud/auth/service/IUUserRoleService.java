@@ -25,12 +25,19 @@ public interface IUUserRoleService extends IService<UUserRole> {
     UUserRole addData(UUserRole data);
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
-    boolean modifyData(UUserRole data);
+    boolean incrementModifyData(UUserRole data);
 
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    boolean totalAmountModifyData(UUserRole data);
     /**
      * 删除数据
      * @param id

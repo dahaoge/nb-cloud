@@ -25,11 +25,19 @@ public interface ISysRoleMenuService extends IService<SysRoleMenu> {
     SysRoleMenu addData(SysRoleMenu data);
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
-    boolean modifyData(SysRoleMenu data);
+    boolean incrementModifyData(SysRoleMenu data);
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    boolean totalAmountModifyData(SysRoleMenu data);
 
     /**
      * 删除数据

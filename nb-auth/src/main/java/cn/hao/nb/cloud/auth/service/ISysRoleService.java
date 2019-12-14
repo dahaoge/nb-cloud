@@ -25,11 +25,19 @@ public interface ISysRoleService extends IService<SysRole> {
     SysRole addData(SysRole data);
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
-    boolean modifyData(SysRole data);
+    boolean incrementModifyData(SysRole data);
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    boolean totalAmountModifyData(SysRole data);
 
     /**
      * 删除数据

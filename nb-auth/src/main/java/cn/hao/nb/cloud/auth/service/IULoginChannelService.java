@@ -34,18 +34,27 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
     boolean addPhoneChannel(String userId, String phone, ELoginChannelScop loginChannelScop);
 
     /**
-     * 修改数据
+     * 增量更新数据
+     * @param data
+     * @return
+     */
+    boolean incrementModifyData(ULoginChannel data);
+
+    /**
+     * 全量更新数据
      *
      * @param data
      * @return
      */
-    boolean modifyData(ULoginChannel data);
+    boolean totalAmountModifyData(ULoginChannel data);
 
     boolean modifyLoginId(ULoginChannel data);
 
     boolean modifyLoginId(String tId, String loginId, String userId);
 
     boolean modifyLoginId(String tId, String loginId);
+
+    int countByLoginId(String loginId);
 
     /**
      * 删除数据

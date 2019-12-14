@@ -30,12 +30,19 @@ public interface IUUserDeptService extends IService<UUserDept> {
     boolean addUser2Depts(String userId, String deptIds);
 
     /**
-     * 修改数据
+     * 增量更新数据
+     * @param data
+     * @return
+     */
+    boolean incrementModifyData(UUserDept data);
+
+    /**
+     * 全量更新数据
      *
      * @param data
      * @return
      */
-    boolean modifyData(UUserDept data);
+    boolean totalAmountModifyData(UUserDept data);
 
     /**
      * 删除数据

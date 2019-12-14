@@ -13,6 +13,7 @@ import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,13 +77,12 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     }
 
     /**
-     * 修改数据
-     *
+     * 增量更新数据
      * @param data
      * @return
      */
     @Override
-    public boolean modifyData(ULoginChannel data) {
+    public boolean incrementModifyData(ULoginChannel data) {
         if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getTId()))
             throw NBException.create(EErrorCode.missingArg);
         if (CheckUtil.objIsNotEmpty(data.getLoginId()))
@@ -95,6 +95,33 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
         return this.updateById(data);
     }
 
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public boolean totalAmountModifyData(ULoginChannel data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getTId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
+        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        data.setVersion(null);
+        data.setDeleted(null);
+        data.setUpdateTime(null);
+        data.setCreateTime(null);
+        return this.update(data, Wrappers.<ULoginChannel>lambdaUpdate()
+                .set(ULoginChannel::getUpdateBy, data.getUpdateBy())
+                .set(ULoginChannel::getUserId, data.getUserId())
+                .set(ULoginChannel::getLoginType, data.getLoginType())
+                .set(ULoginChannel::getLoginId, data.getLoginId())
+                .set(ULoginChannel::getLoginChannelScope, data.getLoginChannelScope())
+                .eq(ULoginChannel::getTId, data.getTId())
+        );
+    }
+
     @Override
     public boolean modifyLoginId(ULoginChannel data) {
         if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getTId(), data.getLoginId(), data.getUserId()))
@@ -105,7 +132,7 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
         temp.setTId(data.getTId());
         temp.setLoginId(data.getLoginId());
         temp.setUserId(data.getUserId());
-        return this.modifyData(temp);
+        return this.incrementModifyData(temp);
     }
 
     @Override
@@ -127,6 +154,13 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
         if (CheckUtil.objIsEmpty(dbData))
             throw NBException.create(EErrorCode.noData);
         return this.modifyLoginId(tId, loginId, dbData.getUserId());
+    }
+
+    @Override
+    public int countByLoginId(String loginId) {
+        if (CheckUtil.objIsEmpty(loginId))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.count(Qw.create().eq(ULoginChannel.LOGIN_ID, loginId));
     }
 
     /**

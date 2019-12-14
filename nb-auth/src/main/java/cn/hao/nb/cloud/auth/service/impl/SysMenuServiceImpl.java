@@ -10,6 +10,7 @@ import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,19 +54,52 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     /**
-     * 修改数据
+     * 增量更新数据
      * @param data
      * @return
      */
     @Override
-    public boolean modifyData(SysMenu data) {
-        this.validData(data);
+    public boolean incrementModifyData(SysMenu data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getMenuId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
         return this.updateById(data);
+    }
+
+    /**
+     * 全量更新数据
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public boolean totalAmountModifyData(SysMenu data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
+                data.getMenuId()
+        ))
+            throw NBException.create(EErrorCode.missingArg);
+        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        data.setVersion(null);
+        data.setDeleted(null);
+        data.setUpdateTime(null);
+        data.setCreateTime(null);
+        return this.update(data, Wrappers.<SysMenu>lambdaUpdate()
+                .set(SysMenu::getUpdateBy, data.getUpdateBy())
+                .set(SysMenu::getParentMenuCode, data.getParentMenuCode())
+                .set(SysMenu::getMenuCode, data.getMenuCode())
+                .set(SysMenu::getMenuName, data.getMenuName())
+                .set(SysMenu::getMenuPath, data.getMenuPath())
+                .set(SysMenu::getMenuIndex, data.getMenuIndex())
+                .set(SysMenu::getMenuIcon, data.getMenuIcon())
+                .set(SysMenu::getMenuType, data.getMenuType())
+                .eq(SysMenu::getMenuId, data.getMenuId())
+        );
     }
 
     /**
