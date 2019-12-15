@@ -1,13 +1,18 @@
 package cn.hao.nb.cloud.auth.service.impl;
 
+import cn.hao.nb.cloud.auth.entity.SysRole;
 import cn.hao.nb.cloud.auth.entity.UUserRole;
 import cn.hao.nb.cloud.auth.mapper.UUserRoleMapper;
+import cn.hao.nb.cloud.auth.service.CommonService;
+import cn.hao.nb.cloud.auth.service.ISysRoleService;
 import cn.hao.nb.cloud.auth.service.IUUserRoleService;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
+import cn.hao.nb.cloud.common.util.ListUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -33,6 +38,10 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
     IDUtil idUtil;
     @Autowired
     UUserRoleMapper mapper;
+    @Autowired
+    CommonService commonService;
+    @Autowired
+    ISysRoleService roleService;
 
     /**
      * 添加数据
@@ -51,6 +60,25 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
         data.setCreateTime(null);
         this.save(data);
         return data;
+    }
+
+    @Override
+    public UUserRole addUserRole(String userId, String roleCode) {
+        if (CheckUtil.objIsEmpty(userId, roleCode))
+            throw NBException.create(EErrorCode.missingArg);
+        UUserRole data = new UUserRole();
+        data.setUserId(userId);
+        data.setRoleCode(roleCode);
+        return this.addData(data);
+    }
+
+    @Override
+    public boolean addUserRoles(String userId, String roleCodes) {
+        if (CheckUtil.objIsEmpty(userId, roleCodes))
+            throw NBException.create(EErrorCode.missingArg);
+        this.delByUserId(userId);
+        ListUtil.spliteCreate(roleCodes).forEach(item -> this.addUserRole(userId, item));
+        return true;
     }
 
     /**
@@ -109,6 +137,20 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
         return this.removeById(id);
     }
 
+    @Override
+    public boolean delByUserId(String userId) {
+        if (CheckUtil.objIsEmpty(userId))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.remove(Qw.create().eq(UUserRole.USER_ID, userId));
+    }
+
+    @Override
+    public boolean delByRoleCode(String roleCode) {
+        if (CheckUtil.objIsEmpty(roleCode))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.remove(Qw.create().eq(UUserRole.ROLE_CODE, roleCode));
+    }
+
     /**
      * 获取详情
      * @param id
@@ -162,6 +204,12 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
      */
     @Override
     public UUserRole prepareReturnModel(UUserRole data) {
+        if (CheckUtil.objIsNotEmpty(data)) {
+            if (CheckUtil.objIsEmpty(data.getUserInfo()))
+                data.setUserInfo(commonService.getRedisUser(data.getUserId()));
+            if (CheckUtil.objIsEmpty(data.getRole()))
+                data.setRole(roleService.getByRoleCode(data.getRoleCode()));
+        }
         return data;
     }
 
@@ -184,10 +232,16 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
      */
     @Override
     public List<UUserRole> prepareReturnModel(List<UUserRole> list) {
-        if (CheckUtil.collectionIsNotEmpty(list))
+        if (CheckUtil.collectionIsNotEmpty(list)) {
+            List<SysRole> roles = roleService.list(Qw.create().in(SysRole.ROLE_CODE, ListUtil.getPkList(list, UUserRole.ROLE_CODE)));
             list.forEach(item -> {
+                roles.forEach(role -> {
+                    if (role.getRoleCode().equals(item.getRoleCode()))
+                        item.setRole(role);
+                });
                 this.prepareReturnModel(item);
             });
+        }
         return list;
     }
 

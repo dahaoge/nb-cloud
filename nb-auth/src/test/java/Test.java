@@ -33,7 +33,7 @@ public class Test {
 
     @org.junit.Test
     public void test() {
-        smsUtil.sendLoginCheckCode("17686688903");
+//        smsUtil.sendLoginCheckCode("17686688903");
         System.out.println(userInfoService.count(Qw.create().eq(UUserInfo.USER_ID, "999")));
     }
 }

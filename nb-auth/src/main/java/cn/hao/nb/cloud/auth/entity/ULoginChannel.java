@@ -1,6 +1,7 @@
 package cn.hao.nb.cloud.auth.entity;
 
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.entity.RedisUser;
 import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
 import cn.hao.nb.cloud.common.penum.ELoginType;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
@@ -14,7 +15,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * <p>
@@ -42,6 +42,10 @@ public class ULoginChannel implements Serializable {
         public Qw<ULoginChannel> preWrapper(Qw<ULoginChannel> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
+            if (ESqlOrder.DESC.equals(this.getOrder()))
+                qw.orderByDesc(this.getSort());
+            else
+                qw.orderByAsc(this.getSort());
             return qw;
         }
     }
@@ -49,12 +53,10 @@ public class ULoginChannel implements Serializable {
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "创建人信息")
     @TableField(exist = false)
-    private Map
-            <String, Object> createUserMap;
+    private RedisUser createUserMap;
     @ApiModelProperty(value = "修改人信息")
     @TableField(exist = false)
-    private Map
-            <String, Object> updateUserMap;
+    private RedisUser updateUserMap;
     @ApiModelProperty(value = "乐观锁")
     @Version
     private Integer version;

@@ -65,6 +65,10 @@ private ESqlOrder order = ESqlOrder.DESC;
 public Qw<${entity}> preWrapper(Qw<${entity}> qw){
 if (CheckUtil.objIsEmpty(qw))
 qw = Qw.create();
+if (ESqlOrder.DESC.equals(this.getOrder()))
+qw.orderByDesc(this.getSort());
+else
+qw.orderByAsc(this.getSort());
 return qw;
 }
 }
@@ -73,13 +77,11 @@ private static final long serialVersionUID = 1L;
 
 @ApiModelProperty(value = "创建人信息")
 @TableField(exist = false)
-private Map
-<String, Object> createUserMap;
+private RedisUser createUserMap;
 
 @ApiModelProperty(value = "修改人信息")
 @TableField(exist = false)
-private Map
-<String, Object> updateUserMap;
+private RedisUser updateUserMap;
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
     <#if field.keyFlag>

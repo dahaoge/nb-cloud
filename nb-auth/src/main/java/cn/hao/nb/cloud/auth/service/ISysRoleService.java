@@ -54,6 +54,14 @@ public interface ISysRoleService extends IService<SysRole> {
     SysRole getDetail(String id);
 
     /**
+     * 根据编码获取详情
+     *
+     * @param roleCode
+     * @return
+     */
+    SysRole getByRoleCode(String roleCode);
+
+    /**
      * 分页查询数据
      * @param pg
      * @param searchParams

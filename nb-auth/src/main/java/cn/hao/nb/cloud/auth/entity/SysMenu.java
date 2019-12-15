@@ -1,6 +1,7 @@
 package cn.hao.nb.cloud.auth.entity;
 
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.entity.RedisUser;
 import cn.hao.nb.cloud.common.penum.EMenuType;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
 import cn.hao.nb.cloud.common.util.CheckUtil;
@@ -14,7 +15,6 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -33,6 +33,16 @@ public class SysMenu implements Serializable {
     @Data
     public class SearchParams {
 
+        private String menuCode;
+
+        private String menuName;
+
+        private String menuPath;
+
+        private String menuIcon;
+
+        @ApiModelProperty(value = "菜单类型")
+        private EMenuType menuType;
 
         @ApiModelProperty(value = "排序字段")
         private String sort = "update_time";
@@ -43,6 +53,21 @@ public class SysMenu implements Serializable {
         public Qw<SysMenu> preWrapper(Qw<SysMenu> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
+            if (CheckUtil.objIsNotEmpty(this.getMenuCode()))
+                qw.like(SysMenu.MENU_CODE, this.getMenuCode());
+            if (CheckUtil.objIsNotEmpty(this.getMenuName()))
+                qw.like(SysMenu.MENU_NAME, this.getMenuName());
+            if (CheckUtil.objIsNotEmpty(this.getMenuPath()))
+                qw.like(SysMenu.MENU_PATH, this.getMenuPath());
+            if (CheckUtil.objIsNotEmpty(this.getMenuIcon()))
+                qw.like(SysMenu.MENU_ICON, this.getMenuIcon());
+            if (CheckUtil.objIsNotEmpty(this.getMenuType()))
+                qw.eq(SysMenu.MENU_TYPE, this.getMenuType());
+
+            if (ESqlOrder.DESC.equals(this.getOrder()))
+                qw.orderByDesc(this.getSort());
+            else
+                qw.orderByAsc(this.getSort());
             return qw;
         }
     }
@@ -51,13 +76,11 @@ public class SysMenu implements Serializable {
 
     @ApiModelProperty(value = "创建人信息")
     @TableField(exist = false)
-    private Map
-            <String, Object> createUserMap;
+    private RedisUser createUserMap;
 
     @ApiModelProperty(value = "修改人信息")
     @TableField(exist = false)
-    private Map
-            <String, Object> updateUserMap;
+    private RedisUser updateUserMap;
 
     @ApiModelProperty(value = "乐观锁")
     @Version

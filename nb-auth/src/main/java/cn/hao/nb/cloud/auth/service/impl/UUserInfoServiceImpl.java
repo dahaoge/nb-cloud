@@ -49,6 +49,8 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     ISysDeptService deptService;
     @Autowired
     AliSmsUtil smsUtil;
+    @Autowired
+    CommonService commonService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -239,7 +241,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             if (CheckUtil.objIsNotEmpty(data.getPhone()) || CheckUtil.objIsNotEmpty(data.getLoginId()))
                 this.getLoginInfo(data.getUserId());
         }
-
+        commonService.refreshRedisUser(data.getUserId());
         return true;
     }
 
@@ -260,13 +262,15 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
-        return this.update(data, Wrappers.<UUserInfo>lambdaUpdate()
+        this.update(data, Wrappers.<UUserInfo>lambdaUpdate()
                 .set(UUserInfo::getUpdateBy, data.getUpdateBy())
                 .set(UUserInfo::getUserName, data.getUserName())
                 .set(UUserInfo::getIcnum, data.getIcnum())
                 .set(UUserInfo::getIcon, data.getIcon())
                 .eq(UUserInfo::getUserId, data.getUserId())
         );
+        commonService.refreshRedisUser(data.getUserId());
+        return true;
     }
 
     @Override

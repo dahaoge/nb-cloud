@@ -53,6 +53,16 @@ public interface ISysMenuService extends IService<SysMenu> {
      */
     SysMenu getDetail(String id);
 
+    SysMenu getByMenuCode(String menuCode);
+
+    SysMenu getParent(SysMenu menu);
+
+    SysMenu getParent(String menuCode);
+
+    List<SysMenu> getDisMenu(String menuCode);
+
+    List<SysMenu> menuTree();
+
     /**
      * 分页查询数据
      * @param pg

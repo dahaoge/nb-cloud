@@ -24,6 +24,17 @@ public interface IUUserRoleService extends IService<UUserRole> {
      */
     UUserRole addData(UUserRole data);
 
+    UUserRole addUserRole(String userId, String roleCode);
+
+    /**
+     * 添加用户权限
+     *
+     * @param userId
+     * @param roleCodes
+     * @return
+     */
+    boolean addUserRoles(String userId, String roleCodes);
+
     /**
      * 增量更新数据
      * @param data
@@ -44,6 +55,22 @@ public interface IUUserRoleService extends IService<UUserRole> {
      * @return
      */
     boolean delData(String id);
+
+    /**
+     * 根据用户id删除用户角色
+     *
+     * @param userId
+     * @return
+     */
+    boolean delByUserId(String userId);
+
+    /**
+     * 根据角色编码删除
+     *
+     * @param roleCode
+     * @return
+     */
+    boolean delByRoleCode(String roleCode);
 
     /**
      * 查询详情

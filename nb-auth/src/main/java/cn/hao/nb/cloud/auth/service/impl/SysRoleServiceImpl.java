@@ -1,10 +1,17 @@
 package cn.hao.nb.cloud.auth.service.impl;
 
 import cn.hao.nb.cloud.auth.entity.SysRole;
+import cn.hao.nb.cloud.auth.entity.SysRoleMenu;
+import cn.hao.nb.cloud.auth.entity.SysRolePermission;
+import cn.hao.nb.cloud.auth.entity.UUserRole;
 import cn.hao.nb.cloud.auth.mapper.SysRoleMapper;
+import cn.hao.nb.cloud.auth.service.ISysRoleMenuService;
+import cn.hao.nb.cloud.auth.service.ISysRolePermissionService;
 import cn.hao.nb.cloud.auth.service.ISysRoleService;
+import cn.hao.nb.cloud.auth.service.IUUserRoleService;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
@@ -33,6 +40,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     IDUtil idUtil;
     @Autowired
     SysRoleMapper mapper;
+    @Autowired
+    ISysRoleMenuService roleMenuService;
+    @Autowired
+    ISysRolePermissionService rolePermissionService;
+    @Autowired
+    IUUserRoleService userRoleService;
 
     /**
      * 添加数据
@@ -64,6 +77,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
                 data.getRoleId()
         ))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsNotEmpty(data.getRoleCode()))
+            this.beUsedCheck(data);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
@@ -81,9 +96,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     public boolean totalAmountModifyData(SysRole data) {
         if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
-                data.getRoleId()
+                data.getRoleId(), data.getRoleCode(), data.getRoleName()
         ))
             throw NBException.create(EErrorCode.missingArg);
+        this.beUsedCheck(data);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
@@ -106,6 +122,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public boolean delData(String id) {
         if (CheckUtil.strIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
+        SysRole data = this.getById(id);
+        if (CheckUtil.objIsEmpty(data))
+            throw NBException.create(EErrorCode.noData);
+        this.beUsedCheck(data);
         return this.removeById(id);
     }
 
@@ -119,6 +139,13 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         if (CheckUtil.strIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
+    }
+
+    @Override
+    public SysRole getByRoleCode(String roleCode) {
+        if (CheckUtil.objIsEmpty(roleCode))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.getOne(Qw.create().eq(SysRole.ROLE_CODE, roleCode));
     }
 
     /**
@@ -212,7 +239,26 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      */
     @Override
     public void validData(SysRole data) {
-        if (CheckUtil.objIsEmpty(data))
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getRoleCode(), data.getRoleName()))
             throw NBException.create(EErrorCode.missingArg);
+        this.beUsedCheck(data);
+    }
+
+    private void beUsedCheck(SysRole data) {
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getRoleCode()))
+            throw NBException.create(EErrorCode.missingArg);
+        Qw qw = Qw.create().eq(SysRole.ROLE_CODE, data.getRoleCode());
+        if (CheckUtil.objIsNotEmpty(data.getRoleId())) {
+            qw.ne(SysRole.ROLE_ID, data.getRoleId());
+            SysRole dbData = this.getById(data.getRoleId());
+            if (roleMenuService.count(Qw.create().eq(SysRoleMenu.ROLE_CODE, dbData.getRoleCode())) > 0)
+                throw NBException.create(EErrorCode.beUsed, "无法修改使用中的角色编码");
+            if (rolePermissionService.count(Qw.create().eq(SysRolePermission.ROLE_CODE, dbData.getRoleCode())) > 0)
+                throw NBException.create(EErrorCode.beUsed, "无法修改使用中的角色编码");
+            if (userRoleService.count(Qw.create().eq(UUserRole.ROLE_CODE, dbData.getRoleCode())) > 0)
+                throw NBException.create(EErrorCode.beUsed, "无法修改使用中的角色编码");
+        }
+        if (CheckUtil.objIsNotEmpty(this.getOne(qw)))
+            throw NBException.create(EErrorCode.beUsed, "该角色编码已被使用");
     }
 }
