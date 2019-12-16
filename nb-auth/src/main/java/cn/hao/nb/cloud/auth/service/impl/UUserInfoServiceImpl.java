@@ -61,7 +61,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UUserInfo clientUserRegistByPhone(String phone, String userName, String deptIds) {
-        if (CheckUtil.objIsEmpty(phone, userName, deptIds))
+        if (CheckUtil.objIsEmpty(phone, userName))
             throw NBException.create(EErrorCode.missingArg);
         // 添加用户信息
         UUserInfo userInfo = this.phoneRegist(phone, userName);

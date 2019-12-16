@@ -36,6 +36,8 @@ public class PmsController {
     ISysPermissionService iSysPermissionService;
     @Autowired
     ISysRoleMenuService iSysRoleMenuService;
+    @Autowired
+    ISysRolePermissionService iSysRolePermissionService;
 
     /********************************** 角色 **********************************/
 
@@ -309,6 +311,52 @@ public class PmsController {
     @GetMapping(value = "/sysRoleMenu/pageMap")
     public Rv pageMapSysRoleMenu(Pg pg, SysRoleMenu.SearchParams searchParams) {
         return Rv.getInstance(iSysRoleMenuService.pageMapData(pg, searchParams));
+    }
+
+
+    /********************************** 角色菜单 **********************************/
+
+
+    @ApiOperation(value = "添加角色权限 ", notes = "添加角色权限 ")
+    @PostMapping(value = "/sysRolePermission/add")
+    public Rv addSysRolePermission(SysRolePermission data) {
+        return Rv.getInstance(iSysRolePermissionService.addData(data));
+    }
+
+    @ApiOperation(value = "添加角色权限列表 ")
+    @PostMapping(value = "/sysRolePermission/addList")
+    public Rv addSysRolePermissionList(String roleCode, String permissionCodes) {
+        return Rv.getInstance(iSysRolePermissionService.addRolePermissions(roleCode, permissionCodes));
+    }
+
+    @ApiOperation(value = "删除角色权限 ", notes = "删除角色权限 ")
+    @PostMapping(value = "/sysRolePermission/del/{id}")
+    public Rv delSysRolePermission(@ApiParam(name = "id", value = "角色权限 id") @PathVariable String id) {
+        return Rv.getInstance(iSysRolePermissionService.delData(id));
+    }
+
+    @ApiOperation(value = "查询角色权限 ", notes = "查询角色权限 ")
+    @GetMapping(value = "/sysRolePermission/getById/{id}")
+    public Rv getSysRolePermissionById(@ApiParam(name = "id", value = "角色权限 id") @PathVariable String id) {
+        return Rv.getInstance(iSysRolePermissionService.getDetail(id));
+    }
+
+    @ApiOperation(value = "分页查询角色权限 ", notes = "分页查询角色权限 ")
+    @GetMapping(value = "/sysRolePermission/page")
+    public Rv pageSysRolePermission(Pg pg, SysRolePermission.SearchParams searchParams) {
+        return Rv.getInstance(iSysRolePermissionService.pageData(pg, searchParams));
+    }
+
+    @ApiOperation(value = "列表查询角色权限 ", notes = "列表查询角色权限 ")
+    @GetMapping(value = "/sysRolePermission/list")
+    public Rv listSysRolePermission(SysRolePermission.SearchParams searchParams) {
+        return Rv.getInstance(iSysRolePermissionService.listData(searchParams));
+    }
+
+    @ApiOperation(value = "分页查询角色权限 (map数据)", notes = "列表查询角色权限 (map数据)")
+    @GetMapping(value = "/sysRolePermission/pageMap")
+    public Rv pageMapSysRolePermission(Pg pg, SysRolePermission.SearchParams searchParams) {
+        return Rv.getInstance(iSysRolePermissionService.pageMapData(pg, searchParams));
     }
 
 }

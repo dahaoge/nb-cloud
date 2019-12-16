@@ -43,6 +43,9 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
     private String REDIS_ALL_DIS_DEPT_BY_PID_KEY = "REDIS_ALL_DIS_DEPT_BY_PID_KEY";
     private long REDIS_ALL_DIS_DEPT_BY_PID_EXPIRE_TIME = 3600;
+    private String REDIS_DEPT_TREE_KEY = "REDIS_DEPT_TREE_KEY";
+    private long REDIS_DEPT_TREE_EXPIRE_TIME = 86400;
+
 
     /**
      * 添加数据
@@ -201,11 +204,34 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         return this.list(this.lightSelect(Qw.create().eq(SysDept.P_ID, pId)));
     }
 
+    @Override
+    public List<SysDept> deptTree() {
+        List<SysDept> result = (List<SysDept>) redisUtil.get(this.REDIS_DEPT_TREE_KEY);
+        if (CheckUtil.objIsNotEmpty(result))
+            return result;
+        result = this.listDisDeptByParentId("0");
+        result.forEach(item -> this.recursiveSetChildren(item));
+        return null;
+    }
+
+    @Override
+    public List<SysDept> userDeptTree(String userId) {
+        return null;
+    }
+
     private void recursiveGetDisDept(String pId, List<SysDept> all) {
         List<SysDept> childrens = this.listDisDeptByParentId(pId);
         if (CheckUtil.collectionIsNotEmpty(childrens)) {
             all.addAll(childrens);
             childrens.forEach(item -> this.recursiveGetDisDept(item.getDeptId(), all));
+        }
+    }
+
+    private void recursiveSetChildren(SysDept dept) {
+        if (CheckUtil.objIsNotEmpty(dept)) {
+            dept.setChildren(this.listDisDeptByParentId(dept.getDeptId()));
+            if (CheckUtil.objIsNotEmpty(dept.getChildren()))
+                dept.getChildren().forEach(item -> this.recursiveSetChildren(item));
         }
     }
 

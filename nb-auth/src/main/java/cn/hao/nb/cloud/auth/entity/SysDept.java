@@ -13,6 +13,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -76,6 +77,9 @@ public class SysDept implements Serializable {
     private String deptName;
     @ApiModelProperty(value = "父节点id")
     private String pId;
+
+    @TableField(exist = false)
+    private List<SysDept> children;
 
     public static final String VERSION = "version";
     public static final String CREATE_BY = "create_by";
