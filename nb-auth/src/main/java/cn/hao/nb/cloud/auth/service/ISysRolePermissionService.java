@@ -24,6 +24,10 @@ public interface ISysRolePermissionService extends IService<SysRolePermission> {
      */
     SysRolePermission addData(SysRolePermission data);
 
+    SysRolePermission addRolePermission(String roleCode, String permissionCode);
+
+    boolean addRolePermissions(String roleCode, String permissionCodes);
+
     /**
      * 增量更新数据
      * @param data
@@ -45,6 +49,10 @@ public interface ISysRolePermissionService extends IService<SysRolePermission> {
      * @return
      */
     boolean delData(String id);
+
+    boolean delByRoleCode(String roleCode);
+
+    boolean delByPermissionCode(String permissionCode);
 
     /**
      * 查询详情

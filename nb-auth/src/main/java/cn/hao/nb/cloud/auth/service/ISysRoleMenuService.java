@@ -26,7 +26,7 @@ public interface ISysRoleMenuService extends IService<SysRoleMenu> {
 
     boolean addRoleMenus(String roleCode, String menuCodes);
 
-    boolean addRoleMenu(String roleCode, String menuCode);
+    SysRoleMenu addRoleMenu(String roleCode, String menuCode);
 
     /**
      * 增量更新数据

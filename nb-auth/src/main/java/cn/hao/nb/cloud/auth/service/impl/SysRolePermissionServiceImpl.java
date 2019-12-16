@@ -5,9 +5,11 @@ import cn.hao.nb.cloud.auth.mapper.SysRolePermissionMapper;
 import cn.hao.nb.cloud.auth.service.ISysRolePermissionService;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
+import cn.hao.nb.cloud.common.util.ListUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -51,6 +53,24 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
         data.setCreateTime(null);
         this.save(data);
         return data;
+    }
+
+    @Override
+    public SysRolePermission addRolePermission(String roleCode, String permissionCode) {
+        if (CheckUtil.objIsEmpty(roleCode, permissionCode))
+            throw NBException.create(EErrorCode.missingArg);
+        SysRolePermission data = new SysRolePermission();
+        data.setRoleCode(roleCode);
+        data.setPermissionCode(permissionCode);
+        return this.addData(data);
+    }
+
+    @Override
+    public boolean addRolePermissions(String roleCode, String permissionCodes) {
+        if (CheckUtil.objIsEmpty(roleCode, permissionCodes))
+            throw NBException.create(EErrorCode.missingArg);
+        ListUtil.spliteCreate(permissionCodes).forEach(item -> this.addRolePermission(roleCode, item));
+        return true;
     }
 
     /**
@@ -107,6 +127,20 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
         if (CheckUtil.strIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.removeById(id);
+    }
+
+    @Override
+    public boolean delByRoleCode(String roleCode) {
+        if (CheckUtil.objIsEmpty(roleCode))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.remove(Qw.create().eq(SysRolePermission.ROLE_CODE, roleCode));
+    }
+
+    @Override
+    public boolean delByPermissionCode(String permissionCode) {
+        if (CheckUtil.objIsEmpty(permissionCode))
+            throw NBException.create(EErrorCode.missingArg);
+        return this.remove(Qw.create().eq(SysRolePermission.PERMISSION_CODE, permissionCode));
     }
 
     /**
@@ -212,7 +246,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
      */
     @Override
     public void validData(SysRolePermission data) {
-        if (CheckUtil.objIsEmpty(data))
+        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getPermissionCode(), data.getRoleCode()))
             throw NBException.create(EErrorCode.missingArg);
     }
 }

@@ -71,14 +71,13 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
     }
 
     @Override
-    public boolean addRoleMenu(String roleCode, String menuCode) {
+    public SysRoleMenu addRoleMenu(String roleCode, String menuCode) {
         if (CheckUtil.objIsEmpty(roleCode, menuCode))
             throw NBException.create(EErrorCode.missingArg);
         SysRoleMenu data = new SysRoleMenu();
         data.setRoleCode(roleCode);
         data.setMenuCode(menuCode);
-        this.addData(data);
-        return true;
+        return this.addData(data);
     }
 
     /**
