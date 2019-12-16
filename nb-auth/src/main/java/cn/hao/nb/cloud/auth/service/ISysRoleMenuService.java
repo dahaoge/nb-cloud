@@ -24,6 +24,10 @@ public interface ISysRoleMenuService extends IService<SysRoleMenu> {
      */
     SysRoleMenu addData(SysRoleMenu data);
 
+    boolean addRoleMenus(String roleCode, String menuCodes);
+
+    boolean addRoleMenu(String roleCode, String menuCode);
+
     /**
      * 增量更新数据
      * @param data
@@ -46,12 +50,18 @@ public interface ISysRoleMenuService extends IService<SysRoleMenu> {
      */
     boolean delData(String id);
 
+    boolean delByRoleCode(String roleCode);
+
+    boolean delByMenuCode(String menuCode);
+
     /**
      * 查询详情
      * @param id
      * @return
      */
     SysRoleMenu getDetail(String id);
+
+    List<SysRoleMenu> listByRoleCode(String roleCode);
 
     /**
      * 分页查询数据

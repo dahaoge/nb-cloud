@@ -31,6 +31,9 @@ public class SysRoleMenu implements Serializable {
     @Data
     public class SearchParams {
 
+        private String roleCode;
+
+        private String menuCode;
 
         @ApiModelProperty(value = "排序字段")
         private String sort = "update_time";
@@ -41,6 +44,10 @@ public class SysRoleMenu implements Serializable {
         public Qw<SysRoleMenu> preWrapper(Qw<SysRoleMenu> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
+            if (CheckUtil.objIsNotEmpty(this.getRoleCode()))
+                qw.like(SysRoleMenu.ROLE_CODE, this.getRoleCode());
+            if (CheckUtil.objIsNotEmpty(this.getMenuCode()))
+                qw.like(SysRoleMenu.MENU_CODE, this.getMenuCode());
             if (ESqlOrder.DESC.equals(this.getOrder()))
                 qw.orderByDesc(this.getSort());
             else
@@ -81,6 +88,9 @@ public class SysRoleMenu implements Serializable {
     private String roleMenuId;
 
     private String roleCode;
+
+    @TableField(exist = false)
+    private SysRole role;
 
     private String menuCode;
 

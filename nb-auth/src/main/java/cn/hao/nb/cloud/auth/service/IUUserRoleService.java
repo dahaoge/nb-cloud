@@ -79,6 +79,8 @@ public interface IUUserRoleService extends IService<UUserRole> {
      */
     UUserRole getDetail(String id);
 
+    List<UUserRole> listByUserId(String userId);
+
     /**
      * 分页查询数据
      * @param pg

@@ -1,9 +1,11 @@
 package cn.hao.nb.cloud.auth.controller;
 
 import cn.hao.nb.cloud.auth.entity.SysMenu;
+import cn.hao.nb.cloud.auth.entity.SysPermission;
 import cn.hao.nb.cloud.auth.entity.SysRole;
 import cn.hao.nb.cloud.auth.entity.UUserRole;
 import cn.hao.nb.cloud.auth.service.ISysMenuService;
+import cn.hao.nb.cloud.auth.service.ISysPermissionService;
 import cn.hao.nb.cloud.auth.service.ISysRoleService;
 import cn.hao.nb.cloud.auth.service.IUUserRoleService;
 import cn.hao.nb.cloud.common.entity.Pg;
@@ -36,6 +38,8 @@ public class PmsController {
     IUUserRoleService iUUserRoleService;
     @Autowired
     ISysMenuService iSysMenuService;
+    @Autowired
+    ISysPermissionService iSysPermissionService;
 
     /********************************** 角色 **********************************/
 
@@ -93,6 +97,12 @@ public class PmsController {
     @PostMapping(value = "/uUserRole/add")
     public Rv addUUserRole(UUserRole data) {
         return Rv.getInstance(iUUserRoleService.addData(data));
+    }
+
+    @ApiOperation(value = "添加用户角色列表 ")
+    @PostMapping(value = "/uUserRole/addList")
+    public Rv addUUserRole(String userId, String roleCodes) {
+        return Rv.getInstance(iUUserRoleService.addUserRoles(userId, roleCodes));
     }
 
     @ApiOperation(value = "修改用户角色 ", notes = "修改用户角色 ")
@@ -187,6 +197,52 @@ public class PmsController {
     @GetMapping("/sysMenu/tree")
     public Rv getMenuTree() {
         return Rv.getInstance(iSysMenuService.menuTree());
+    }
+
+
+    /********************************** 权限 **********************************/
+
+
+    @ApiOperation(value = "添加权限表 ", notes = "添加权限表 ")
+    @PostMapping(value = "/sysPermission/add")
+    public Rv addSysPermission(SysPermission data) {
+        return Rv.getInstance(iSysPermissionService.addData(data));
+    }
+
+    @ApiOperation(value = "修改权限表 ", notes = "修改权限表 ")
+    @PostMapping(value = "/sysPermission/modify")
+    public Rv modifySysPermission(SysPermission data) {
+        return Rv.getInstance(iSysPermissionService.incrementModifyData(data));
+    }
+
+    @ApiOperation(value = "删除权限表 ", notes = "删除权限表 ")
+    @PostMapping(value = "/sysPermission/del/{id}")
+    public Rv delSysPermission(@ApiParam(name = "id", value = "权限表 id") @PathVariable String id) {
+        return Rv.getInstance(iSysPermissionService.delData(id));
+    }
+
+    @ApiOperation(value = "查询权限表 ", notes = "查询权限表 ")
+    @GetMapping(value = "/sysPermission/getById/{id}")
+    public Rv getSysPermissionById(@ApiParam(name = "id", value = "权限表 id") @PathVariable String id) {
+        return Rv.getInstance(iSysPermissionService.getDetail(id));
+    }
+
+    @ApiOperation(value = "分页查询权限表 ", notes = "分页查询权限表 ")
+    @GetMapping(value = "/sysPermission/page")
+    public Rv pageSysPermission(Pg pg, SysPermission.SearchParams searchParams) {
+        return Rv.getInstance(iSysPermissionService.pageData(pg, searchParams));
+    }
+
+    @ApiOperation(value = "列表查询权限表 ", notes = "列表查询权限表 ")
+    @GetMapping(value = "/sysPermission/list")
+    public Rv listSysPermission(SysPermission.SearchParams searchParams) {
+        return Rv.getInstance(iSysPermissionService.listData(searchParams));
+    }
+
+    @ApiOperation(value = "分页查询权限表 (map数据)", notes = "列表查询权限表 (map数据)")
+    @GetMapping(value = "/sysPermission/pageMap")
+    public Rv pageMapSysPermission(Pg pg, SysPermission.SearchParams searchParams) {
+        return Rv.getInstance(iSysPermissionService.pageMapData(pg, searchParams));
     }
 
 }

@@ -1,10 +1,13 @@
 package cn.hao.nb.cloud.auth.service.impl;
 
 import cn.hao.nb.cloud.auth.entity.SysPermission;
+import cn.hao.nb.cloud.auth.entity.SysRolePermission;
 import cn.hao.nb.cloud.auth.mapper.SysPermissionMapper;
 import cn.hao.nb.cloud.auth.service.ISysPermissionService;
+import cn.hao.nb.cloud.auth.service.ISysRolePermissionService;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
@@ -33,9 +36,12 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     IDUtil idUtil;
     @Autowired
     SysPermissionMapper mapper;
+    @Autowired
+    ISysRolePermissionService rolePermissionService;
 
     /**
      * 添加数据
+     *
      * @param data
      * @return
      */
@@ -55,6 +61,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     /**
      * 增量更新数据
+     *
      * @param data
      * @return
      */
@@ -64,6 +71,9 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
                 data.getPermissionId()
         ))
             throw NBException.create(EErrorCode.missingArg);
+
+        this.beUsedCheck(data);
+
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
@@ -84,6 +94,9 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
                 data.getPermissionId()
         ))
             throw NBException.create(EErrorCode.missingArg);
+
+        this.beUsedCheck(data);
+
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
@@ -99,6 +112,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     /**
      * 删除数据
+     *
      * @param id
      * @return
      */
@@ -106,11 +120,16 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     public boolean delData(String id) {
         if (CheckUtil.strIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
+        SysPermission data = this.getById(id);
+        if (CheckUtil.objIsEmpty(data))
+            throw NBException.create(EErrorCode.noData);
+        this.beUsedCheck(data);
         return this.removeById(id);
     }
 
     /**
      * 获取详情
+     *
      * @param id
      * @return
      */
@@ -123,6 +142,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     /**
      * 分页查询
+     *
      * @param pg
      * @param searchParams
      * @return
@@ -134,6 +154,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     /**
      * 列表查询
+     *
      * @param searchParams
      * @return
      */
@@ -142,8 +163,16 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         return this.prepareReturnModel(this.list(searchParams.preWrapper(null)));
     }
 
+    @Override
+    public List<SysPermission> listByRoleCode(String roleCode) {
+        if (CheckUtil.objIsEmpty(roleCode))
+            throw NBException.create(EErrorCode.missingArg);
+        return mapper.listByRoleCode(roleCode);
+    }
+
     /**
      * 连表分页查询map数据
+     *
      * @param pg
      * @param searchParams
      * @return
@@ -157,6 +186,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     /**
      * 处理返回值
+     *
      * @param data
      * @return
      */
@@ -167,6 +197,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     /**
      * 处理返回值
+     *
      * @param page
      * @return
      */
@@ -179,6 +210,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     /**
      * 处理返回值
+     *
      * @param list
      * @return
      */
@@ -193,6 +225,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     /**
      * 处理返回值
+     *
      * @param page
      * @return
      */
@@ -208,11 +241,31 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     /**
      * 添加/修改数据前校验数据有效性(强制抛出异常)
      * 如果不需要抛出异常请不用调用该服务
+     *
      * @param data
      */
     @Override
     public void validData(SysPermission data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getPermissionId()) && CheckUtil.objIsEmpty(data.getPermissionCode(), data.getPermissionName()))
+            throw NBException.create(EErrorCode.missingArg);
+        this.beUsedCheck(data);
+    }
+
+    private void beUsedCheck(SysPermission data) {
+        if (CheckUtil.objIsEmpty(data))
+            throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsNotEmpty(data.getPermissionCode())) {
+            Qw qw = Qw.create().eq(SysPermission.PERMISSION_CODE, data.getPermissionCode());
+            if (CheckUtil.objIsNotEmpty(data.getPermissionId())) {
+                qw.ne(SysPermission.PERMISSION_ID, data.getPermissionId());
+                SysPermission dbData = this.getById(data.getPermissionId());
+                if (rolePermissionService.count(Qw.create().eq(SysRolePermission.PERMISSION_CODE, dbData.getPermissionCode())) > 0)
+                    throw NBException.create(EErrorCode.beUsed, "无法修改使用中菜单编码");
+            }
+            if (this.count(qw) > 0)
+                throw NBException.create(EErrorCode.beUsed);
+        }
     }
 }

@@ -169,6 +169,13 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         return this.prepareReturnModel(this.list(searchParams.preWrapper(null)));
     }
 
+    @Override
+    public List<SysRole> listByUserId(String userId) {
+        if (CheckUtil.objIsEmpty(userId))
+            throw NBException.create(EErrorCode.missingArg);
+        return mapper.listByUserId(userId);
+    }
+
     /**
      * 连表分页查询map数据
      * @param pg

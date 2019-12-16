@@ -76,6 +76,8 @@ public interface ISysRoleService extends IService<SysRole> {
      */
     List<SysRole> listData(SysRole.SearchParams searchParams);
 
+    List<SysRole> listByUserId(String userId);
+
     /**
      * 分页查询Map数据
      * @param pg

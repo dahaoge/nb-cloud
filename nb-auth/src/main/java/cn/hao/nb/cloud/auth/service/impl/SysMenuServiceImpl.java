@@ -127,6 +127,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public boolean delData(String id) {
         if (CheckUtil.strIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
+        SysMenu data = this.getById(id);
+        if (CheckUtil.objIsEmpty(data))
+            throw NBException.create(EErrorCode.noData);
+        this.beUsedCheck(data);
         return this.removeById(id);
     }
 
@@ -218,6 +222,13 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return this.prepareReturnModel(this.list(searchParams.preWrapper(null)));
     }
 
+    @Override
+    public List<SysMenu> listByRoleCode(String roleCode) {
+        if (CheckUtil.objIsEmpty(roleCode))
+            throw NBException.create(EErrorCode.missingArg);
+        return mapper.listByRoleCode(roleCode);
+    }
+
     /**
      * 连表分页查询map数据
      *
@@ -299,6 +310,18 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         if (CheckUtil.objIsEmpty(data.getMenuId()) && CheckUtil.objIsEmpty(data.getMenuCode()))
             throw NBException.create(EErrorCode.missingArg);
 
+        this.beUsedCheck(data);
+
+        if (CheckUtil.objIsNotEmpty(data.getParentMenuCode())) {
+            SysMenu p = this.getByMenuCode(data.getParentMenuCode());
+            if (CheckUtil.objIsEmpty(p))
+                throw NBException.create(EErrorCode.noData, "请先添加编码为[" + data.getParentMenuCode() + "]的父级菜单");
+        }
+    }
+
+    private void beUsedCheck(SysMenu data) {
+        if (CheckUtil.objIsEmpty(data))
+            throw NBException.create(EErrorCode.missingArg);
         if (CheckUtil.objIsNotEmpty(data.getMenuCode())) {
             Qw qw = Qw.create().eq(SysMenu.MENU_CODE, data.getMenuCode());
             if (CheckUtil.objIsNotEmpty(data.getMenuId())) {
@@ -309,11 +332,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             }
             if (this.count(qw) > 0)
                 throw NBException.create(EErrorCode.beUsed);
-        }
-        if (CheckUtil.objIsNotEmpty(data.getParentMenuCode())) {
-            SysMenu p = this.getByMenuCode(data.getParentMenuCode());
-            if (CheckUtil.objIsEmpty(p))
-                throw NBException.create(EErrorCode.noData, "请先添加编码为[" + data.getParentMenuCode() + "]的父级菜单");
         }
     }
 

@@ -163,6 +163,15 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
         return this.prepareReturnModel(this.getById(id));
     }
 
+    @Override
+    public List<UUserRole> listByUserId(String userId) {
+        if (CheckUtil.objIsEmpty(userId))
+            throw NBException.create(EErrorCode.missingArg);
+        UUserRole.SearchParams searchParams = new UUserRole().new SearchParams();
+        searchParams.setUserId(userId);
+        return this.listData(searchParams);
+    }
+
     /**
      * 分页查询
      * @param pg

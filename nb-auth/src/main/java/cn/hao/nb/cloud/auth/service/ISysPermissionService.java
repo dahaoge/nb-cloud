@@ -68,6 +68,8 @@ public interface ISysPermissionService extends IService<SysPermission> {
      */
     List<SysPermission> listData(SysPermission.SearchParams searchParams);
 
+    List<SysPermission> listByRoleCode(String roleCode);
+
     /**
      * 分页查询Map数据
      * @param pg

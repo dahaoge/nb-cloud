@@ -78,6 +78,8 @@ public interface ISysMenuService extends IService<SysMenu> {
      */
     List<SysMenu> listData(SysMenu.SearchParams searchParams);
 
+    List<SysMenu> listByRoleCode(String roleCode);
+
     /**
      * 分页查询Map数据
      * @param pg

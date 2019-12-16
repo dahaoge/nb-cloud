@@ -31,6 +31,9 @@ public class SysPermission implements Serializable {
     @Data
     public class SearchParams {
 
+        private String permissionCode;
+
+        private String permissionName;
 
         @ApiModelProperty(value = "排序字段")
         private String sort = "update_time";
@@ -41,6 +44,10 @@ public class SysPermission implements Serializable {
         public Qw<SysPermission> preWrapper(Qw<SysPermission> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
+            if (CheckUtil.objIsEmpty(this.getPermissionCode()))
+                qw.like(SysPermission.PERMISSION_CODE, this.getPermissionCode());
+            if (CheckUtil.objIsEmpty(this.getPermissionName()))
+                qw.like(SysPermission.PERMISSION_NAME, this.getPermissionName());
             if (ESqlOrder.DESC.equals(this.getOrder()))
                 qw.orderByDesc(this.getSort());
             else
