@@ -24,6 +24,6 @@
     <select id="pageMapData" parameterType="map" resultType="map">
         select
         <include refid="Base_Column_List"/>
-        from sys_role_permission
+        from sys_role_permission ${ew.customSqlSegment}
     </select>
 </mapper>

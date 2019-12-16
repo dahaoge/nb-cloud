@@ -29,6 +29,6 @@
     <select id="pageMapData" parameterType="map" resultType="map">
         select
         <include refid="Base_Column_List"/>
-        from sys_menu
+        from sys_menu ${ew.customSqlSegment}
     </select>
 </mapper>

@@ -31,6 +31,6 @@
     <select id="pageMapData" parameterType="map" resultType="map">
         select
         <include refid="Base_Column_List"/>
-        from u_user_info
+        from u_user_info ${ew.customSqlSegment}
     </select>
 </mapper>
