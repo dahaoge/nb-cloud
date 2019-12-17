@@ -1,9 +1,7 @@
 import cn.hao.nb.cloud.common.penum.ESourceClient;
 import cn.hao.nb.cloud.common.util.AesUtil;
-import com.google.common.collect.Lists;
 
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * @Auther: hao
@@ -13,8 +11,6 @@ import java.util.List;
 public class Test {
 
     public static void main(String[] args) {
-        List list = Lists.newArrayList(ESourceClient.webManageClient, ESourceClient.clientApp);
-        System.out.println(list.contains(ESourceClient.webManageClient));
 
     }
 
