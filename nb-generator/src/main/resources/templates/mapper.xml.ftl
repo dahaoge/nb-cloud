@@ -40,6 +40,6 @@
     <select id="pageMapData" parameterType="map" resultType="map">
         select
         <include refid="Base_Column_List"/>
-        from ${table.name} ${ew.customSqlSegment}
+        from ${table.name}
     </select>
 </mapper>

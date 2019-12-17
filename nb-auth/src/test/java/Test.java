@@ -29,6 +29,7 @@ public class Test {
         List list = Lists.newArrayList("a", "b");
         System.out.println(list.contains("a"));
         System.out.println("17686688903".substring(3));
+        System.out.println("aaa$$bbb".indexOf("$$"));
     }
 
     @org.junit.Test

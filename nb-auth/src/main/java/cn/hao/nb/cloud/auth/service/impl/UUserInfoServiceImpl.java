@@ -210,8 +210,11 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     public UUserInfo addData(UUserInfo data) {
         this.validData(data);
         data.setUserId(idUtil.nextId());
-        data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
-        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        TokenUser tokenUser = UserUtil.getTokenUser(false);
+        if (CheckUtil.objIsNotEmpty()) {
+            data.setCreateBy(tokenUser.getUserId());
+            data.setUpdateBy(tokenUser.getUserId());
+        }
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);

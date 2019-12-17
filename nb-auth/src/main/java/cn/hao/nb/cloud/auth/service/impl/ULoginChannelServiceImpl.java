@@ -6,6 +6,7 @@ import cn.hao.nb.cloud.auth.service.IULoginChannelService;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
 import cn.hao.nb.cloud.common.penum.ELoginType;
@@ -47,8 +48,11 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     public ULoginChannel addData(ULoginChannel data) {
         this.validData(data);
         data.setTId(idUtil.nextId());
-        data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
-        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        TokenUser tokenUser = UserUtil.getTokenUser(false);
+        if (CheckUtil.objIsNotEmpty(tokenUser)) {
+            data.setCreateBy(tokenUser.getUserId());
+            data.setUpdateBy(tokenUser.getUserId());
+        }
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);

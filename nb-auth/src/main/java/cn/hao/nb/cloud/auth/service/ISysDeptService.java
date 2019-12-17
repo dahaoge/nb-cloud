@@ -70,9 +70,11 @@ public interface ISysDeptService extends IService<SysDept> {
 
     List<SysDept> listDisDeptByParentId(String pId);
 
-    List<SysDept> deptTree();
+    List<SysDept> deptTree(String deptId);
 
     List<SysDept> userDeptTree(String userId);
+
+    List<SysDept> listByUserId(String userId);
 
     /**
      * 分页查询数据

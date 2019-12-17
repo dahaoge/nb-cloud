@@ -46,10 +46,12 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
     @Override
     public UUserDept addData(UUserDept data) {
         this.validData(data);
-        TokenUser tokenUser = UserUtil.getTokenUser(true);
+        TokenUser tokenUser = UserUtil.getTokenUser(false);
         data.setTId(idUtil.nextId());
-        data.setCreateBy(tokenUser.getUserId());
-        data.setUpdateBy(tokenUser.getUserId());
+        if (CheckUtil.objIsNotEmpty(tokenUser)) {
+            data.setCreateBy(tokenUser.getUserId());
+            data.setUpdateBy(tokenUser.getUserId());
+        }
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
@@ -80,6 +82,7 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
 
     /**
      * 增量更新数据
+     *
      * @param data
      * @return
      */

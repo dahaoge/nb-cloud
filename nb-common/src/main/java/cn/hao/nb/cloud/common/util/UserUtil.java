@@ -9,6 +9,8 @@ import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
 import cn.hao.nb.cloud.common.penum.ESourceClient;
+import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -22,6 +24,7 @@ import java.util.Map;
  * @Date: 2019-12-06 20:46
  * @Description:
  */
+@Slf4j
 public class UserUtil {
 
     public static long PWD_EXPIRE_TIME = 300000;
@@ -104,6 +107,7 @@ public class UserUtil {
     public static ESourceClient getAndValidRequestClient(HttpServletRequest httpServletRequest) {
         String sourceAk = httpServletRequest.getHeader(SecurityConstants.HEADER_SOURCE_AK_KEY);
         String sourceSign = httpServletRequest.getHeader(SecurityConstants.HEADER_SOURCE_SIGN_KEY);
+        log.debug("获取并验证请求来源-->sourceAk:{}----sourceSign:{}", sourceAk, sourceSign);
         return UserUtil.getAndValidRequestClient(sourceAk, sourceSign);
     }
 
@@ -134,6 +138,7 @@ public class UserUtil {
     public static ESourceClient getAndValidRequestClient(String sourceAk, String sourceSign) {
         if (CheckUtil.objIsEmpty(sourceAk, sourceSign))
             throw NBException.create(EErrorCode.missingAuthArgs);
+        log.debug("获取并验证请求来源-->sourceAk:{}----sourceSign:{}", sourceAk, sourceSign);
         Map<String, String> sourceClientMap = SpringUtil.getBean(SecurityProps.class).getSourceClients().get(sourceAk);
         String client = sourceClientMap.get(SecurityConstants.SOURCE_VERIFICATION_ENTITY_NAME_KEY);
         String sk = sourceClientMap.get(SecurityConstants.SOURCE_VERIFICATION_ENTITY_SK_KEY);
@@ -151,19 +156,21 @@ public class UserUtil {
         if (CheckUtil.objIsEmpty(sk, sign)) {
             throw NBException.create(EErrorCode.missingAuthArgs);
         }
+        String decodeSign = null;
         try {
-            String decodeSign = AesUtil.decrypt(sign, sk);
-            if (CheckUtil.objIsEmpty(decodeSign) || decodeSign.indexOf("$$") < 0)
-                throw NBException.create(EErrorCode.authDecodeError);
-            String[] ss = decodeSign.split("\\$\\$");
-            if (Long.parseLong(ss[1]) < (Calendar.getInstance().getTimeInMillis() - UserUtil.SOURCE_SIGN_EXPIRE_TIME)) {
-                throw NBException.create(EErrorCode.authDenied, "权限已过期");
-            }
-            if (!sk.equals(ss[0])) {
-                throw NBException.create(EErrorCode.authDecodeError);
-            }
-
+            decodeSign = AesUtil.decrypt(sign, sk);
         } catch (Exception e) {
+            throw NBException.create(EErrorCode.authDecodeError);
+        }
+        log.debug("获取并验证请求来源--->decodeSign:{}", decodeSign);
+        if (CheckUtil.objIsEmpty(decodeSign) || decodeSign.indexOf("$$") < 0)
+            throw NBException.create(EErrorCode.authDecodeError);
+        String[] ss = decodeSign.split("\\$\\$");
+        log.debug("获取并验证请求来源--->decodeSign.split('$$'):{}", JSON.toJSONString(ss));
+        if (Long.parseLong(ss[1]) < (Calendar.getInstance().getTimeInMillis() - UserUtil.SOURCE_SIGN_EXPIRE_TIME)) {
+            throw NBException.create(EErrorCode.authDenied, "请求头参数过期");
+        }
+        if (!sk.equals(ss[0])) {
             throw NBException.create(EErrorCode.authDecodeError);
         }
     }
