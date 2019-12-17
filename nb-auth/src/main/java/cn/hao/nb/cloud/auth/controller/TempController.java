@@ -73,7 +73,7 @@ public class TempController {
         Qd result = Qd.create();
         userId = CheckUtil.objIsEmpty(userId) ? userInfoService.getOne(Qw.create().eq(UUserInfo.PHONE, phone)).getUserId() : userId;
         TokenUser tokenUser = authMapper.getTokenUserById(userId);
-        if (sourceClient == ESourceClient.webManageClient) {
+        if (sourceClient == ESourceClient.web2Manager) {
             List<String> roleList = ListUtil.getPkList(authMapper.getUserRoles(tokenUser.getUserId()), SysRole.ROLE_CODE);
             tokenUser.setRoleList(roleList);
 

@@ -11,8 +11,9 @@ import java.util.List;
  * @Description:
  */
 public enum ELoginChannelScop implements PEnum<String> {
-    CClient(Lists.newArrayList(ESourceClient.clientApp), "C端客户端"),
-    manageClient(Lists.newArrayList(ESourceClient.webManageClient), "管理端");
+    CClient(Lists.newArrayList(ESourceClient.app2c, ESourceClient.web2c), "C端"),
+    BClient(Lists.newArrayList(ESourceClient.app2b, ESourceClient.web2b), "B端"),
+    manageClient(Lists.newArrayList(ESourceClient.app2Manager, ESourceClient.web2Manager), "管理端");
 
     private String desc;
     private List<ESourceClient> clients;

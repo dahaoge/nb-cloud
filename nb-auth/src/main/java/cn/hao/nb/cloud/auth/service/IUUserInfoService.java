@@ -27,16 +27,16 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param userName
      * @return
      */
-    UUserInfo clientUserRegistByPhone(String phone, String userName);
+    UUserInfo addCUser(String phone, String loginId, String userName, String pwd);
 
     /**
-     * C端用户注册(添加)
+     * B端用户注册(添加)
      * @param phone
      * @param userName
      * @param deptIds
      * @return
      */
-    UUserInfo clientUserRegistByPhone(String phone, String userName, String deptIds);
+    UUserInfo addBUser(String phone, String loginId, String userName, String deptIds, String pwd);
 
     /**
      * 管理端用户注册(添加)
@@ -46,7 +46,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param roleCodes
      * @return
      */
-    UUserInfo webManagerRegistByPhone(String phone, String userName, String deptIds, String roleCodes);
+    UUserInfo addManager(String phone, String loginId, String userName, String deptIds, String pwd, String roleCodes);
 
     /**
      * 根据手机号和密码登录

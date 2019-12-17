@@ -13,6 +13,7 @@
         <module>nb-gateway</module>
         <module>nb-auth</module>
         <module>nb-generator</module>
+        <module>nb-basic</module>
     </modules>
     <packaging>pom</packaging>
 

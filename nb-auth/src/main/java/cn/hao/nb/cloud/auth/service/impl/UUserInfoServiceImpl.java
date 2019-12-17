@@ -54,39 +54,66 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UUserInfo clientUserRegistByPhone(String phone, String userName) {
-        return this.clientUserRegistByPhone(phone, userName, null);
+    public UUserInfo addCUser(String phone, String loginId, String userName, String pwd) {
+        return this.addUser(phone, loginId, userName, EUserType.cUser, pwd);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UUserInfo clientUserRegistByPhone(String phone, String userName, String deptIds) {
-        if (CheckUtil.objIsEmpty(phone, userName))
+    public UUserInfo addBUser(String phone, String loginId, String userName, String deptIds, String pwd) {
+        if (CheckUtil.objIsEmpty(userName))
             throw NBException.create(EErrorCode.missingArg);
+
         // 添加用户信息
-        UUserInfo userInfo = this.phoneRegist(phone, userName);
-        // 添加C端登录渠道
-        loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, ELoginChannelScop.CClient);
+        UUserInfo uUserInfo = this.addUser(phone, loginId, userName, EUserType.bUser, pwd);
+
         if (CheckUtil.objIsNotEmpty(deptIds))
-            userDeptService.addUser2Depts(userInfo.getUserId(), deptIds);
-        return userInfo;
+            userDeptService.addUser2Depts(uUserInfo.getUserId(), deptIds);
+        return uUserInfo;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UUserInfo webManagerRegistByPhone(String phone, String userName, String deptIds, String roleCodes) {
-        if (CheckUtil.objIsEmpty(phone, userName))
+    public UUserInfo addManager(String phone, String loginId, String userName, String deptIds, String pwd, String roleCodes) {
+        if (CheckUtil.objIsEmpty(userName))
             throw NBException.create(EErrorCode.missingArg);
         // 添加用户信息
-        UUserInfo userInfo = this.phoneRegist(phone, userName);
-        //添加管理端登录渠道
-        loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, ELoginChannelScop.manageClient);
-        // 添加端登录渠道
-        loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, ELoginChannelScop.CClient);
+        UUserInfo uUserInfo = this.addUser(phone, loginId, userName, EUserType.manager, pwd);
         if (CheckUtil.objIsNotEmpty(deptIds))
-            userDeptService.addUser2Depts(userInfo.getUserId(), deptIds);
+            userDeptService.addUser2Depts(uUserInfo.getUserId(), deptIds);
         if (CheckUtil.objIsNotEmpty(roleCodes))
-            authService.addUserRoles(userInfo.getUserId(), roleCodes);
+            authService.addUserRoles(uUserInfo.getUserId(), roleCodes);
+        return uUserInfo;
+    }
+
+    private UUserInfo addUser(String phone, String loginId, String userName, EUserType userType, String pwd) {
+        if (CheckUtil.objIsEmpty(userType))
+            throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(phone) && CheckUtil.objIsEmpty(loginId))
+            throw NBException.create(EErrorCode.missingArg, "登录ID和电话号码不能同时为空");
+        if (EUserType.cUser == userType && CheckUtil.objIsEmpty(phone) && CheckUtil.objIsEmpty(pwd))
+            throw NBException.create(EErrorCode.missingArg, "使用登录ID注册的用户密码为必填项");
+        UUserInfo userInfo = new UUserInfo();
+        userInfo.setSalt(RandomUtil.getRandomSaltL(6));
+        userInfo.setIsLocked(0);
+        userInfo.setPhone(phone);
+        userInfo.setLoginId(loginId);
+        userInfo.setUserName(userName);
+        userInfo.setLoginPwd(CheckUtil.strIsNotEmpty(pwd)
+                ? this.getDefaultPwd(pwd, userInfo.getSalt())
+                : CheckUtil.strIsEmpty(phone)
+                ? this.getDefaultPwd("12345678", userInfo.getSalt())
+                : this.getDefaultPwd(phone.substring(3), userInfo.getSalt()));
+        userInfo.setUserType(userType);
+        this.addData(userInfo);
+
+        // 添加登录渠道
+        userInfo.getUserType().getLoginChannelScops().forEach(item -> {
+            if (CheckUtil.objIsNotEmpty(phone))
+                loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, item);
+            if (CheckUtil.objIsNotEmpty(loginId))
+                loginChannelService.addLoginChannel(userInfo.getUserId(), ELoginType.pwd, loginId, item);
+        });
         return userInfo;
     }
 
@@ -143,7 +170,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             throw NBException.create(EErrorCode.authIdentityErr, "查询不到用户信息");
         Qd result = Qd.create();
 
-        if (UserUtil.getAndValidRequestClient() == ESourceClient.webManageClient) {
+        if (ELoginChannelScop.manageClient == UserUtil.getLoginChannelScop()) {
             List<String> roleList = ListUtil.getPkList(authMapper.getUserRoles(tokenUser.getUserId()), SysRole.ROLE_CODE);
             tokenUser.setRoleList(roleList);
 
@@ -176,29 +203,10 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         return this.changeUserLock(userId, EYn.n);
     }
 
-    private UUserInfo phoneRegist(String phone, String userName) {
-        if (CheckUtil.objIsEmpty(phone, userName))
-            throw NBException.create(EErrorCode.missingArg);
-        UUserInfo userInfo = this.preUser();
-        userInfo.setPhone(phone);
-        userInfo.setUserName(userName);
-        userInfo.setLoginPwd(this.getDefaultPwd(phone, userInfo.getSalt()));
-        this.addData(userInfo);
-
-        return userInfo;
+    private String getDefaultPwd(String loginId, String salt) {
+        return UserUtil.encodePwd(loginId, salt);
     }
 
-    private String getDefaultPwd(String phone, String salt) {
-        return UserUtil.encodePwd(phone.substring(3), salt);
-    }
-
-
-    private UUserInfo preUser() {
-        UUserInfo userInfo = new UUserInfo();
-        userInfo.setSalt(RandomUtil.getRandomSaltL(6));
-        userInfo.setIsLocked(0);
-        return userInfo;
-    }
 
     /**
      * 添加数据

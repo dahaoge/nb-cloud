@@ -20,11 +20,13 @@
         <result column="salt" property="salt"/>
         <result column="is_locked" property="isLocked"/>
         <result column="unlock_time" property="unlockTime"/>
+        <result column="user_type" property="userType"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-            version, create_by, create_time, update_by, update_time, deleted, user_id, user_name, phone, icnum, icon, login_id, login_pwd, salt, is_locked, unlock_time
+            version, create_by, create_time, update_by, update_time, deleted, user_id, user_name,
+            phone, icnum, icon, login_id, login_pwd, salt, is_locked, unlock_time,user_type
         </sql>
 
 

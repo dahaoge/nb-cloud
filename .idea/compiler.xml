@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="nb-auth" />
         <module name="nacos-demo" />
         <module name="nb-common" />
+        <module name="nb-basic" />
         <module name="nb-generator" />
         <module name="nb-gateway" />
-        <module name="nb-auth" />
       </profile>
     </annotationProcessing>
   </component>
@@ -18,6 +19,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="nacos-demo" options="-parameters" />
       <module name="nb-auth" options="-parameters" />
+      <module name="nb-basic" options="-parameters" />
       <module name="nb-common" options="-parameters" />
       <module name="nb-gateway" options="-parameters" />
       <module name="nb-generator" options="-parameters" />

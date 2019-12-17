@@ -48,17 +48,29 @@ public class PAuthController {
         return Rv.getInstance(iUUserInfoService.getLoginInfo(userInfo.getUserId()));
     }
 
-    @ApiOperation(value = "姓名+手机号+组织机构编码注册(添加)C端用户")
-    @PostMapping("/regist/clientUser/byPhoneWithDept")
-    public Rv clientUserRegistByPhone(@RequestParam String phone, @RequestParam String userName, String deptIds) {
-        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.clientUserRegistByPhone(phone, userName, deptIds).getUserId()));
+    @ApiOperation(value = "添加管理员账号")
+    @PostMapping("/manager/add")
+    public Rv addManager(String phone, String loginId, String userName, String deptIds, String roleCodes) {
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(
+                iUUserInfoService.addManager(phone, loginId, userName, deptIds, null, roleCodes).getUserId()));
     }
 
-    @ApiOperation(value = "姓名+手机号+组织机构+角色编码注册(添加)管理员用户")
-    @PostMapping("/regist/webManager/byPudr")
-    public Rv webManagerRegistByPhone(@RequestParam String phone, @RequestParam String userName,
-                                      String deptIds, String roleCodes) {
-        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.webManagerRegistByPhone(phone, userName, deptIds, roleCodes).getUserId()));
+    @ApiOperation(value = "添加B端用户")
+    @PostMapping("/bUser/add")
+    public Rv addBUser(String phone, String loginId, String userName, String deptIds) {
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.addBUser(phone, loginId, userName, deptIds, null).getUserId()));
+    }
+
+    @ApiOperation(value = "B端用户注册")
+    @PostMapping("/bUser/regist")
+    public Rv registBUser(String phone, String loginId, String userName, String deptIds, String pwd) {
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.addBUser(phone, loginId, userName, deptIds, pwd).getUserId()));
+    }
+
+    @ApiOperation(value = "C端用户注册")
+    @PostMapping("/cUser/regist")
+    public Rv registCUser(String phone, String loginId, String userName, String pwd) {
+        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.addCUser(phone, loginId, userName, pwd).getUserId()));
     }
 
     @ApiOperation(value = "获取登录信息(会刷新token)")

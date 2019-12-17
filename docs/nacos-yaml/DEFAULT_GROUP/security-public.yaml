@@ -26,8 +26,8 @@ customize:
       CHPGTP6OQ6AYVWMV:
         ak: CHPGTP6OQ6AYVWMV
         sk: AI7KMUMW8CJ3PEPT
-        name: clientApp
+        name: app2b
       0N9O4XMGTP1XOV30:
         ak: 0N9O4XMGTP1XOV30
         sk: 28X335DCZ864VGG9
-        name: webManageClient
+        name: web2Manager

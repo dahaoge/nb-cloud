@@ -8,7 +8,7 @@ import cn.hao.nb.cloud.common.entity.PEnum;
  * @Description:
  */
 public enum ESourceClient implements PEnum<String> {
-    clientApp("客户端APP"), webManageClient("web管理端");
+    app2c("C端App"), web2c("C端Web"), app2b("C端App"), web2b("C端Web"), web2Manager("管理端Web"), app2Manager("管理端App");
 
     private String desc;
 

@@ -3,7 +3,9 @@ package cn.hao.nb.cloud.auth.entity;
 import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.entity.RedisUser;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
+import cn.hao.nb.cloud.common.penum.EUserType;
 import cn.hao.nb.cloud.common.util.CheckUtil;
+import cn.hao.nb.cloud.common.util.ListUtil;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,6 +37,8 @@ public class UUserInfo implements Serializable {
         private String q;
         @ApiModelProperty(value = "是否被锁定")
         private Integer isLocked;
+        @ApiModelProperty(value = "用户类型")
+        private String userType;
 
         @ApiModelProperty(value = "排序字段")
         private String sort = "update_time";
@@ -53,6 +57,8 @@ public class UUserInfo implements Serializable {
                 });
             if (CheckUtil.objIsNotEmpty(this.getIsLocked()))
                 qw.eq(UUserInfo.IS_LOCKED, this.getIsLocked());
+            if (CheckUtil.objIsNotEmpty(this.getUserType()))
+                qw.in(UUserInfo.USER_TYPE, ListUtil.spliteCreate(this.getUserType()));
             if (ESqlOrder.DESC.equals(this.getOrder()))
                 qw.orderByDesc(this.getSort());
             else
@@ -103,6 +109,8 @@ public class UUserInfo implements Serializable {
     private Integer isLocked;
     @ApiModelProperty(value = "解锁时间")
     private Date unlockTime;
+    @ApiModelProperty(value = "用户类型")
+    private EUserType userType;
 
     public static final String VERSION = "version";
     public static final String CREATE_BY = "create_by";
@@ -120,5 +128,6 @@ public class UUserInfo implements Serializable {
     public static final String SALT = "salt";
     public static final String IS_LOCKED = "is_locked";
     public static final String UNLOCK_TIME = "unlock_time";
+    public static final String USER_TYPE = "user_type";
 
 }
