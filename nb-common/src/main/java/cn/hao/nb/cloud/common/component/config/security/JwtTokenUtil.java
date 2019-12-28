@@ -2,11 +2,11 @@ package cn.hao.nb.cloud.common.component.config.security;
 
 import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.util.CheckUtil;
+import cn.hao.nb.cloud.common.util.UserUtil;
 import com.alibaba.fastjson.JSON;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -73,15 +73,19 @@ public class JwtTokenUtil implements Serializable {
      * @return 令牌
      */
     private String generateToken(Map<String, Object> claims) {
+        // token过期时间
         long expireMillTimes = 604800L * 1000 * 52;
 
-//        Date expirationDate = new Date(System.currentTimeMillis() + expireMillTimes);
-        Date expirationDate = DateTime.now().plusDays(30).toDate();
+        Date expirationDate = new Date(System.currentTimeMillis() + expireMillTimes);
         String token = Jwts.builder().setClaims(claims).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, secret).compact();
 
         String userId = (String) claims.get("sub");
+
+        // token放入缓存
         redisTemplate.opsForHash().put(ACCESS_KEY, token, Byte.MIN_VALUE);
-        redisTemplate.opsForHash().put(USER_TOKEN_KEY, userId, token);
+
+        // 存放token的激活状态,适配对于每个端的单点登录
+        redisTemplate.opsForHash().put(USER_TOKEN_KEY, UserUtil.getAndValidRequestClient().getValue() + "_" + userId, token);
 
         return token;
     }
@@ -102,6 +106,7 @@ public class JwtTokenUtil implements Serializable {
 
         Map<String, Object> map = JSON.parseObject(JSON.toJSONString(user));
 
+        // 鉴权的时候一般token中不需要包含menu,为了避免token过长,生成token前去掉menu
         map.remove("menuList");
 
         claims.put("userInfo", JSON.toJSONString(map));
@@ -119,8 +124,6 @@ public class JwtTokenUtil implements Serializable {
             Claims claims = getClaimsFromToken(token);
             Date expiration = claims.getExpiration();
             return expiration.before(new Date());
-            //TODO token过期时间
-//            return false;
         } catch (Exception e) {
             return false;
         }
@@ -190,7 +193,7 @@ public class JwtTokenUtil implements Serializable {
         }
 
         //获取用户激活状态token
-        Object userExistToken = redisTemplate.opsForHash().get(USER_TOKEN_KEY, tokenUser.getUserId());
+        Object userExistToken = redisTemplate.opsForHash().get(USER_TOKEN_KEY, UserUtil.getAndValidRequestClient().getValue() + "_" + tokenUser.getUserId());
         //无激活状态token，该token失效
         if (userExistToken == null) {
             redisTemplate.opsForHash().delete(ACCESS_KEY, token);

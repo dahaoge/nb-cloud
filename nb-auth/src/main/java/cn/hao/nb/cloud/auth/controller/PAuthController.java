@@ -125,9 +125,4 @@ public class PAuthController {
 
         return Rv.getInstance(smsUtil.checkSms(phone, code));
     }
-
-
-
-
-
 }
