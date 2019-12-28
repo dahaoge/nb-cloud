@@ -33,18 +33,6 @@ public class StartGenerator {
      */
     public static String userPwd = "WXfengguang88";
 
-    /**
-     * 数据库url
-     */
-    public static String url1 = "jdbc:mysql://222.79.184.36:13306/marketing?serverTimezone=GMT%2B8&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
-    /**
-     * 用户名
-     */
-    public static String userName1 = "root";
-    /**
-     * 密码
-     */
-    public static String userPwd1 = "root";
 
 
     /**
@@ -115,16 +103,19 @@ public class StartGenerator {
         strategy.setSuperControllerClass(null);
 //        strategy.setInclude(scanner("表名"));
         strategy.setInclude(
-                "u_user_info",
-                "u_login_channel",
-                "sys_menu",
-                "sys_role",
-                "sys_permission",
-                "sys_role_menu",
-                "sys_role_permission",
-                "u_user_role",
-                "u_user_dept",
-                "sys_dept"
+//                "u_user_info",
+//                "u_login_channel",
+//                "sys_menu",
+//                "sys_role",
+//                "sys_permission",
+//                "sys_role_menu",
+//                "sys_role_permission",
+//                "u_user_role",
+//                "u_user_dept",
+//                "sys_dept"
+                "sys_app_version",
+                "sys_dict",
+                "sys_tags"
         );
         strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);

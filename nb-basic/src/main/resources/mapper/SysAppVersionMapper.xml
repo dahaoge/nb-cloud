@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hao.nb.cloud.basic.mapper.SysAppVersionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.hao.nb.cloud.basic.entity.SysAppVersion">
+        <id column="app_version_id" property="appVersionId"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="app" property="app"/>
+        <result column="app_platform" property="appPlatform"/>
+        <result column="app_download_channel" property="appDownloadChannel"/>
+        <result column="app_version_type" property="appVersionType"/>
+        <result column="app_version" property="appVersion"/>
+        <result column="is_must" property="isMust"/>
+        <result column="app_version_name" property="appVersionName"/>
+        <result column="version_desc" property="versionDesc"/>
+        <result column="update_desc" property="updateDesc"/>
+        <result column="version_start_time" property="versionStartTime"/>
+        <result column="pay_lock" property="payLock"/>
+        <result column="app_size" property="appSize"/>
+        <result column="download_url_hash" property="downloadUrlHash"/>
+        <result column="has_published" property="hasPublished"/>
+        <result column="version_num" property="versionNum"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            version, create_by, create_time, update_by, update_time, deleted, app_version_id, app, app_platform, app_download_channel, app_version_type, app_version, is_must, app_version_name, version_desc, update_desc, version_start_time, pay_lock, app_size, download_url_hash, has_published, version_num
+        </sql>
+
+
+    <select id="pageMapData" parameterType="map" resultType="map">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_app_version
+    </select>
+</mapper>

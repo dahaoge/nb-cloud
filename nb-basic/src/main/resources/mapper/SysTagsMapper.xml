@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hao.nb.cloud.basic.mapper.SysTagsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.hao.nb.cloud.basic.entity.SysTags">
+        <id column="tag_id" property="tagId"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="tag_code" property="tagCode"/>
+        <result column="tag_label" property="tagLabel"/>
+        <result column="tag_target" property="tagTarget"/>
+        <result column="tag_type" property="tagType"/>
+        <result column="tag_icon" property="tagIcon"/>
+        <result column="tag_icon_active" property="tagIconActive"/>
+        <result column="tag_index" property="tagIndex"/>
+        <result column="tag_group" property="tagGroup"/>
+        <result column="tag_group_name" property="tagGroupName"/>
+        <result column="app_style_normal" property="appStyleNormal"/>
+        <result column="app_style_active" property="appStyleActive"/>
+        <result column="mini_app_style_normal" property="miniAppStyleNormal"/>
+        <result column="mini_app_style_active" property="miniAppStyleActive"/>
+        <result column="web_style_normal" property="webStyleNormal"/>
+        <result column="web_style_active" property="webStyleActive"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            version, create_by, create_time, update_by, update_time, deleted, tag_id, tag_code, tag_label, tag_target, tag_type, tag_icon, tag_icon_active, tag_index, tag_group, tag_group_name, app_style_normal, app_style_active, mini_app_style_normal, mini_app_style_active, web_style_normal, web_style_active
+        </sql>
+
+
+    <select id="pageMapData" parameterType="map" resultType="map">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_tags
+    </select>
+</mapper>
