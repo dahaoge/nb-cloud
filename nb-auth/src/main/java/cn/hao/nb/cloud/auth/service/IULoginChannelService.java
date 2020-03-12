@@ -1,6 +1,7 @@
 package cn.hao.nb.cloud.auth.service;
 
 import cn.hao.nb.cloud.auth.entity.ULoginChannel;
+import cn.hao.nb.cloud.auth.entity.UUserInfo;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
 import cn.hao.nb.cloud.common.penum.ELoginType;
@@ -32,6 +33,14 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
     ULoginChannel addLoginChannel(String userId, ELoginType loginType, String loginId, ELoginChannelScop loginChannelScop);
 
     boolean addPhoneChannel(String userId, String phone, ELoginChannelScop loginChannelScop);
+
+    public boolean modifyUserPhone(String userId, String phone);
+
+    public boolean addByUser(UUserInfo user);
+
+    public List<ULoginChannel> getUserLoginChannelByLoginType(String userId, ELoginType loginType);
+
+    boolean resetUserLoginChannel(String userId);
 
     /**
      * 增量更新数据
@@ -75,6 +84,14 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
     ULoginChannel getDetail(String id);
 
     ULoginChannel getByTypeAndChannelScope(String loginId, ELoginType loginType, ELoginChannelScop loginChannelScop);
+
+    public ULoginChannel getByWechatUnionId(String unionId);
+
+    public ULoginChannel getByWechatMpOpenId(String openId);
+
+    public ULoginChannel getByWechatPNOpenId(String openId);
+
+    public ULoginChannel getByWechatOpenAppOpenId(String openId);
 
     /**
      * 分页查询数据

@@ -1,8 +1,10 @@
 package cn.hao.nb.cloud.auth.service.impl;
 
 import cn.hao.nb.cloud.auth.entity.ULoginChannel;
+import cn.hao.nb.cloud.auth.entity.UUserInfo;
 import cn.hao.nb.cloud.auth.mapper.ULoginChannelMapper;
 import cn.hao.nb.cloud.auth.service.IULoginChannelService;
+import cn.hao.nb.cloud.auth.service.IUUserInfoService;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qw;
@@ -37,6 +39,8 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     IDUtil idUtil;
     @Autowired
     ULoginChannelMapper mapper;
+    @Autowired
+    IUUserInfoService userInfoService;
 
     /**
      * 添加数据
@@ -78,6 +82,62 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
         this.addLoginChannel(userId, ELoginType.checkSms, phone, loginChannelScop);
         this.addLoginChannel(userId, ELoginType.pwd, phone, loginChannelScop);
         return true;
+    }
+
+    @Override
+    public boolean modifyUserPhone(String userId, String phone) {
+        if (CheckUtil.objIsEmpty(userId, phone))
+            throw NBException.create(EErrorCode.missingArg);
+        List<ULoginChannel> loginChannels = this.getUserLoginChannelByLoginType(userId, ELoginType.checkSms);
+        if (CheckUtil.collectionIsNotEmpty(loginChannels)) {
+            loginChannels.forEach(item -> {
+                item.setLoginId(phone);
+                this.incrementModifyData(item);
+            });
+        }
+        return true;
+    }
+
+    @Override
+    public boolean addByUser(UUserInfo user) {
+        if (CheckUtil.objIsEmpty(user))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("addByUser:user");
+        if (CheckUtil.objIsEmpty(user.getUserType()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("addByUser:userType");
+        if (CheckUtil.objIsEmpty(user.getUserId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("addByUser:userId");
+        user.getUserType().getLoginChannelScops().forEach(item -> {
+            if (CheckUtil.strIsNotEmpty(user.getPhone()))
+                this.addPhoneChannel(user.getUserId(), user.getPhone(), item);
+            if (CheckUtil.strIsNotEmpty(user.getLoginId()))
+                this.addLoginChannel(user.getUserId(), ELoginType.pwd, user.getLoginId(), item);
+            if (CheckUtil.strIsNotEmpty(user.getWechatAppOpenid()))
+                this.addLoginChannel(user.getUserId(), ELoginType.wechatAppOpenid, user.getWechatAppOpenid(), item);
+            if (CheckUtil.strIsNotEmpty(user.getWechatMpOpenid()))
+                this.addLoginChannel(user.getUserId(), ELoginType.wechatAppOpenid, user.getWechatMpOpenid(), item);
+            if (CheckUtil.strIsNotEmpty(user.getWechatPnOpenid()))
+                this.addLoginChannel(user.getUserId(), ELoginType.wechatAppOpenid, user.getWechatPnOpenid(), item);
+            if (CheckUtil.strIsNotEmpty(user.getWechatUnionid()))
+                this.addLoginChannel(user.getUserId(), ELoginType.wechatAppOpenid, user.getWechatUnionid(), item);
+        });
+
+        return true;
+    }
+
+    @Override
+    public List<ULoginChannel> getUserLoginChannelByLoginType(String userId, ELoginType loginType) {
+        if (CheckUtil.objIsEmpty(userId, loginType))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("getUserLoginChannelByLoginType");
+        return this.list(Qw.create().eq(ULoginChannel.USER_ID, userId).eq(ULoginChannel.LOGIN_TYPE, loginType));
+    }
+
+    @Override
+    public boolean resetUserLoginChannel(String userId) {
+        if (CheckUtil.strIsEmpty(userId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("resetUserLoginChannel:userId");
+        this.delByUserId(userId);
+        UUserInfo userInfo = userInfoService.getById(userId);
+        return this.addByUser(userInfo);
     }
 
     /**
@@ -208,6 +268,34 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
                 .eq(ULoginChannel.LOGIN_ID, loginId)
                 .eq(ULoginChannel.LOGIN_TYPE, loginType)
                 .eq(ULoginChannel.LOGIN_CHANNEL_SCOPE, loginChannelScop));
+    }
+
+    @Override
+    public ULoginChannel getByWechatUnionId(String unionId) {
+        if (CheckUtil.strIsEmpty(unionId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("getByWechatUnionId");
+        return this.getOne(Qw.create().eq(ULoginChannel.LOGIN_ID, unionId).eq(ULoginChannel.LOGIN_TYPE, ELoginType.wechatUnionid));
+    }
+
+    @Override
+    public ULoginChannel getByWechatMpOpenId(String openId) {
+        if (CheckUtil.strIsEmpty(openId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("getByWechatMpOpenId");
+        return this.getOne(Qw.create().eq(ULoginChannel.LOGIN_ID, openId).eq(ULoginChannel.LOGIN_TYPE, ELoginType.wechatMpOpenid));
+    }
+
+    @Override
+    public ULoginChannel getByWechatPNOpenId(String openId) {
+        if (CheckUtil.strIsEmpty(openId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("getByWechatPNOpenId");
+        return this.getOne(Qw.create().eq(ULoginChannel.LOGIN_ID, openId).eq(ULoginChannel.LOGIN_TYPE, ELoginType.wechatPnOpenid));
+    }
+
+    @Override
+    public ULoginChannel getByWechatOpenAppOpenId(String openId) {
+        if (CheckUtil.strIsEmpty(openId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("getByWechatOpenAppOpenId");
+        return this.getOne(Qw.create().eq(ULoginChannel.LOGIN_ID, openId).eq(ULoginChannel.LOGIN_TYPE, ELoginType.wechatAppOpenid));
     }
 
     /**

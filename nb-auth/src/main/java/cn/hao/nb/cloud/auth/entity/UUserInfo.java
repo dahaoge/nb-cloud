@@ -30,6 +30,11 @@ import java.util.Date;
 @ApiModel(value = "UUserInfo对象", description = "用户信息")
 public class UUserInfo implements Serializable {
 
+
+    public static UUserInfo.SearchParams getSearchParamInstance() {
+        return new UUserInfo().new SearchParams();
+    }
+
     @Data
     public class SearchParams {
 
@@ -112,6 +117,18 @@ public class UUserInfo implements Serializable {
     @ApiModelProperty(value = "用户类型")
     private EUserType userType;
 
+    @ApiModelProperty(value = "微信小程序openId")
+    private String wechatMpOpenid;
+
+    @ApiModelProperty(value = "微信unionid")
+    private String wechatUnionid;
+
+    @ApiModelProperty(value = "微信公众号openId")
+    private String wechatPnOpenid;
+
+    @ApiModelProperty(value = "微信开放平台绑定app获取的openId")
+    private String wechatAppOpenid;
+
     public static final String VERSION = "version";
     public static final String CREATE_BY = "create_by";
     public static final String CREATE_TIME = "create_time";
@@ -129,5 +146,13 @@ public class UUserInfo implements Serializable {
     public static final String IS_LOCKED = "is_locked";
     public static final String UNLOCK_TIME = "unlock_time";
     public static final String USER_TYPE = "user_type";
+
+    public static final String WECHAT_MP_OPENID = "wechat_mp_openid";
+
+    public static final String WECHAT_UNIONID = "wechat_unionid";
+
+    public static final String WECHAT_PN_OPENID = "wechat_pn_openid";
+
+    public static final String WECHAT_APP_OPENID = "wechat_app_openid";
 
 }
