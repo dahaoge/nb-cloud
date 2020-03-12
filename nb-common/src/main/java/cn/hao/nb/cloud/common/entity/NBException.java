@@ -114,4 +114,9 @@ public class NBException extends RuntimeException {
         return new StringBuilder().append("PAuth exception, type:").append(this.errorCode.toChString()).append(" message:").append(this.meMessage)
                 .toString();
     }
+
+    public NBException plusMsg(String s) {
+        this.meMessage = this.meMessage + "[" + s + "]";
+        return this;
+    }
 }

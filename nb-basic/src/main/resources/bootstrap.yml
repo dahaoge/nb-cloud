@@ -5,7 +5,7 @@ spring:
     name: nb-basic
   cloud:
     nacos:
-      server-addr: 117.50.43.3:8848
+      server-addr: 117.50.43.59:8848
       discovery:
       config:
         ext-config:

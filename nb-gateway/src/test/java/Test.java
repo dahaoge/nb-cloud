@@ -11,7 +11,11 @@ import java.util.Calendar;
 public class Test {
 
     public static void main(String[] args) {
-
+        String s = "aa_bb_cc";
+        System.out.println(s.replace("_", ""));
+        String s1 = "aa.bb.cc.dd.doc";
+        String[] ss = s1.split("\\.");
+        System.out.println(ss[ss.length - 1]);
     }
 
     public static void aes() {

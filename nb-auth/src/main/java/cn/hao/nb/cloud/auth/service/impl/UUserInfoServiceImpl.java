@@ -91,7 +91,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             throw NBException.create(EErrorCode.missingArg);
         if (CheckUtil.objIsEmpty(phone) && CheckUtil.objIsEmpty(loginId))
             throw NBException.create(EErrorCode.missingArg, "登录ID和电话号码不能同时为空");
-        if (EUserType.cUser == userType && CheckUtil.objIsEmpty(phone) && CheckUtil.objIsEmpty(pwd))
+        if (EUserType.cUser == userType && CheckUtil.objIsEmpty(pwd))
             throw NBException.create(EErrorCode.missingArg, "使用登录ID注册的用户密码为必填项");
         UUserInfo userInfo = new UUserInfo();
         userInfo.setSalt(RandomUtil.getRandomSaltL(6));

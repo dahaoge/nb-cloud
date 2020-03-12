@@ -157,7 +157,7 @@ public class JwtTokenUtil implements Serializable {
         TokenUser user = getUserFromToken(token);
 
         redisTemplate.opsForHash().delete(ACCESS_KEY, token);
-        redisTemplate.opsForHash().delete(USER_TOKEN_KEY, user.getUserId());
+        redisTemplate.opsForHash().delete(USER_TOKEN_KEY, UserUtil.getAndValidRequestClient().getValue() + "_" + user.getUserId());
 
         return true;
     }
@@ -189,7 +189,7 @@ public class JwtTokenUtil implements Serializable {
         // 临时处理缓存丢失重新发送短信的问题
         if (!redisTemplate.opsForHash().hasKey(ACCESS_KEY, token)) {
             redisTemplate.opsForHash().put(ACCESS_KEY, token, Byte.MIN_VALUE);
-            redisTemplate.opsForHash().put(USER_TOKEN_KEY, tokenUser.getUserId(), token);
+            redisTemplate.opsForHash().put(USER_TOKEN_KEY, UserUtil.getAndValidRequestClient().getValue() + "_" + tokenUser.getUserId(), token);
         }
 
         //获取用户激活状态token

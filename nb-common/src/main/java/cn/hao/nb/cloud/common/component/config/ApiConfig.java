@@ -1,19 +1,20 @@
 package cn.hao.nb.cloud.common.component.config;
 
+import cn.hao.nb.cloud.common.constant.SecurityConstants;
 import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,9 +28,15 @@ public class ApiConfig {
 
     @Bean
     public Docket createRestApi() {
+        //添加head参数start
+        List<Parameter> pars = new ArrayList<Parameter>();
+
+        pars.add(new ParameterBuilder().name(SecurityConstants.HEADER_SOURCE_AK_KEY).description(SecurityConstants.HEADER_SOURCE_AK_KEY).modelRef(new ModelRef("string")).parameterType("header").required(false).build());
+        pars.add(new ParameterBuilder().name(SecurityConstants.HEADER_SOURCE_SIGN_KEY).description(SecurityConstants.HEADER_SOURCE_SIGN_KEY).modelRef(new ModelRef("string")).parameterType("header").required(false).build());
+        //添加head参数end
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("cn.hao.nb.cloud")).paths
                 (PathSelectors.any()).build().securitySchemes(securitySchemes())
-                .securityContexts(securityContexts());
+                .securityContexts(securityContexts()).globalOperationParameters(pars);
     }
 
     private ApiInfo apiInfo() {

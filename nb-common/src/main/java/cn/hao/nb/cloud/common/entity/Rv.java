@@ -23,7 +23,7 @@ import java.util.Map;
 public class Rv<T> implements Serializable {
 
     //错误码
-    @ApiModelProperty(value = "错误码，SUCCESS ： 成功 OTHER： 错误", example = "0")
+    @ApiModelProperty(value = "错误码，SUCCESS ： 成功 OTHER： 错误")
     private int code;
 
     //返回msg
