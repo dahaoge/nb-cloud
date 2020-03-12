@@ -52,6 +52,11 @@ import java.util.Map;
     public class ${entity} implements Serializable {
 </#if>
 
+
+public static ${entity}.SearchParams getSearchParamInstance(){
+return new ${entity}().new SearchParams();
+}
+
 @Data
 public class SearchParams{
 
