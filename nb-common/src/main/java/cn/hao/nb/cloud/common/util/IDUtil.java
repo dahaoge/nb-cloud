@@ -1,105 +1,137 @@
 package cn.hao.nb.cloud.common.util;
 
+import com.baomidou.mybatisplus.core.toolkit.SystemClock;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 /**
- * Twitter_Snowflake<br>
- * SnowFlake的结构如下(每部分用-分开):<br>
- * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000 <br>
- * 1位标识，由于long基本类型在Java中是带符号的，最高位是符号位，正数是0，负数是1，所以id一般是正数，最高位是0<br>
- * 41位时间截(毫秒级)，注意，41位时间截不是存储当前时间的时间截，而是存储时间截的差值（当前时间截 - 开始时间截)
- * 得到的值），这里的的开始时间截，一般是我们的id生成器开始使用的时间，由我们程序来指定的（如下下面程序IdWorker类的startTime属性）。41位的时间截，可以使用69年，年T = (1L << 41) / (1000L * 60 * 60 * 24 * 365) = 69<br>
- * 10位的数据机器位，可以部署在1024个节点，包括5位datacenterId和5位workerId<br>
- * 12位序列，毫秒内的计数，12位的计数顺序号支持每个节点每毫秒(同一机器，同一时间截)产生4096个ID序号<br>
- * 加起来刚好64位，为一个Long型。<br>
- * SnowFlake的优点是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞(由数据中心ID和机器ID作区分)，并且效率较高，经测试，SnowFlake每秒能够产生26万ID左右。
- */
+ * 雪花算法分布式唯一ID生成器<br>
+ * 每个机器号最高支持每秒‭65535个序列, 当秒序列不足时启用备份机器号, 若备份机器也不足时借用备份机器下一秒可用序列<br>
+ * 53 bits 趋势自增ID结构如下:
+ * <p>
+ * |00000000|00011111|11111111|11111111|11111111|11111111|11111111|11111111|
+ * |-----------|##########32bit 秒级时间戳##########|-----|-----------------|
+ * |--------------------------------------5bit机器位|xxxxx|-----------------|
+ * |-----------------------------------------16bit自增序列|xxxxxxxx|xxxxxxxx|
+ *
+ * @author: yangzc
+ * @date: 2019-10-19
+ **/
+@Slf4j
+@Component("idUtil")
 public class IDUtil {
 
-    private final long twepoch = 1543906793401L;
-    private final long workerIdBits = 9L;
-    private final long datacenterIdBits = 1L;
-    private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
-    private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
-    private final long sequenceBits = 12L;
-    private final long workerIdShift = sequenceBits;
-    private final long datacenterIdShift = sequenceBits + workerIdBits;
-    private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
-    private final long sequenceMask = -1L ^ (-1L << sequenceBits);
+    /** 初始偏移时间戳 */
+    private static final long OFFSET = 1546300800L;
 
-    private long workerId;
-    private long datacenterId;
-    private long sequence = 0L;
-    private long lastTimestamp = -1L;
+    /** 机器id (0~15 保留 16~31作为备份机器) */
+    @Value("${nb.serviceId}")
+    private long WORKER_ID;
+    /** 机器id所占位数 (5bit, 支持最大机器数 2^5 = 32)*/
+    private static final long WORKER_ID_BITS = 5L;
+    /** 自增序列所占位数 (16bit, 支持最大每秒生成 2^16 = ‭65536‬) */
+    private static final long SEQUENCE_ID_BITS = 16L;
+    /** 机器id偏移位数 */
+    private static final long WORKER_SHIFT_BITS = SEQUENCE_ID_BITS;
+    /** 自增序列偏移位数 */
+    private static final long OFFSET_SHIFT_BITS = SEQUENCE_ID_BITS + WORKER_ID_BITS;
+    /** 机器标识最大值 (2^5 / 2 - 1 = 15) */
+    private static final long WORKER_ID_MAX = ((1 << WORKER_ID_BITS) - 1) >> 1;
+    /** 备份机器ID开始位置 (2^5 / 2 = 16) */
+    private static final long BACK_WORKER_ID_BEGIN = (1 << WORKER_ID_BITS) >> 1;
+    /** 自增序列最大值 (2^16 - 1 = ‭65535) */
+    private static final long SEQUENCE_MAX = (1 << SEQUENCE_ID_BITS) - 1;
+    /** 发生时间回拨时容忍的最大回拨时间 (秒) */
+    private static final long BACK_TIME_MAX = 1L;
 
-    public IDUtil(long datacenterId) {
-        if (datacenterId > maxDatacenterId || datacenterId < 0) {
-            throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
-        }
-        this.workerId = 0L;
-        this.datacenterId = datacenterId;
-    }
+    /** 上次生成ID的时间戳 (秒) */
+    private static long lastTimestamp = 0L;
+    /** 当前秒内序列 (2^16)*/
+    private static long sequence = 0L;
+    /** 备份机器上次生成ID的时间戳 (秒) */
+    private static long lastTimestampBak = 0L;
+    /** 备份机器当前秒内序列 (2^16)*/
+    private static long sequenceBak = 0L;
 
-    public IDUtil(int workerId, long datacenterId) {
-        if (workerId > maxWorkerId || workerId < 0) {
-            throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
-        }
-        if (datacenterId > maxDatacenterId || datacenterId < 0) {
-            throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
-        }
-        this.workerId = workerId;
-        this.datacenterId = datacenterId;
-    }
 
-    public static void main(String[] args) {
-        System.out.println(-1L ^ (-1L << 9L));
+//    static {
+//        // 初始化机器ID
+//        // 伪代码: 由你的配置文件获取节点ID
+//        long workerId = temp;
+//        if (workerId < 0 || workerId > WORKER_ID_MAX) {
+//            throw new IllegalArgumentException(String.format("cmallshop.workerId范围: 0 ~ %d 目前: %d", WORKER_ID_MAX, workerId));
+//        }
+//        WORKER_ID = workerId;
+//    }
 
-        IDUtil idWorker = new IDUtil(0, 0);
-        for (int i = 0; i < 10; i++) {
-            String id = idWorker.nextId();
-            System.out.println(id);
-        }
+    /** 私有构造函数禁止外部访问 */
+    private IDUtil() {
     }
 
     /**
-     * 获取id
-     *
-     * @return
+     * 获取自增序列
+     * @return long
      */
-    public synchronized String nextId() {
-        return nextOne("NB");
+    public String nextId() {
+        return nextId(SystemClock.now() / 1000)+"";
     }
 
-
-    private synchronized String nextOne(String prefix) {
-        long timestamp = timeGen();
+    /**
+     * 主机器自增序列
+     *
+     * @param timestamp 当前Unix时间戳
+     * @return long
+     */
+    private synchronized long nextId(long timestamp) {
+        // 时钟回拨检查
         if (timestamp < lastTimestamp) {
-            throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp -
-                    timestamp));
+            // 发生时钟回拨
+            log.warn("时钟回拨, 启用备份机器ID: now: [{}] last: [{}]", timestamp, lastTimestamp);
+            return nextIdBackup(timestamp);
         }
-        if (lastTimestamp == timestamp) {
-            sequence = (sequence + 1) & sequenceMask;
-            if (sequence == 0) {
-                timestamp = tilNextMillis(lastTimestamp);
-            }
-        } else {
+
+        // 开始下一秒
+        if (timestamp != lastTimestamp) {
+            lastTimestamp = timestamp;
             sequence = 0L;
         }
-
-        lastTimestamp = timestamp;
-        long id = ((timestamp - twepoch) << timestampLeftShift) | (datacenterId << datacenterIdShift) | (workerId << workerIdShift) | sequence;
-        ;
-
-        return prefix + String.valueOf(id);
-    }
-
-    protected long tilNextMillis(long lastTimestamp) {
-        long timestamp = timeGen();
-        while (timestamp <= lastTimestamp) {
-            timestamp = timeGen();
+        if (0L == (++sequence & SEQUENCE_MAX)) {
+            // 秒内序列用尽
+//            log.warn("秒内[{}]序列用尽, 启用备份机器ID序列", timestamp);
+            sequence--;
+            return nextIdBackup(timestamp);
         }
-        return timestamp;
+
+        return ((timestamp - OFFSET) << OFFSET_SHIFT_BITS) | (WORKER_ID << WORKER_SHIFT_BITS) | sequence;
     }
 
-    protected long timeGen() {
-        return System.currentTimeMillis();
+    /**
+     * 备份机器自增序列
+     *
+     * @param timestamp timestamp 当前Unix时间戳
+     * @return long
+     */
+    private long nextIdBackup(long timestamp) {
+        if (timestamp < lastTimestampBak) {
+            if (lastTimestampBak - SystemClock.now() / 1000 <= BACK_TIME_MAX) {
+                timestamp = lastTimestampBak;
+            } else {
+                throw new RuntimeException(String.format("时钟回拨: now: [%d] last: [%d]", timestamp, lastTimestampBak));
+            }
+        }
+
+        if (timestamp != lastTimestampBak) {
+            lastTimestampBak = timestamp;
+            sequenceBak = 0L;
+        }
+
+        if (0L == (++sequenceBak & SEQUENCE_MAX)) {
+            // 秒内序列用尽
+//            logger.warn("秒内[{}]序列用尽, 备份机器ID借取下一秒序列", timestamp);
+            return nextIdBackup(timestamp + 1);
+        }
+
+        return ((timestamp - OFFSET) << OFFSET_SHIFT_BITS) | ((WORKER_ID ^ BACK_WORKER_ID_BEGIN) << WORKER_SHIFT_BITS) | sequenceBak;
     }
 }

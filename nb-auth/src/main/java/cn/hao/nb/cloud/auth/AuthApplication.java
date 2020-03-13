@@ -22,11 +22,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class AuthApplication {
 
     public static void main(String[] args) {
-//        try {
+        try {
         SpringApplication.run(AuthApplication.class, args);
         log.info("\033[1;93;32m【Server startup done.】\033[m");
-//        }catch (Exception e){
-//            log.error("服务xxx-support启动报错", e);
-//        }
+        } catch (Exception e) {
+            log.error("服务xxx-support启动报错", e);
+        }
     }
 }

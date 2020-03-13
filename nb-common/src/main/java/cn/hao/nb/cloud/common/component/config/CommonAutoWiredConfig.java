@@ -1,9 +1,7 @@
 package cn.hao.nb.cloud.common.component.config;
 
-import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.PEnumUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,19 +12,6 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class CommonAutoWiredConfig {
-
-    @Value("${nb.serviceId}")
-    private long serviceId;
-
-    /**
-     * 主键生成工具
-     *
-     * @return
-     */
-    @Bean("idUtil")
-    public IDUtil idUtil() {
-        return new IDUtil(serviceId);
-    }
 
     /**
      * 枚举获取工具
