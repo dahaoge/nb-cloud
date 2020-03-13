@@ -25,6 +25,6 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
                     <String, Object>> pageMapData(Page page, SysRole.SearchParams searchParams);
 
     @Select("select * from sys_role where deleted=0 and role_code in (select role_code from u_user_role where deleted=0 and userId=#{userId}) t1")
-    List<SysRole> listByUserId(@Param("userId") String userId);
+    List<SysRole> listByUserId(@Param("userId") Long userId);
 
 }

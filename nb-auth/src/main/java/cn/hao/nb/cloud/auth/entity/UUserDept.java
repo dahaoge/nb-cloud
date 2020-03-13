@@ -59,11 +59,11 @@ public class UUserDept implements Serializable {
     @Version
     private Integer version;
     @ApiModelProperty(value = "创建人")
-    private String createBy;
+    private Long createBy;
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
     @ApiModelProperty(value = "更新人")
-    private String updateBy;
+    private Long updateBy;
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
     @ApiModelProperty(value = "删除标记")
@@ -71,11 +71,11 @@ public class UUserDept implements Serializable {
     private Integer deleted = 0;
     @ApiModelProperty(value = "ID")
     @TableId(value = "t_id", type = IdType.INPUT)
-    private String tId;
+    private Long tId;
     @ApiModelProperty(value = "用户id")
-    private String userId;
+    private Long userId;
     @ApiModelProperty(value = "组织id")
-    private String deptId;
+    private Long deptId;
 
     public static final String VERSION = "version";
     public static final String CREATE_BY = "create_by";

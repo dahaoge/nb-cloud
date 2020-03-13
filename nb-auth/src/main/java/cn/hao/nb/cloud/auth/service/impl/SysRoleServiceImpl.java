@@ -119,8 +119,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @return
      */
     @Override
-    public boolean delData(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         SysRole data = this.getById(id);
         if (CheckUtil.objIsEmpty(data))
@@ -135,8 +135,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @return
      */
     @Override
-    public SysRole getDetail(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public SysRole getDetail(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }
@@ -170,7 +170,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
-    public List<SysRole> listByUserId(String userId) {
+    public List<SysRole> listByUserId(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         return mapper.listByUserId(userId);

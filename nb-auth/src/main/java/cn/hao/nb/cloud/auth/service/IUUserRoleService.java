@@ -24,7 +24,7 @@ public interface IUUserRoleService extends IService<UUserRole> {
      */
     UUserRole addData(UUserRole data);
 
-    UUserRole addUserRole(String userId, String roleCode);
+    UUserRole addUserRole(Long userId, String roleCode);
 
     /**
      * 添加用户权限
@@ -33,7 +33,7 @@ public interface IUUserRoleService extends IService<UUserRole> {
      * @param roleCodes
      * @return
      */
-    boolean addUserRoles(String userId, String roleCodes);
+    boolean addUserRoles(Long userId, String roleCodes);
 
     /**
      * 增量更新数据
@@ -54,7 +54,7 @@ public interface IUUserRoleService extends IService<UUserRole> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 根据用户id删除用户角色
@@ -62,7 +62,7 @@ public interface IUUserRoleService extends IService<UUserRole> {
      * @param userId
      * @return
      */
-    boolean delByUserId(String userId);
+    boolean delByUserId(Long userId);
 
     /**
      * 根据角色编码删除
@@ -77,9 +77,9 @@ public interface IUUserRoleService extends IService<UUserRole> {
      * @param id
      * @return
      */
-    UUserRole getDetail(String id);
+    UUserRole getDetail(Long id);
 
-    List<UUserRole> listByUserId(String userId);
+    List<UUserRole> listByUserId(Long userId);
 
     /**
      * 分页查询数据
@@ -177,13 +177,13 @@ return Rv.getInstance(iUUserRoleService.modifyData(data));
 
 @ApiOperation(value = "删除用户角色 ", notes = "删除用户角色 ")
 @PostMapping(value = "/uUserRole/del/{id}")
-public Rv delUUserRole(@ApiParam(name = "id", value = "用户角色 id") @PathVariable String id) {
+public Rv delUUserRole(@ApiParam(name = "id", value = "用户角色 id") @PathVariable Long id) {
 return Rv.getInstance(iUUserRoleService.delData(id));
 }
 
 @ApiOperation(value = "查询用户角色 ", notes = "查询用户角色 ")
 @GetMapping(value = "/uUserRole/getById/{id}")
-public Rv getUUserRoleById(@ApiParam(name = "id", value = "用户角色 id") @PathVariable String id) {
+public Rv getUUserRoleById(@ApiParam(name = "id", value = "用户角色 id") @PathVariable Long id) {
 return Rv.getInstance(iUUserRoleService.getDetail(id));
 }
 

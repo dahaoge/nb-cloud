@@ -97,8 +97,8 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean delRole(String roleId) {
-        if (CheckUtil.strIsEmpty(roleId))
+    public Boolean delRole(Long roleId) {
+        if (CheckUtil.objIsEmpty(roleId))
             throw NBException.create(EErrorCode.missingArg);
         SysRole role = roleService.getById(roleId);
         if (CheckUtil.objIsEmpty(role))
@@ -110,7 +110,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean revertRole(String roleId) {
+    public Boolean revertRole(Long roleId) {
         SysRole role = new SysRole();
         role.setRoleId(roleId);
         role.setDeleted(0);
@@ -169,8 +169,8 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean delPermission(String permissionId) {
-        if (CheckUtil.strIsEmpty(permissionId))
+    public Boolean delPermission(Long permissionId) {
+        if (CheckUtil.objIsEmpty(permissionId))
             throw NBException.create(EErrorCode.missingArg);
         SysPermission oldPermission = permissionService.getById(permissionId);
         if (CheckUtil.objIsEmpty(oldPermission))
@@ -208,8 +208,8 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean delMenu(String menuId) {
-        if (CheckUtil.strIsEmpty(menuId))
+    public Boolean delMenu(Long menuId) {
+        if (CheckUtil.objIsEmpty(menuId))
             throw NBException.create(EErrorCode.missingArg);
         SysMenu oldMenu = menuService.getById(menuId);
         if (CheckUtil.objIsEmpty(oldMenu))
@@ -257,8 +257,8 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean delRolePermission(String rpId) {
-        if (CheckUtil.strIsEmpty(rpId))
+    public Boolean delRolePermission(Long rpId) {
+        if (CheckUtil.objIsEmpty(rpId))
             throw NBException.create(EErrorCode.missingArg);
         return rolePermissionService.removeById(rpId);
     }
@@ -300,15 +300,15 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean delRoleMenu(String rmId) {
-        if (CheckUtil.strIsEmpty(rmId))
+    public Boolean delRoleMenu(Long rmId) {
+        if (CheckUtil.objIsEmpty(rmId))
             throw NBException.create(EErrorCode.missingArg);
         return roleMenuService.removeById(rmId);
     }
 
     @Override
-    public Boolean addUserRole(String userId, String roleCode) {
-        if (CheckUtil.strIsEmpty(userId, roleCode))
+    public Boolean addUserRole(Long userId, String roleCode) {
+        if (CheckUtil.objIsEmpty(userId, roleCode))
             throw NBException.create(EErrorCode.missingArg);
         this.roleCodeIfExist(roleCode);
         if (CheckUtil.objIsNotEmpty(this.getUserRoleByUserIdAndRoleCode(userId, roleCode)))
@@ -329,8 +329,8 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean addUserRoles(String userId, String roleCodes) {
-        if (CheckUtil.strIsEmpty(userId, roleCodes))
+    public Boolean addUserRoles(Long userId, String roleCodes) {
+        if (CheckUtil.objIsEmpty(userId, roleCodes))
             throw NBException.create(EErrorCode.missingArg);
         for (String roleCode : roleCodes.split(",")) {
             this.addUserRole(userId, roleCode);
@@ -339,8 +339,8 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean delUserRole(String urId) {
-        if (CheckUtil.strIsEmpty(urId))
+    public Boolean delUserRole(Long urId) {
+        if (CheckUtil.objIsEmpty(urId))
             throw NBException.create(EErrorCode.missingArg);
 
         //查询用户角色
@@ -366,16 +366,16 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public Boolean delUserRolesByUserId(String userId) {
-        if (CheckUtil.strIsEmpty(userId))
+    public Boolean delUserRolesByUserId(Long userId) {
+        if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         return userRoleService.remove(Qw.create().eq(UUserRole.USER_ID, userId));
     }
 
     @Override
 
-    public List<SysRole> listRolesByUserId(String userId) {
-        if (CheckUtil.strIsEmpty(userId))
+    public List<SysRole> listRolesByUserId(Long userId) {
+        if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         List<UUserRole> userRoles = this.listUserRolesByUserId(userId);
         List<SysRole> result = authMapper.getUserRoles(userId);
@@ -390,8 +390,8 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
 
-    public List<UUserRole> listUserRolesByUserId(String userId) {
-        if (CheckUtil.strIsEmpty(userId))
+    public List<UUserRole> listUserRolesByUserId(Long userId) {
+        if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         return userRoleService.list(Qw.create().eq(UUserRole.USER_ID, userId));
     }
@@ -462,15 +462,15 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
 
-    public UUserRole getUserRoleByUserIdAndRoleCode(String userId, String roleCode) {
-        if (CheckUtil.strIsEmpty(userId, roleCode))
+    public UUserRole getUserRoleByUserIdAndRoleCode(Long userId, String roleCode) {
+        if (CheckUtil.objIsEmpty(userId, roleCode))
             throw NBException.create(EErrorCode.missingArg);
         return userRoleService.getOne(Qw.create().eq(UUserRole.USER_ID, userId).eq(UUserRole.ROLE_CODE, roleCode));
     }
 
     @Override
-    public boolean delUserRoleByUserIdAndRoleCode(String userId, String roleCode) {
-        if (CheckUtil.strIsEmpty(userId, roleCode))
+    public boolean delUserRoleByUserIdAndRoleCode(Long userId, String roleCode) {
+        if (CheckUtil.objIsEmpty(userId, roleCode))
             throw NBException.create(EErrorCode.missingArg);
         return userRoleService.remove(Qw.create().eq(UUserRole.USER_ID, userId).eq(UUserRole.ROLE_CODE, roleCode));
     }

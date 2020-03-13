@@ -51,14 +51,14 @@ import java.util.Map;
     * @param id
     * @return
     */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
     * 查询详情
     * @param id
     * @return
     */
-    ${entity} getDetail(String id);
+    ${entity} getDetail(Long id);
 
     /**
     * 分页查询数据
@@ -157,13 +157,13 @@ return Rv.getInstance(${table.serviceName?uncap_first}.modifyData(data));
 
 @ApiOperation(value = "删除${table.comment!}", notes = "删除${table.comment!}")
 @PostMapping(value = "/${entity?uncap_first}/del/{id}")
-public Rv del${entity}(@ApiParam(name = "id", value = "${table.comment!}id") @PathVariable String id) {
+public Rv del${entity}(@ApiParam(name = "id", value = "${table.comment!}id") @PathVariable Long id) {
 return Rv.getInstance(${table.serviceName?uncap_first}.delData(id));
 }
 
 @ApiOperation(value = "查询${table.comment!}", notes = "查询${table.comment!}")
 @GetMapping(value = "/${entity?uncap_first}/getById/{id}")
-public Rv get${entity}ById(@ApiParam(name = "id", value = "${table.comment!}id") @PathVariable String id) {
+public Rv get${entity}ById(@ApiParam(name = "id", value = "${table.comment!}id") @PathVariable Long id) {
 return Rv.getInstance(${table.serviceName?uncap_first}.getDetail(id));
 }
 

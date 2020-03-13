@@ -48,7 +48,7 @@ public interface ISysRolePermissionService extends IService<SysRolePermission> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     boolean delByRoleCode(String roleCode);
 
@@ -59,7 +59,7 @@ public interface ISysRolePermissionService extends IService<SysRolePermission> {
      * @param id
      * @return
      */
-    SysRolePermission getDetail(String id);
+    SysRolePermission getDetail(Long id);
 
     /**
      * 分页查询数据
@@ -157,13 +157,13 @@ return Rv.getInstance(iSysRolePermissionService.modifyData(data));
 
 @ApiOperation(value = "删除角色权限 ", notes = "删除角色权限 ")
 @PostMapping(value = "/sysRolePermission/del/{id}")
-public Rv delSysRolePermission(@ApiParam(name = "id", value = "角色权限 id") @PathVariable String id) {
+public Rv delSysRolePermission(@ApiParam(name = "id", value = "角色权限 id") @PathVariable Long id) {
 return Rv.getInstance(iSysRolePermissionService.delData(id));
 }
 
 @ApiOperation(value = "查询角色权限 ", notes = "查询角色权限 ")
 @GetMapping(value = "/sysRolePermission/getById/{id}")
-public Rv getSysRolePermissionById(@ApiParam(name = "id", value = "角色权限 id") @PathVariable String id) {
+public Rv getSysRolePermissionById(@ApiParam(name = "id", value = "角色权限 id") @PathVariable Long id) {
 return Rv.getInstance(iSysRolePermissionService.getDetail(id));
 }
 

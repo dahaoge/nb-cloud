@@ -47,7 +47,7 @@ public interface ISysTagsService extends IService<SysTags> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
@@ -55,7 +55,7 @@ public interface ISysTagsService extends IService<SysTags> {
      * @param id
      * @return
      */
-    SysTags getDetail(String id);
+    SysTags getDetail(Long id);
 
     /**
      * 分页查询数据
@@ -161,13 +161,13 @@ return Rv.getInstance(iSysTagsService.modifyData(data));
 
 @ApiOperation(value = "删除标签 ", notes = "删除标签 ")
 @PostMapping(value = "/sysTags/del/{id}")
-public Rv delSysTags(@ApiParam(name = "id", value = "标签 id") @PathVariable String id) {
+public Rv delSysTags(@ApiParam(name = "id", value = "标签 id") @PathVariable Long id) {
 return Rv.getInstance(iSysTagsService.delData(id));
 }
 
 @ApiOperation(value = "查询标签 ", notes = "查询标签 ")
 @GetMapping(value = "/sysTags/getById/{id}")
-public Rv getSysTagsById(@ApiParam(name = "id", value = "标签 id") @PathVariable String id) {
+public Rv getSysTagsById(@ApiParam(name = "id", value = "标签 id") @PathVariable Long id) {
 return Rv.getInstance(iSysTagsService.getDetail(id));
 }
 

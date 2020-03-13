@@ -30,14 +30,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('user:mange')")
     @ApiOperation(value = "锁定账号")
     @PostMapping("/manage/uUserInfo/lockUser/{userId}")
-    public Rv lockUser(@PathVariable String userId) {
+    public Rv lockUser(@PathVariable Long userId) {
         return Rv.getInstance(iUUserInfoService.lockUser(userId));
     }
 
     @PreAuthorize("hasAuthority('user:mange')")
     @ApiOperation(value = "解除用户锁定")
     @PostMapping("/manage/uUserInfo/unLockUser/{userId}")
-    public Rv unLockUser(@PathVariable String userId) {
+    public Rv unLockUser(@PathVariable Long userId) {
         return Rv.getInstance(iUUserInfoService.unLockUser(userId));
     }
 
@@ -50,7 +50,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('user:mange')")
     @ApiOperation(value = "管理员修改用户手机号")
     @PostMapping("/manage/uUserInfo/modify/userPhone")
-    public Rv manageModifyUserPhone(@RequestParam String userId, @RequestParam String phone) {
+    public Rv manageModifyUserPhone(@RequestParam Long userId, @RequestParam String phone) {
         return Rv.getInstance(iUUserInfoService.modifyUserPhone(userId, phone));
     }
 
@@ -75,7 +75,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('user:mange')")
     @ApiOperation(value = "重置用户密码")
     @PostMapping("/manage/uUserInfo/resetUserPwd/{userId}")
-    public Rv resetUserPwd(@PathVariable String userId) {
+    public Rv resetUserPwd(@PathVariable Long userId) {
         return Rv.getInstance(iUUserInfoService.managerResetUserPwd(userId));
     }
 
@@ -87,7 +87,7 @@ public class UserController {
 
     @ApiOperation(value = "查询用户信息", notes = "查询用户信息")
     @GetMapping(value = "/uUserInfo/getById/{id}")
-    public Rv getUUserInfoById(@ApiParam(name = "id", value = "用户信息id") @PathVariable String id) {
+    public Rv getUUserInfoById(@ApiParam(name = "id", value = "用户信息id") @PathVariable Long id) {
         return Rv.getInstance(iUUserInfoService.getDetail(id));
     }
 

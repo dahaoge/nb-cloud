@@ -69,7 +69,7 @@ public class TempController {
      * @return
      */
     @GetMapping("/genLoginInfoByPhoneOrUserId")
-    public Rv genLoginInfo(String phone, ESourceClient sourceClient, String userId) {
+    public Rv genLoginInfo(String phone, ESourceClient sourceClient, Long userId) {
         Qd result = Qd.create();
         userId = CheckUtil.objIsEmpty(userId) ? userInfoService.getOne(Qw.create().eq(UUserInfo.PHONE, phone)).getUserId() : userId;
         TokenUser tokenUser = authMapper.getTokenUserById(userId);

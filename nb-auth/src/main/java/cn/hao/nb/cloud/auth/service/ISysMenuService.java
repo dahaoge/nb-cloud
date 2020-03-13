@@ -44,14 +44,14 @@ public interface ISysMenuService extends IService<SysMenu> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
      * @param id
      * @return
      */
-    SysMenu getDetail(String id);
+    SysMenu getDetail(Long id);
 
     SysMenu getByMenuCode(String menuCode);
 
@@ -161,13 +161,13 @@ return Rv.getInstance(iSysMenuService.modifyData(data));
 
 @ApiOperation(value = "删除菜单表 ", notes = "删除菜单表 ")
 @PostMapping(value = "/sysMenu/del/{id}")
-public Rv delSysMenu(@ApiParam(name = "id", value = "菜单表 id") @PathVariable String id) {
+public Rv delSysMenu(@ApiParam(name = "id", value = "菜单表 id") @PathVariable Long id) {
 return Rv.getInstance(iSysMenuService.delData(id));
 }
 
 @ApiOperation(value = "查询菜单表 ", notes = "查询菜单表 ")
 @GetMapping(value = "/sysMenu/getById/{id}")
-public Rv getSysMenuById(@ApiParam(name = "id", value = "菜单表 id") @PathVariable String id) {
+public Rv getSysMenuById(@ApiParam(name = "id", value = "菜单表 id") @PathVariable Long id) {
 return Rv.getInstance(iSysMenuService.getDetail(id));
 }
 

@@ -16,7 +16,7 @@ public class RedisUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
-    private String userId;
+    private Long userId;
     @ApiModelProperty(value = "用户名")
     private String userName;
     @ApiModelProperty(value = "手机号")

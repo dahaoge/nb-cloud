@@ -66,7 +66,7 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     }
 
     @Override
-    public ULoginChannel addLoginChannel(String userId, ELoginType loginType, String loginId, ELoginChannelScop loginChannelScop) {
+    public ULoginChannel addLoginChannel(Long userId, ELoginType loginType, String loginId, ELoginChannelScop loginChannelScop) {
         if (CheckUtil.objIsEmpty(userId, loginId, loginType, loginChannelScop))
             throw NBException.create(EErrorCode.missingArg);
         ULoginChannel loginChannel = new ULoginChannel();
@@ -78,14 +78,14 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     }
 
     @Override
-    public boolean addPhoneChannel(String userId, String phone, ELoginChannelScop loginChannelScop) {
+    public boolean addPhoneChannel(Long userId, String phone, ELoginChannelScop loginChannelScop) {
         this.addLoginChannel(userId, ELoginType.checkSms, phone, loginChannelScop);
         this.addLoginChannel(userId, ELoginType.pwd, phone, loginChannelScop);
         return true;
     }
 
     @Override
-    public boolean modifyUserPhone(String userId, String phone) {
+    public boolean modifyUserPhone(Long userId, String phone) {
         if (CheckUtil.objIsEmpty(userId, phone))
             throw NBException.create(EErrorCode.missingArg);
         List<ULoginChannel> loginChannels = this.getUserLoginChannelByLoginType(userId, ELoginType.checkSms);
@@ -125,15 +125,15 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     }
 
     @Override
-    public List<ULoginChannel> getUserLoginChannelByLoginType(String userId, ELoginType loginType) {
+    public List<ULoginChannel> getUserLoginChannelByLoginType(Long userId, ELoginType loginType) {
         if (CheckUtil.objIsEmpty(userId, loginType))
             throw NBException.create(EErrorCode.missingArg).plusMsg("getUserLoginChannelByLoginType");
         return this.list(Qw.create().eq(ULoginChannel.USER_ID, userId).eq(ULoginChannel.LOGIN_TYPE, loginType));
     }
 
     @Override
-    public boolean resetUserLoginChannel(String userId) {
-        if (CheckUtil.strIsEmpty(userId))
+    public boolean resetUserLoginChannel(Long userId) {
+        if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("resetUserLoginChannel:userId");
         this.delByUserId(userId);
         UUserInfo userInfo = userInfoService.getById(userId);
@@ -200,7 +200,7 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     }
 
     @Override
-    public boolean modifyLoginId(String tId, String loginId, String userId) {
+    public boolean modifyLoginId(Long tId, String loginId, Long userId) {
         if (CheckUtil.objIsEmpty(tId, loginId))
             throw NBException.create(EErrorCode.missingArg);
         ULoginChannel loginChannel = new ULoginChannel();
@@ -211,7 +211,7 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     }
 
     @Override
-    public boolean modifyLoginId(String tId, String loginId) {
+    public boolean modifyLoginId(Long tId, String loginId) {
         if (CheckUtil.objIsEmpty(tId, loginId))
             throw NBException.create(EErrorCode.missingArg);
         ULoginChannel dbData = this.getById(tId);
@@ -234,14 +234,14 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
      * @return
      */
     @Override
-    public boolean delData(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.removeById(id);
     }
 
     @Override
-    public boolean delByUserId(String userId) {
+    public boolean delByUserId(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         return this.delByUserId(userId);
@@ -254,8 +254,8 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
      * @return
      */
     @Override
-    public ULoginChannel getDetail(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public ULoginChannel getDetail(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }
@@ -322,7 +322,7 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     }
 
     @Override
-    public List<ULoginChannel> listByUserId(String userId) {
+    public List<ULoginChannel> listByUserId(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         return this.list(Qw.create().eq(ULoginChannel.USER_ID, userId));

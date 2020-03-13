@@ -25,7 +25,7 @@ public interface ISysDeptService extends IService<SysDept> {
      */
     SysDept addData(SysDept data);
 
-    SysDept addData(String deptName, String pId);
+    SysDept addData(String deptName, Long pId);
 
     SysDept addData(String deptName);
 
@@ -50,7 +50,7 @@ public interface ISysDeptService extends IService<SysDept> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
@@ -58,23 +58,23 @@ public interface ISysDeptService extends IService<SysDept> {
      * @param id
      * @return
      */
-    SysDept getDetail(String id);
+    SysDept getDetail(Long id);
 
-    List<SysDept> listAllDisDeptByUserId(String userId);
+    List<SysDept> listAllDisDeptByUserId(Long userId);
 
     List<SysDept> listAllDisDeptByParent(SysDept parent);
 
-    List<SysDept> listAllDisDeptByParentId(String pId);
+    List<SysDept> listAllDisDeptByParentId(Long pId);
 
     List<SysDept> listDisDeptByParent(SysDept parent);
 
-    List<SysDept> listDisDeptByParentId(String pId);
+    List<SysDept> listDisDeptByParentId(Long pId);
 
-    List<SysDept> deptTree(String deptId);
+    List<SysDept> deptTree(Long deptId);
 
-    List<SysDept> userDeptTree(String userId);
+    List<SysDept> userDeptTree(Long userId);
 
-    List<SysDept> listByUserId(String userId);
+    List<SysDept> listByUserId(Long userId);
 
     /**
      * 分页查询数据
@@ -180,13 +180,13 @@ return Rv.getInstance(iSysDeptService.modifyData(data));
 
 @ApiOperation(value = "删除组织机构", notes = "删除组织机构")
 @PostMapping(value = "/sysDept/del/{id}")
-public Rv delSysDept(@ApiParam(name = "id", value = "组织机构id") @PathVariable String id) {
+public Rv delSysDept(@ApiParam(name = "id", value = "组织机构id") @PathVariable Long id) {
 return Rv.getInstance(iSysDeptService.delData(id));
 }
 
 @ApiOperation(value = "查询组织机构", notes = "查询组织机构")
 @GetMapping(value = "/sysDept/getById/{id}")
-public Rv getSysDeptById(@ApiParam(name = "id", value = "组织机构id") @PathVariable String id) {
+public Rv getSysDeptById(@ApiParam(name = "id", value = "组织机构id") @PathVariable Long id) {
 return Rv.getInstance(iSysDeptService.getDetail(id));
 }
 

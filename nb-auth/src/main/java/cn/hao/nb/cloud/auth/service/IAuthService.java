@@ -47,9 +47,9 @@ public interface IAuthService {
      * @param roleId
      * @return
      */
-    Boolean delRole(String roleId);
+    Boolean delRole(Long roleId);
 
-    Boolean revertRole(String roleId);
+    Boolean revertRole(Long roleId);
 
     SysRole getRoleByCode(String roleCode);
 
@@ -61,13 +61,13 @@ public interface IAuthService {
 
     Boolean modifyPermission(SysPermission permission);
 
-    Boolean delPermission(String permissionId);
+    Boolean delPermission(Long permissionId);
 
     Boolean addMenu(SysMenu menu);
 
     Boolean modifyMenu(SysMenu menu);
 
-    Boolean delMenu(String menuId);
+    Boolean delMenu(Long menuId);
 
     Boolean addRolePermission(String roleCode, String permissionCode);
 
@@ -75,7 +75,7 @@ public interface IAuthService {
 
     boolean delRolePermissionsByRoleCode(String roleCode);
 
-    Boolean delRolePermission(String rpId);
+    Boolean delRolePermission(Long rpId);
 
     Boolean addRoleMenu(String roleCode, String menuCode);
 
@@ -83,7 +83,7 @@ public interface IAuthService {
 
     boolean delRoleMenusByRoleCode(String roleCode);
 
-    Boolean delRoleMenu(String rmId);
+    Boolean delRoleMenu(Long rmId);
 
     /**
      * 添加用户角色
@@ -92,7 +92,7 @@ public interface IAuthService {
      * @param roleId
      * @return
      */
-    Boolean addUserRole(String userId, String roleCode);
+    Boolean addUserRole(Long userId, String roleCode);
 
     /**
      * 添加用户角色
@@ -101,7 +101,7 @@ public interface IAuthService {
      * @param roleId
      * @return
      */
-    Boolean addUserRoles(String userId, String roleCodes);
+    Boolean addUserRoles(Long userId, String roleCodes);
 
     /**
      * 删除用户角色
@@ -110,9 +110,9 @@ public interface IAuthService {
      * @param roleId
      * @return
      */
-    Boolean delUserRole(String urId);
+    Boolean delUserRole(Long urId);
 
-    Boolean delUserRolesByUserId(String userId);
+    Boolean delUserRolesByUserId(Long userId);
 
     /**
      * 查询用户角色
@@ -120,7 +120,7 @@ public interface IAuthService {
      * @param userId
      * @return
      */
-    List<SysRole> listRolesByUserId(String userId);
+    List<SysRole> listRolesByUserId(Long userId);
 
     /**
      * 根据用户id获取用户角色关系
@@ -128,7 +128,7 @@ public interface IAuthService {
      * @param userId
      * @return
      */
-    List<UUserRole> listUserRolesByUserId(String userId);
+    List<UUserRole> listUserRolesByUserId(Long userId);
 
     /**
      * 根据角色编码获取用户角色关系
@@ -174,9 +174,9 @@ public interface IAuthService {
 
     List<SysMenu> listMenus(String menuCode, String menuName, String menuPath);
 
-    UUserRole getUserRoleByUserIdAndRoleCode(String userId, String roleCode);
+    UUserRole getUserRoleByUserIdAndRoleCode(Long userId, String roleCode);
 
-    boolean delUserRoleByUserIdAndRoleCode(String userId, String roleCode);
+    boolean delUserRoleByUserIdAndRoleCode(Long userId, String roleCode);
 
     List<SysRoleMenu> listRoleMenu(String roleCode);
 

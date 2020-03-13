@@ -36,7 +36,7 @@ public class TokenUser implements Serializable, UserDetails {
 
     @ApiModelProperty(value = "ID")
     @TableId(value = "user_id", type = IdType.INPUT)
-    private String userId;
+    private Long userId;
     @ApiModelProperty(value = "用户名")
     private String userName;
     @ApiModelProperty(value = "手机号")

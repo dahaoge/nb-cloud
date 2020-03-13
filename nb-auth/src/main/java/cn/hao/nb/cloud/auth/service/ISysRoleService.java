@@ -44,14 +44,14 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
      * @param id
      * @return
      */
-    SysRole getDetail(String id);
+    SysRole getDetail(Long id);
 
     /**
      * 根据编码获取详情
@@ -76,7 +76,7 @@ public interface ISysRoleService extends IService<SysRole> {
      */
     List<SysRole> listData(SysRole.SearchParams searchParams);
 
-    List<SysRole> listByUserId(String userId);
+    List<SysRole> listByUserId(Long userId);
 
     /**
      * 分页查询Map数据
@@ -159,13 +159,13 @@ return Rv.getInstance(iSysRoleService.modifyData(data));
 
 @ApiOperation(value = "删除角色 ", notes = "删除角色 ")
 @PostMapping(value = "/sysRole/del/{id}")
-public Rv delSysRole(@ApiParam(name = "id", value = "角色 id") @PathVariable String id) {
+public Rv delSysRole(@ApiParam(name = "id", value = "角色 id") @PathVariable Long id) {
 return Rv.getInstance(iSysRoleService.delData(id));
 }
 
 @ApiOperation(value = "查询角色 ", notes = "查询角色 ")
 @GetMapping(value = "/sysRole/getById/{id}")
-public Rv getSysRoleById(@ApiParam(name = "id", value = "角色 id") @PathVariable String id) {
+public Rv getSysRoleById(@ApiParam(name = "id", value = "角色 id") @PathVariable Long id) {
 return Rv.getInstance(iSysRoleService.getDetail(id));
 }
 

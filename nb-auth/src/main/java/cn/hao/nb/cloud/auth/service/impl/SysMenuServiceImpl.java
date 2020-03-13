@@ -124,8 +124,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
-    public boolean delData(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         SysMenu data = this.getById(id);
         if (CheckUtil.objIsEmpty(data))
@@ -141,8 +141,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
-    public SysMenu getDetail(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public SysMenu getDetail(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }

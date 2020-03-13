@@ -48,7 +48,7 @@ public interface ISysRoleMenuService extends IService<SysRoleMenu> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     boolean delByRoleCode(String roleCode);
 
@@ -59,7 +59,7 @@ public interface ISysRoleMenuService extends IService<SysRoleMenu> {
      * @param id
      * @return
      */
-    SysRoleMenu getDetail(String id);
+    SysRoleMenu getDetail(Long id);
 
     List<SysRoleMenu> listByRoleCode(String roleCode);
 
@@ -159,13 +159,13 @@ return Rv.getInstance(iSysRoleMenuService.modifyData(data));
 
 @ApiOperation(value = "删除角色菜单 ", notes = "删除角色菜单 ")
 @PostMapping(value = "/sysRoleMenu/del/{id}")
-public Rv delSysRoleMenu(@ApiParam(name = "id", value = "角色菜单 id") @PathVariable String id) {
+public Rv delSysRoleMenu(@ApiParam(name = "id", value = "角色菜单 id") @PathVariable Long id) {
 return Rv.getInstance(iSysRoleMenuService.delData(id));
 }
 
 @ApiOperation(value = "查询角色菜单 ", notes = "查询角色菜单 ")
 @GetMapping(value = "/sysRoleMenu/getById/{id}")
-public Rv getSysRoleMenuById(@ApiParam(name = "id", value = "角色菜单 id") @PathVariable String id) {
+public Rv getSysRoleMenuById(@ApiParam(name = "id", value = "角色菜单 id") @PathVariable Long id) {
 return Rv.getInstance(iSysRoleMenuService.getDetail(id));
 }
 

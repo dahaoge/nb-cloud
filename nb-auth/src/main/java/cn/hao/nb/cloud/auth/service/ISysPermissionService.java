@@ -44,14 +44,14 @@ public interface ISysPermissionService extends IService<SysPermission> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
      * @param id
      * @return
      */
-    SysPermission getDetail(String id);
+    SysPermission getDetail(Long id);
 
     /**
      * 分页查询数据
@@ -151,13 +151,13 @@ return Rv.getInstance(iSysPermissionService.modifyData(data));
 
 @ApiOperation(value = "删除权限表 ", notes = "删除权限表 ")
 @PostMapping(value = "/sysPermission/del/{id}")
-public Rv delSysPermission(@ApiParam(name = "id", value = "权限表 id") @PathVariable String id) {
+public Rv delSysPermission(@ApiParam(name = "id", value = "权限表 id") @PathVariable Long id) {
 return Rv.getInstance(iSysPermissionService.delData(id));
 }
 
 @ApiOperation(value = "查询权限表 ", notes = "查询权限表 ")
 @GetMapping(value = "/sysPermission/getById/{id}")
-public Rv getSysPermissionById(@ApiParam(name = "id", value = "权限表 id") @PathVariable String id) {
+public Rv getSysPermissionById(@ApiParam(name = "id", value = "权限表 id") @PathVariable Long id) {
 return Rv.getInstance(iSysPermissionService.getDetail(id));
 }
 

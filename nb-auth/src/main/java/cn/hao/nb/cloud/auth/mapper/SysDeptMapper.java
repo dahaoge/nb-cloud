@@ -26,6 +26,6 @@ public interface SysDeptMapper extends BaseMapper<SysDept> {
 
     @Select("select * from sys_dept where deleted=0 and" +
             " dept_id in (select dept_id from u_user_dept where deleted=0 and user_id=#{userId}) t1")
-    List<SysDept> listByUserId(@Param("userId") String userId);
+    List<SysDept> listByUserId(@Param("userId") Long userId);
 
 }

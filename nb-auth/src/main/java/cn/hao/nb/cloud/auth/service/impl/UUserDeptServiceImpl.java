@@ -61,7 +61,7 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
     }
 
     @Override
-    public UUserDept addData(String userId, String deptId) {
+    public UUserDept addData(Long userId, Long deptId) {
         if (CheckUtil.objIsEmpty(userId, deptId))
             throw NBException.create(EErrorCode.missingArg);
         UUserDept userDept = new UUserDept();
@@ -71,10 +71,10 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
     }
 
     @Override
-    public boolean addUser2Depts(String userId, String deptIds) {
+    public boolean addUser2Depts(Long userId, String deptIds) {
         if (CheckUtil.objIsEmpty(userId, deptIds))
             throw NBException.create(EErrorCode.missingArg);
-        ListUtil.spliteCreate(deptIds).forEach(item -> {
+        ListUtil.spliteCreateLong(deptIds).forEach(item -> {
             this.addData(userId, item);
         });
         return true;
@@ -132,8 +132,8 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
      * @return
      */
     @Override
-    public boolean delData(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.removeById(id);
     }
@@ -145,14 +145,14 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
      * @return
      */
     @Override
-    public UUserDept getDetail(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public UUserDept getDetail(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }
 
     @Override
-    public List<UUserDept> listByUserId(String userId) {
+    public List<UUserDept> listByUserId(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         return this.list(Qw.create().eq(UUserDept.USER_ID, userId).select(UUserDept.T_ID, UUserDept.USER_ID, UUserDept.DEPT_ID));

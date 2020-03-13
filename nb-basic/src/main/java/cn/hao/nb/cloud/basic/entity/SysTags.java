@@ -1,6 +1,7 @@
 package cn.hao.nb.cloud.basic.entity;
 
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.entity.RedisUser;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
@@ -62,12 +63,12 @@ public class SysTags implements Serializable {
     @Version
     private Integer version;
 
-    private String createBy;
+    private Long createBy;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    private String updateBy;
+    private Long updateBy;
 
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
@@ -77,7 +78,7 @@ public class SysTags implements Serializable {
     private Integer deleted = 0;
 
     @TableId(value = "tag_id", type = IdType.INPUT)
-    private String tagId;
+    private Long tagId;
 
     private String tagCode;
 

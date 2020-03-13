@@ -64,13 +64,13 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         data.setUpdateTime(null);
         data.setCreateTime(null);
         if (CheckUtil.objIsEmpty(data.getPId()))
-            data.setPId("root");
+            data.setPId(0L);
         this.save(data);
         return data;
     }
 
     @Override
-    public SysDept addData(String deptName, String pId) {
+    public SysDept addData(String deptName, Long pId) {
         SysDept dept = new SysDept();
         dept.setDeptName(deptName);
         dept.setPId(pId);
@@ -134,8 +134,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
      * @return
      */
     @Override
-    public boolean delData(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         if (CheckUtil.objIsNotEmpty(userDeptService.getOne(Qw.create().eq(SysDept.DEPT_ID, id))))
             throw NBException.create(EErrorCode.argCheckErr, "该机构下尚有绑定的用户,无法删除");
@@ -149,14 +149,14 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
      * @return
      */
     @Override
-    public SysDept getDetail(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public SysDept getDetail(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }
 
     @Override
-    public List<SysDept> listAllDisDeptByUserId(String userId) {
+    public List<SysDept> listAllDisDeptByUserId(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         List<SysDept> result = Lists.newArrayList();
@@ -180,15 +180,15 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     @Override
-    public List<SysDept> listAllDisDeptByParentId(String pId) {
+    public List<SysDept> listAllDisDeptByParentId(Long pId) {
         if (CheckUtil.objIsEmpty(pId))
             return Lists.newArrayList();
-        List<SysDept> result = (List<SysDept>) (Object) redisUtil.hget(this.REDIS_ALL_DIS_DEPT_BY_PID_KEY, pId);
+        List<SysDept> result = (List<SysDept>) (Object) redisUtil.hget(this.REDIS_ALL_DIS_DEPT_BY_PID_KEY, pId.toString());
         if (CheckUtil.collectionIsNotEmpty(result))
             return result;
         result = Lists.newArrayList();
         this.recursiveGetDisDept(pId, result);
-        redisUtil.hset(this.REDIS_ALL_DIS_DEPT_BY_PID_KEY, pId, result, this.REDIS_ALL_DIS_DEPT_BY_PID_EXPIRE_TIME);
+        redisUtil.hset(this.REDIS_ALL_DIS_DEPT_BY_PID_KEY, pId.toString(), result, this.REDIS_ALL_DIS_DEPT_BY_PID_EXPIRE_TIME);
         return result;
     }
 
@@ -200,27 +200,27 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     @Override
-    public List<SysDept> listDisDeptByParentId(String pId) {
+    public List<SysDept> listDisDeptByParentId(Long pId) {
         if (CheckUtil.objIsEmpty(pId))
             return Lists.newArrayList();
         return this.list(this.lightSelect(Qw.create().eq(SysDept.P_ID, pId)));
     }
 
     @Override
-    public List<SysDept> deptTree(String deptId) {
-        deptId = CheckUtil.strIsEmpty(deptId) ? "root" : deptId;
-        List<SysDept> result = (List<SysDept>) redisUtil.hget(this.REDIS_DEPT_TREE_KEY, deptId);
+    public List<SysDept> deptTree(Long deptId) {
+        deptId = CheckUtil.objIsEmpty(deptId) ? 0L : deptId;
+        List<SysDept> result = (List<SysDept>) redisUtil.hget(this.REDIS_DEPT_TREE_KEY, deptId.toString());
         if (CheckUtil.objIsNotEmpty(result))
             return result;
 
-        result = this.listDisDeptByParentId("root");
+        result = this.listDisDeptByParentId(0L);
         result.forEach(item -> this.recursiveSetChildren(item));
-        redisUtil.hset(this.REDIS_DEPT_TREE_KEY, deptId, result, this.REDIS_DEPT_TREE_EXPIRE_TIME);
+        redisUtil.hset(this.REDIS_DEPT_TREE_KEY, deptId.toString(), result, this.REDIS_DEPT_TREE_EXPIRE_TIME);
         return result;
     }
 
     @Override
-    public List<SysDept> userDeptTree(String userId) {
+    public List<SysDept> userDeptTree(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         List<SysDept> result = this.listByUserId(userId);
@@ -230,13 +230,13 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     @Override
-    public List<SysDept> listByUserId(String userId) {
+    public List<SysDept> listByUserId(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         return mapper.listByUserId(userId);
     }
 
-    private void recursiveGetDisDept(String pId, List<SysDept> all) {
+    private void recursiveGetDisDept(Long pId, List<SysDept> all) {
         List<SysDept> childrens = this.listDisDeptByParentId(pId);
         if (CheckUtil.collectionIsNotEmpty(childrens)) {
             all.addAll(childrens);
@@ -360,6 +360,6 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         if (CheckUtil.objIsEmpty(data, data.getDeptName()))
             throw NBException.create(EErrorCode.missingArg);
         if (CheckUtil.objIsEmpty(data.getPId()))
-            data.setPId("0");
+            data.setPId(0L);
     }
 }

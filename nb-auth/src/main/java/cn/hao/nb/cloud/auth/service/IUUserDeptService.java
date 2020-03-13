@@ -25,9 +25,9 @@ public interface IUUserDeptService extends IService<UUserDept> {
      */
     UUserDept addData(UUserDept data);
 
-    UUserDept addData(String userId, String deptId);
+    UUserDept addData(Long userId, Long deptId);
 
-    boolean addUser2Depts(String userId, String deptIds);
+    boolean addUser2Depts(Long userId, String deptIds);
 
     /**
      * 增量更新数据
@@ -50,7 +50,7 @@ public interface IUUserDeptService extends IService<UUserDept> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
@@ -58,9 +58,9 @@ public interface IUUserDeptService extends IService<UUserDept> {
      * @param id
      * @return
      */
-    UUserDept getDetail(String id);
+    UUserDept getDetail(Long id);
 
-    List<UUserDept> listByUserId(String userId);
+    List<UUserDept> listByUserId(Long userId);
 
     /**
      * 分页查询数据
@@ -166,13 +166,13 @@ return Rv.getInstance(iUUserDeptService.modifyData(data));
 
 @ApiOperation(value = "删除用户所属组织机构", notes = "删除用户所属组织机构")
 @PostMapping(value = "/uUserDept/del/{id}")
-public Rv delUUserDept(@ApiParam(name = "id", value = "用户所属组织机构id") @PathVariable String id) {
+public Rv delUUserDept(@ApiParam(name = "id", value = "用户所属组织机构id") @PathVariable Long id) {
 return Rv.getInstance(iUUserDeptService.delData(id));
 }
 
 @ApiOperation(value = "查询用户所属组织机构", notes = "查询用户所属组织机构")
 @GetMapping(value = "/uUserDept/getById/{id}")
-public Rv getUUserDeptById(@ApiParam(name = "id", value = "用户所属组织机构id") @PathVariable String id) {
+public Rv getUUserDeptById(@ApiParam(name = "id", value = "用户所属组织机构id") @PathVariable Long id) {
 return Rv.getInstance(iUUserDeptService.getDetail(id));
 }
 

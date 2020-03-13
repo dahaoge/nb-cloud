@@ -30,17 +30,17 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      */
     ULoginChannel addData(ULoginChannel data);
 
-    ULoginChannel addLoginChannel(String userId, ELoginType loginType, String loginId, ELoginChannelScop loginChannelScop);
+    ULoginChannel addLoginChannel(Long userId, ELoginType loginType, String loginId, ELoginChannelScop loginChannelScop);
 
-    boolean addPhoneChannel(String userId, String phone, ELoginChannelScop loginChannelScop);
+    boolean addPhoneChannel(Long userId, String phone, ELoginChannelScop loginChannelScop);
 
-    public boolean modifyUserPhone(String userId, String phone);
+    public boolean modifyUserPhone(Long userId, String phone);
 
     public boolean addByUser(UUserInfo user);
 
-    public List<ULoginChannel> getUserLoginChannelByLoginType(String userId, ELoginType loginType);
+    public List<ULoginChannel> getUserLoginChannelByLoginType(Long userId, ELoginType loginType);
 
-    boolean resetUserLoginChannel(String userId);
+    boolean resetUserLoginChannel(Long userId);
 
     /**
      * 增量更新数据
@@ -59,9 +59,9 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
 
     boolean modifyLoginId(ULoginChannel data);
 
-    boolean modifyLoginId(String tId, String loginId, String userId);
+    boolean modifyLoginId(Long tId, String loginId, Long userId);
 
-    boolean modifyLoginId(String tId, String loginId);
+    boolean modifyLoginId(Long tId, String loginId);
 
     int countByLoginId(String loginId);
 
@@ -71,9 +71,9 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
-    boolean delByUserId(String userId);
+    boolean delByUserId(Long userId);
 
     /**
      * 查询详情
@@ -81,7 +81,7 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      * @param id
      * @return
      */
-    ULoginChannel getDetail(String id);
+    ULoginChannel getDetail(Long id);
 
     ULoginChannel getByTypeAndChannelScope(String loginId, ELoginType loginType, ELoginChannelScop loginChannelScop);
 
@@ -110,7 +110,7 @@ public interface IULoginChannelService extends IService<ULoginChannel> {
      */
     List<ULoginChannel> listData(ULoginChannel.SearchParams searchParams);
 
-    List<ULoginChannel> listByUserId(String userId);
+    List<ULoginChannel> listByUserId(Long userId);
 
     /**
      * 分页查询Map数据
@@ -201,13 +201,13 @@ return Rv.getInstance(iULoginChannelService.modifyData(data));
 
 @ApiOperation(value = "删除登录渠道", notes = "删除登录渠道")
 @PostMapping(value = "/uLoginChannel/del/{id}")
-public Rv delULoginChannel(@ApiParam(name = "id", value = "登录渠道id") @PathVariable String id) {
+public Rv delULoginChannel(@ApiParam(name = "id", value = "登录渠道id") @PathVariable Long id) {
 return Rv.getInstance(iULoginChannelService.delData(id));
 }
 
 @ApiOperation(value = "查询登录渠道", notes = "查询登录渠道")
 @GetMapping(value = "/uLoginChannel/getById/{id}")
-public Rv getULoginChannelById(@ApiParam(name = "id", value = "登录渠道id") @PathVariable String id) {
+public Rv getULoginChannelById(@ApiParam(name = "id", value = "登录渠道id") @PathVariable Long id) {
 return Rv.getInstance(iULoginChannelService.getDetail(id));
 }
 

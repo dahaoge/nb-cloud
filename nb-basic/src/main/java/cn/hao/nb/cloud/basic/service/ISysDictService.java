@@ -47,7 +47,7 @@ public interface ISysDictService extends IService<SysDict> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
@@ -55,7 +55,7 @@ public interface ISysDictService extends IService<SysDict> {
      * @param id
      * @return
      */
-    SysDict getDetail(String id);
+    SysDict getDetail(Long id);
 
     /**
      * 分页查询数据
@@ -161,13 +161,13 @@ return Rv.getInstance(iSysDictService.modifyData(data));
 
 @ApiOperation(value = "删除数据字典 ", notes = "删除数据字典 ")
 @PostMapping(value = "/sysDict/del/{id}")
-public Rv delSysDict(@ApiParam(name = "id", value = "数据字典 id") @PathVariable String id) {
+public Rv delSysDict(@ApiParam(name = "id", value = "数据字典 id") @PathVariable Long id) {
 return Rv.getInstance(iSysDictService.delData(id));
 }
 
 @ApiOperation(value = "查询数据字典 ", notes = "查询数据字典 ")
 @GetMapping(value = "/sysDict/getById/{id}")
-public Rv getSysDictById(@ApiParam(name = "id", value = "数据字典 id") @PathVariable String id) {
+public Rv getSysDictById(@ApiParam(name = "id", value = "数据字典 id") @PathVariable Long id) {
 return Rv.getInstance(iSysDictService.getDetail(id));
 }
 

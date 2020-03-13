@@ -23,13 +23,13 @@ public interface AuthMapper extends BaseMapper<TokenUser> {
      * @param userId
      * @return
      */
-    public TokenUser getTokenUserById(String userId);
+    public TokenUser getTokenUserById(Long userId);
 
     public TokenUser getTokenUserByLoginId(String loginId);
 
-    public List<SysPermission> getUserPermission(String userId);
+    public List<SysPermission> getUserPermission(Long userId);
 
-    public List<SysRole> getUserRoles(String userId);
+    public List<SysRole> getUserRoles(Long userId);
 
-    public List<SysMenu> getUserMenus(String userId);
+    public List<SysMenu> getUserMenus(Long userId);
 }

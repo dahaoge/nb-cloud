@@ -55,13 +55,13 @@ public class PmsController {
 
     @ApiOperation(value = "删除角色 ", notes = "删除角色 ")
     @PostMapping(value = "/sysRole/del/{id}")
-    public Rv delSysRole(@ApiParam(name = "id", value = "角色 id") @PathVariable String id) {
+    public Rv delSysRole(@ApiParam(name = "id", value = "角色 id") @PathVariable Long id) {
         return Rv.getInstance(iSysRoleService.delData(id));
     }
 
     @ApiOperation(value = "查询角色 ", notes = "查询角色 ")
     @GetMapping(value = "/sysRole/getById/{id}")
-    public Rv getSysRoleById(@ApiParam(name = "id", value = "角色 id") @PathVariable String id) {
+    public Rv getSysRoleById(@ApiParam(name = "id", value = "角色 id") @PathVariable Long id) {
         return Rv.getInstance(iSysRoleService.getDetail(id));
     }
 
@@ -85,7 +85,7 @@ public class PmsController {
 
     @ApiOperation(value = "根据用户id列表查询角色 ")
     @GetMapping(value = "/sysRole/listByUserId/{userId}")
-    public Rv listSysRoleByUserId(@PathVariable String userId) {
+    public Rv listSysRoleByUserId(@PathVariable Long userId) {
         return Rv.getInstance(iSysRoleService.listByUserId(userId));
     }
 
@@ -105,7 +105,7 @@ public class PmsController {
 
     @ApiOperation(value = "添加用户角色列表 ")
     @PostMapping(value = "/uUserRole/addList")
-    public Rv addUUserRole(String userId, String roleCodes) {
+    public Rv addUUserRole(Long userId, String roleCodes) {
         return Rv.getInstance(iUUserRoleService.addUserRoles(userId, roleCodes));
     }
 
@@ -117,13 +117,13 @@ public class PmsController {
 
     @ApiOperation(value = "删除用户角色 ", notes = "删除用户角色 ")
     @PostMapping(value = "/uUserRole/del/{id}")
-    public Rv delUUserRole(@ApiParam(name = "id", value = "用户角色 id") @PathVariable String id) {
+    public Rv delUUserRole(@ApiParam(name = "id", value = "用户角色 id") @PathVariable Long id) {
         return Rv.getInstance(iUUserRoleService.delData(id));
     }
 
     @ApiOperation(value = "查询用户角色 ", notes = "查询用户角色 ")
     @GetMapping(value = "/uUserRole/getById/{id}")
-    public Rv getUUserRoleById(@ApiParam(name = "id", value = "用户角色 id") @PathVariable String id) {
+    public Rv getUUserRoleById(@ApiParam(name = "id", value = "用户角色 id") @PathVariable Long id) {
         return Rv.getInstance(iUUserRoleService.getDetail(id));
     }
 
@@ -163,13 +163,13 @@ public class PmsController {
 
     @ApiOperation(value = "删除菜单表 ", notes = "删除菜单表 ")
     @PostMapping(value = "/sysMenu/del/{id}")
-    public Rv delSysMenu(@ApiParam(name = "id", value = "菜单表 id") @PathVariable String id) {
+    public Rv delSysMenu(@ApiParam(name = "id", value = "菜单表 id") @PathVariable Long id) {
         return Rv.getInstance(iSysMenuService.delData(id));
     }
 
     @ApiOperation(value = "查询菜单表 ", notes = "查询菜单表 ")
     @GetMapping(value = "/sysMenu/getById/{id}")
-    public Rv getSysMenuById(@ApiParam(name = "id", value = "菜单表 id") @PathVariable String id) {
+    public Rv getSysMenuById(@ApiParam(name = "id", value = "菜单表 id") @PathVariable Long id) {
         return Rv.getInstance(iSysMenuService.getDetail(id));
     }
 
@@ -227,13 +227,13 @@ public class PmsController {
 
     @ApiOperation(value = "删除权限表 ", notes = "删除权限表 ")
     @PostMapping(value = "/sysPermission/del/{id}")
-    public Rv delSysPermission(@ApiParam(name = "id", value = "权限表 id") @PathVariable String id) {
+    public Rv delSysPermission(@ApiParam(name = "id", value = "权限表 id") @PathVariable Long id) {
         return Rv.getInstance(iSysPermissionService.delData(id));
     }
 
     @ApiOperation(value = "查询权限表 ", notes = "查询权限表 ")
     @GetMapping(value = "/sysPermission/getById/{id}")
-    public Rv getSysPermissionById(@ApiParam(name = "id", value = "权限表 id") @PathVariable String id) {
+    public Rv getSysPermissionById(@ApiParam(name = "id", value = "权限表 id") @PathVariable Long id) {
         return Rv.getInstance(iSysPermissionService.getDetail(id));
     }
 
@@ -285,13 +285,13 @@ public class PmsController {
 
     @ApiOperation(value = "删除角色菜单 ", notes = "删除角色菜单 ")
     @PostMapping(value = "/sysRoleMenu/del/{id}")
-    public Rv delSysRoleMenu(@ApiParam(name = "id", value = "角色菜单 id") @PathVariable String id) {
+    public Rv delSysRoleMenu(@ApiParam(name = "id", value = "角色菜单 id") @PathVariable Long id) {
         return Rv.getInstance(iSysRoleMenuService.delData(id));
     }
 
     @ApiOperation(value = "查询角色菜单 ", notes = "查询角色菜单 ")
     @GetMapping(value = "/sysRoleMenu/getById/{id}")
-    public Rv getSysRoleMenuById(@ApiParam(name = "id", value = "角色菜单 id") @PathVariable String id) {
+    public Rv getSysRoleMenuById(@ApiParam(name = "id", value = "角色菜单 id") @PathVariable Long id) {
         return Rv.getInstance(iSysRoleMenuService.getDetail(id));
     }
 
@@ -331,13 +331,13 @@ public class PmsController {
 
     @ApiOperation(value = "删除角色权限 ", notes = "删除角色权限 ")
     @PostMapping(value = "/sysRolePermission/del/{id}")
-    public Rv delSysRolePermission(@ApiParam(name = "id", value = "角色权限 id") @PathVariable String id) {
+    public Rv delSysRolePermission(@ApiParam(name = "id", value = "角色权限 id") @PathVariable Long id) {
         return Rv.getInstance(iSysRolePermissionService.delData(id));
     }
 
     @ApiOperation(value = "查询角色权限 ", notes = "查询角色权限 ")
     @GetMapping(value = "/sysRolePermission/getById/{id}")
-    public Rv getSysRolePermissionById(@ApiParam(name = "id", value = "角色权限 id") @PathVariable String id) {
+    public Rv getSysRolePermissionById(@ApiParam(name = "id", value = "角色权限 id") @PathVariable Long id) {
         return Rv.getInstance(iSysRolePermissionService.getDetail(id));
     }
 

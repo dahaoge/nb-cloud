@@ -47,7 +47,7 @@ public interface ISysAppVersionService extends IService<SysAppVersion> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
@@ -55,7 +55,7 @@ public interface ISysAppVersionService extends IService<SysAppVersion> {
      * @param id
      * @return
      */
-    SysAppVersion getDetail(String id);
+    SysAppVersion getDetail(Long id);
 
     /**
      * 分页查询数据
@@ -161,13 +161,13 @@ return Rv.getInstance(iSysAppVersionService.modifyData(data));
 
 @ApiOperation(value = "删除app版本管理 ", notes = "删除app版本管理 ")
 @PostMapping(value = "/sysAppVersion/del/{id}")
-public Rv delSysAppVersion(@ApiParam(name = "id", value = "app版本管理 id") @PathVariable String id) {
+public Rv delSysAppVersion(@ApiParam(name = "id", value = "app版本管理 id") @PathVariable Long id) {
 return Rv.getInstance(iSysAppVersionService.delData(id));
 }
 
 @ApiOperation(value = "查询app版本管理 ", notes = "查询app版本管理 ")
 @GetMapping(value = "/sysAppVersion/getById/{id}")
-public Rv getSysAppVersionById(@ApiParam(name = "id", value = "app版本管理 id") @PathVariable String id) {
+public Rv getSysAppVersionById(@ApiParam(name = "id", value = "app版本管理 id") @PathVariable Long id) {
 return Rv.getInstance(iSysAppVersionService.getDetail(id));
 }
 

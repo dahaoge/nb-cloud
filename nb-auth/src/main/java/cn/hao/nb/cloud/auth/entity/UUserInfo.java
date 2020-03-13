@@ -83,11 +83,11 @@ public class UUserInfo implements Serializable {
     @Version
     private Integer version;
     @ApiModelProperty(value = "创建人")
-    private String createBy;
+    private Long createBy;
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
     @ApiModelProperty(value = "更新人")
-    private String updateBy;
+    private Long updateBy;
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
     @ApiModelProperty(value = "删除标记")
@@ -95,7 +95,7 @@ public class UUserInfo implements Serializable {
     private Integer deleted = 0;
     @ApiModelProperty(value = "ID")
     @TableId(value = "user_id", type = IdType.INPUT)
-    private String userId;
+    private Long userId;
     @ApiModelProperty(value = "用户名")
     private String userName;
     @ApiModelProperty(value = "手机号")

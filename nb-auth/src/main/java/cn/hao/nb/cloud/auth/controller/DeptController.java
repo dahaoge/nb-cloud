@@ -45,13 +45,13 @@ public class DeptController {
 
     @ApiOperation(value = "删除组织机构", notes = "删除组织机构")
     @PostMapping(value = "/sysDept/del/{id}")
-    public Rv delSysDept(@ApiParam(name = "id", value = "组织机构id") @PathVariable String id) {
+    public Rv delSysDept(@ApiParam(name = "id", value = "组织机构id") @PathVariable Long id) {
         return Rv.getInstance(iSysDeptService.delData(id));
     }
 
     @ApiOperation(value = "查询组织机构", notes = "查询组织机构")
     @GetMapping(value = "/sysDept/getById/{id}")
-    public Rv getSysDeptById(@ApiParam(name = "id", value = "组织机构id") @PathVariable String id) {
+    public Rv getSysDeptById(@ApiParam(name = "id", value = "组织机构id") @PathVariable Long id) {
         return Rv.getInstance(iSysDeptService.getDetail(id));
     }
 
@@ -75,37 +75,37 @@ public class DeptController {
 
     @ApiOperation(value = "根据用户id列表查询所有组织机构")
     @GetMapping("/sysDept/listAllDisDeptByUserId/{userId}")
-    public Rv listAllDisDeptByUserId(@PathVariable String userId) {
+    public Rv listAllDisDeptByUserId(@PathVariable Long userId) {
         return Rv.getInstance(iSysDeptService.listAllDisDeptByUserId(userId));
     }
 
     @ApiOperation(value = "根据父id查询列表查询所有组织机构")
     @GetMapping("/sysDept/listAllDisDeptByParentId/{pId}")
-    public Rv listAllDisDeptByParentId(@PathVariable String pId) {
+    public Rv listAllDisDeptByParentId(@PathVariable Long pId) {
         return Rv.getInstance(iSysDeptService.listAllDisDeptByParentId(pId));
     }
 
     @ApiOperation(value = "根据父id查询下级组织机构")
     @GetMapping("/sysDept/listDisDeptByParentId/{pId}")
-    public Rv listDisDeptByParentId(@PathVariable String pId) {
+    public Rv listDisDeptByParentId(@PathVariable Long pId) {
         return Rv.getInstance(iSysDeptService.listDisDeptByParentId(pId));
     }
 
     @ApiOperation(value = "组织机构树(deptId为空的时候返回以root节点为起始节点的树)")
     @GetMapping("/sysDept/deptTree")
-    public Rv deptTree(String deptId) {
+    public Rv deptTree(Long deptId) {
         return Rv.getInstance(iSysDeptService.deptTree(deptId));
     }
 
     @ApiOperation(value = "用户组织机构树")
     @GetMapping("/sysDept/userDeptTree/{userId}")
-    public Rv userDeptTree(@PathVariable String userId) {
+    public Rv userDeptTree(@PathVariable Long userId) {
         return Rv.getInstance(iSysDeptService.userDeptTree(userId));
     }
 
     @ApiOperation(value = "根据用户id获取组织机构")
     @GetMapping("/sysDept/listByUserId/{userId}")
-    public Rv listDeptByUserId(@PathVariable String userId) {
+    public Rv listDeptByUserId(@PathVariable Long userId) {
         return Rv.getInstance(iSysDeptService.listByUserId(userId));
     }
 
@@ -123,13 +123,13 @@ public class DeptController {
 
     @ApiOperation(value = "删除用户所属组织机构", notes = "删除用户所属组织机构")
     @PostMapping(value = "/uUserDept/del/{id}")
-    public Rv delUUserDept(@ApiParam(name = "id", value = "用户所属组织机构id") @PathVariable String id) {
+    public Rv delUUserDept(@ApiParam(name = "id", value = "用户所属组织机构id") @PathVariable Long id) {
         return Rv.getInstance(iUUserDeptService.delData(id));
     }
 
     @ApiOperation(value = "查询用户所属组织机构", notes = "查询用户所属组织机构")
     @GetMapping(value = "/uUserDept/getById/{id}")
-    public Rv getUUserDeptById(@ApiParam(name = "id", value = "用户所属组织机构id") @PathVariable String id) {
+    public Rv getUUserDeptById(@ApiParam(name = "id", value = "用户所属组织机构id") @PathVariable Long id) {
         return Rv.getInstance(iUUserDeptService.getDetail(id));
     }
 

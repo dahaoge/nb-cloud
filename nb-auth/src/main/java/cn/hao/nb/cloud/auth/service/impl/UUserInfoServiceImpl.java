@@ -164,7 +164,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
-    public Qd getLoginInfo(String userId) {
+    public Qd getLoginInfo(Long userId) {
         TokenUser tokenUser = authMapper.getTokenUserById(userId);
         if (CheckUtil.objIsEmpty(tokenUser))
             throw NBException.create(EErrorCode.authIdentityErr, "查询不到用户信息");
@@ -183,7 +183,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
-    public boolean changeUserLock(String userId, EYn isLocked) {
+    public boolean changeUserLock(Long userId, EYn isLocked) {
         if (CheckUtil.objIsEmpty(userId, isLocked))
             throw NBException.create(EErrorCode.missingArg);
         UUserInfo data = new UUserInfo();
@@ -194,12 +194,12 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
-    public boolean lockUser(String userId) {
+    public boolean lockUser(Long userId) {
         return this.changeUserLock(userId, EYn.y);
     }
 
     @Override
-    public boolean unLockUser(String userId) {
+    public boolean unLockUser(Long userId) {
         return this.changeUserLock(userId, EYn.n);
     }
 
@@ -291,7 +291,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean modifyUserPhone(String userId, String phone) {
+    public boolean modifyUserPhone(Long userId, String phone) {
         if (CheckUtil.objIsEmpty(userId, phone))
             throw NBException.create(EErrorCode.missingArg);
         TokenUser tokenUser = UserUtil.getTokenUser(true);
@@ -314,7 +314,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean modifyUserPhone(String userId, String phone, String smsCheckCode) {
+    public boolean modifyUserPhone(Long userId, String phone, String smsCheckCode) {
         if (CheckUtil.objIsEmpty(userId, phone, smsCheckCode))
             throw NBException.create(EErrorCode.missingArg);
         if (!smsUtil.checkSms(phone, smsCheckCode))
@@ -374,7 +374,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
-    public boolean managerResetUserPwd(String userId) {
+    public boolean managerResetUserPwd(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         UUserInfo uUserInfo = this.getById(userId);
@@ -400,8 +400,8 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delData(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         loginChannelService.delByUserId(id);
         return this.removeById(id);
@@ -414,8 +414,8 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
      * @return
      */
     @Override
-    public UUserInfo getDetail(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public UUserInfo getDetail(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }
@@ -545,7 +545,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
-    public boolean isMatchDBPwd(String userId, String pwd) {
+    public boolean isMatchDBPwd(Long userId, String pwd) {
         if (CheckUtil.objIsEmpty(userId, pwd))
             throw NBException.create(EErrorCode.missingArg);
         UUserInfo userInfo = this.getById(userId);

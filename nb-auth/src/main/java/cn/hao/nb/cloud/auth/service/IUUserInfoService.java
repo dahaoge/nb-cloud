@@ -63,7 +63,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param userId
      * @return
      */
-    Qd getLoginInfo(String userId);
+    Qd getLoginInfo(Long userId);
 
     /**
      * 改变用户锁定状态
@@ -71,7 +71,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param isLocked
      * @return
      */
-    boolean changeUserLock(String userId, EYn isLocked);
+    boolean changeUserLock(Long userId, EYn isLocked);
 
     /**
      * 锁定用户账号
@@ -79,7 +79,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param userId
      * @return
      */
-    boolean lockUser(String userId);
+    boolean lockUser(Long userId);
 
     /**
      * 解锁用户账号
@@ -87,7 +87,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param userId
      * @return
      */
-    boolean unLockUser(String userId);
+    boolean unLockUser(Long userId);
 
     /**
      * 添加数据
@@ -125,7 +125,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param phone
      * @return
      */
-    boolean modifyUserPhone(String userId, String phone);
+    boolean modifyUserPhone(Long userId, String phone);
 
     /**
      * 根据短信验证码修改用户手机号
@@ -134,7 +134,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param smsCheckCode
      * @return
      */
-    boolean modifyUserPhone(String userId, String phone, String smsCheckCode);
+    boolean modifyUserPhone(Long userId, String phone, String smsCheckCode);
 
     /**
      * 初始化登录id(登录id一旦添加无法修改)
@@ -146,7 +146,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
 
     boolean modifySelfPwd(String oldPwd, String newPwd1, String newPwd2);
 
-    boolean managerResetUserPwd(String userId);
+    boolean managerResetUserPwd(Long userId);
 
     boolean resetSelfPwd();
 
@@ -156,7 +156,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param id
      * @return
      */
-    boolean delData(String id);
+    boolean delData(Long id);
 
     /**
      * 查询详情
@@ -164,7 +164,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param id
      * @return
      */
-    UUserInfo getDetail(String id);
+    UUserInfo getDetail(Long id);
 
     /**
      * 分页查询数据
@@ -258,7 +258,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      * @param pwd
      * @return
      */
-    boolean isMatchDBPwd(String userId, String pwd);
+    boolean isMatchDBPwd(Long userId, String pwd);
 
     boolean isMatchDBPwd(UUserInfo userInfo,String pwd);
 
@@ -294,13 +294,13 @@ return Rv.getInstance(iUUserInfoService.modifyData(data));
 
 @ApiOperation(value = "删除用户信息", notes = "删除用户信息")
 @PostMapping(value = "/uUserInfo/del/{id}")
-public Rv delUUserInfo(@ApiParam(name = "id", value = "用户信息id") @PathVariable String id) {
+public Rv delUUserInfo(@ApiParam(name = "id", value = "用户信息id") @PathVariable Long id) {
 return Rv.getInstance(iUUserInfoService.delData(id));
 }
 
 @ApiOperation(value = "查询用户信息", notes = "查询用户信息")
 @GetMapping(value = "/uUserInfo/getById/{id}")
-public Rv getUUserInfoById(@ApiParam(name = "id", value = "用户信息id") @PathVariable String id) {
+public Rv getUUserInfoById(@ApiParam(name = "id", value = "用户信息id") @PathVariable Long id) {
 return Rv.getInstance(iUUserInfoService.getDetail(id));
 }
 

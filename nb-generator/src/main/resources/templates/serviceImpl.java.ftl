@@ -143,8 +143,8 @@ import java.util.Map;
     * @return
     */
     @Override
-    public boolean delData(String id) {
-    if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+    if (CheckUtil.objIsEmpty(id))
     throw NBException.create(EErrorCode.missingArg);
     return this.removeById(id);
     }
@@ -155,8 +155,8 @@ import java.util.Map;
     * @return
     */
     @Override
-    public ${entity} getDetail(String id) {
-    if (CheckUtil.strIsEmpty(id))
+    public ${entity} getDetail(Long id) {
+    if (CheckUtil.objIsEmpty(id))
     throw NBException.create(EErrorCode.missingArg);
     return this.prepareReturnModel(this.getById(id));
     }

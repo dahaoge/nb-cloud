@@ -63,7 +63,7 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
     }
 
     @Override
-    public UUserRole addUserRole(String userId, String roleCode) {
+    public UUserRole addUserRole(Long userId, String roleCode) {
         if (CheckUtil.objIsEmpty(userId, roleCode))
             throw NBException.create(EErrorCode.missingArg);
         UUserRole data = new UUserRole();
@@ -73,7 +73,7 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
     }
 
     @Override
-    public boolean addUserRoles(String userId, String roleCodes) {
+    public boolean addUserRoles(Long userId, String roleCodes) {
         if (CheckUtil.objIsEmpty(userId, roleCodes))
             throw NBException.create(EErrorCode.missingArg);
         this.delByUserId(userId);
@@ -131,14 +131,14 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
      * @return
      */
     @Override
-    public boolean delData(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.removeById(id);
     }
 
     @Override
-    public boolean delByUserId(String userId) {
+    public boolean delByUserId(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         return this.remove(Qw.create().eq(UUserRole.USER_ID, userId));
@@ -157,14 +157,14 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
      * @return
      */
     @Override
-    public UUserRole getDetail(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public UUserRole getDetail(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }
 
     @Override
-    public List<UUserRole> listByUserId(String userId) {
+    public List<UUserRole> listByUserId(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         UUserRole.SearchParams searchParams = new UUserRole().new SearchParams();

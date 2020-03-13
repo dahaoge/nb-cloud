@@ -70,12 +70,12 @@ public class SysRoleMenu implements Serializable {
     @Version
     private Integer version;
 
-    private String createBy;
+    private Long createBy;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    private String updateBy;
+    private Long updateBy;
 
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
@@ -85,7 +85,7 @@ public class SysRoleMenu implements Serializable {
     private Integer deleted = 0;
 
     @TableId(value = "role_menu_id", type = IdType.INPUT)
-    private String roleMenuId;
+    private Long roleMenuId;
 
     private String roleCode;
 

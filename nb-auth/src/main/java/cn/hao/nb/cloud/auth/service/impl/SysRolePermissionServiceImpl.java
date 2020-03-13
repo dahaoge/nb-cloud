@@ -123,8 +123,8 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
      * @return
      */
     @Override
-    public boolean delData(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public boolean delData(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.removeById(id);
     }
@@ -149,8 +149,8 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
      * @return
      */
     @Override
-    public SysRolePermission getDetail(String id) {
-        if (CheckUtil.strIsEmpty(id))
+    public SysRolePermission getDetail(Long id) {
+        if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
     }

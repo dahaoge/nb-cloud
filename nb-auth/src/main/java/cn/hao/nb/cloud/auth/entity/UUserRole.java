@@ -31,7 +31,7 @@ public class UUserRole implements Serializable {
     @Data
     public class SearchParams {
 
-        String userId;
+        Long userId;
         String roleCode;
 
         @ApiModelProperty(value = "排序字段")
@@ -69,12 +69,12 @@ public class UUserRole implements Serializable {
     @Version
     private Integer version;
 
-    private String createBy;
+    private Long createBy;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    private String updateBy;
+    private Long updateBy;
 
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
@@ -84,9 +84,9 @@ public class UUserRole implements Serializable {
     private Integer deleted = 0;
 
     @TableId(value = "ur_id", type = IdType.INPUT)
-    private String urId;
+    private Long urId;
 
-    private String userId;
+    private Long userId;
 
     @TableField(exist = false)
     private RedisUser userInfo;

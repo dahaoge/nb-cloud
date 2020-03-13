@@ -73,8 +73,8 @@ public class IDUtil {
      * 获取自增序列
      * @return long
      */
-    public String nextId() {
-        return nextId(SystemClock.now() / 1000)+"";
+    public long nextId() {
+        return nextId(SystemClock.now() / 1000);
     }
 
     /**

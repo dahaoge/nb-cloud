@@ -25,10 +25,10 @@ public class CommonService {
     @Autowired
     IUUserInfoService iuUserInfoService;
 
-    public RedisUser getRedisUser(String userId) {
+    public RedisUser getRedisUser(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
-        RedisUser user = (RedisUser) redisUtil.hget(CommonConstant.REDIS_USER_KEY, userId);
+        RedisUser user = (RedisUser) redisUtil.hget(CommonConstant.REDIS_USER_KEY, userId.toString());
         if (CheckUtil.objIsEmpty(user)) {
             UUserInfo temp = iuUserInfoService.getById(userId);
             if (CheckUtil.objIsNotEmpty(temp)) {
@@ -39,13 +39,13 @@ public class CommonService {
                 user.setLoginId(temp.getLoginId());
                 user.setPhone(temp.getPhone());
                 user.setUserName(temp.getUserName());
-                redisUtil.hset(CommonConstant.REDIS_USER_KEY, userId, CommonConstant.REDIS_USER_EXPIRE_TIME);
+                redisUtil.hset(CommonConstant.REDIS_USER_KEY, userId.toString(), CommonConstant.REDIS_USER_EXPIRE_TIME);
             }
         }
         return user;
     }
 
-    public void refreshRedisUser(String userId) {
+    public void refreshRedisUser(Long userId) {
         if (CheckUtil.objIsEmpty(userId))
             throw NBException.create(EErrorCode.missingArg);
         redisUtil.hdel(CommonConstant.REDIS_USER_KEY, userId);

@@ -60,11 +60,11 @@ public class SysDept implements Serializable {
     @Version
     private Integer version;
     @ApiModelProperty(value = "创建人")
-    private String createBy;
+    private Long createBy;
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
     @ApiModelProperty(value = "更新人")
-    private String updateBy;
+    private Long updateBy;
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
     @ApiModelProperty(value = "删除标记")
@@ -72,11 +72,11 @@ public class SysDept implements Serializable {
     private Integer deleted = 0;
     @ApiModelProperty(value = "ID")
     @TableId(value = "dept_id", type = IdType.INPUT)
-    private String deptId;
+    private Long deptId;
     @ApiModelProperty(value = "名称")
     private String deptName;
     @ApiModelProperty(value = "父节点id")
-    private String pId;
+    private Long pId;
 
     @TableField(exist = false)
     private List<SysDept> children;

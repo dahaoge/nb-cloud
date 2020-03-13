@@ -79,7 +79,7 @@ public class JwtTokenUtil implements Serializable {
         Date expirationDate = new Date(System.currentTimeMillis() + expireMillTimes);
         String token = Jwts.builder().setClaims(claims).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, secret).compact();
 
-        String userId = (String) claims.get("sub");
+        Long userId = (Long) claims.get("sub");
 
         // token放入缓存
         redisTemplate.opsForHash().put(ACCESS_KEY, token, Byte.MIN_VALUE);
