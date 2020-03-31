@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.common.penum;
 
 import cn.hao.nb.cloud.common.entity.PEnum;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import java.util.List;
  * @Description:
  */
 public enum EUserType implements PEnum<String> {
-    manager(Lists.newArrayList(ELoginChannelScop.manageClient, ELoginChannelScop.BClient, ELoginChannelScop.CClient), "管理员"),
-    bUser(Lists.newArrayList(ELoginChannelScop.BClient, ELoginChannelScop.CClient), "B端用户"),
-    cUser(Lists.newArrayList(ELoginChannelScop.CClient), "C端用户");
+    manager(ImmutableList.of(ELoginChannelScop.manageClient, ELoginChannelScop.BClient, ELoginChannelScop.CClient), "管理员"),
+    bUser(ImmutableList.of(ELoginChannelScop.BClient, ELoginChannelScop.CClient), "B端用户"),
+    cUser(ImmutableList.of(ELoginChannelScop.CClient), "C端用户");
 
     private String desc;
     private List<ELoginChannelScop> loginChannelScops;

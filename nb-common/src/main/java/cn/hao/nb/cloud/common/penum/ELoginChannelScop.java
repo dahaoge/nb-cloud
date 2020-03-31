@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.common.penum;
 
 import cn.hao.nb.cloud.common.entity.PEnum;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import java.util.List;
  * @Description:
  */
 public enum ELoginChannelScop implements PEnum<String> {
-    CClient(Lists.newArrayList(ESourceClient.app2c, ESourceClient.web2c), "C端"),
-    BClient(Lists.newArrayList(ESourceClient.app2b, ESourceClient.web2b), "B端"),
-    manageClient(Lists.newArrayList(ESourceClient.app2Manager, ESourceClient.web2Manager), "管理端");
+    CClient(ImmutableList.of(ESourceClient.app2c, ESourceClient.web2c), "C端"),
+    BClient(ImmutableList.of(ESourceClient.app2b, ESourceClient.web2b), "B端"),
+    manageClient(ImmutableList.of(ESourceClient.app2Manager, ESourceClient.web2Manager), "管理端");
 
     private String desc;
     private List<ESourceClient> clients;
