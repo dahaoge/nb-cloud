@@ -5,11 +5,12 @@ import cn.hao.nb.cloud.auth.entity.SysRoleMenu;
 import cn.hao.nb.cloud.auth.mapper.SysMenuMapper;
 import cn.hao.nb.cloud.auth.service.ISysMenuService;
 import cn.hao.nb.cloud.auth.service.ISysRoleMenuService;
-import cn.hao.nb.cloud.common.constant.CommonConstant;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
+import cn.hao.nb.cloud.common.penum.EMenuType;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.RedisUtil;
@@ -17,6 +18,7 @@ import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,45 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Autowired
     RedisUtil redisUtil;
 
+    @Override
+    public List<SysMenu> menuTree(List<SysMenu> allMenus) {
+        if (CheckUtil.collectionIsEmpty(allMenus))
+            return allMenus;
+        List<SysMenu> result = Lists.newArrayList();
+        for (SysMenu menu : allMenus) {
+            if (EMenuType.module == menu.getMenuType())
+                result.add(menu);
+        }
+        this.genMenuTree(result, allMenus);
+        return result;
+    }
+
+    @Override
+    public List<SysMenu> menuTree() {
+        return this.menuTree(this.list());
+    }
+
+    @Override
+    public List<SysMenu> roleMenuTree(String roleCode) {
+        return this.menuTree(mapper.listByRoleCode(roleCode));
+    }
+
+    private void genMenuTree(List<SysMenu> parentList, List<SysMenu> all) {
+        if (CheckUtil.collectionIsEmpty(parentList, all))
+            return;
+
+        parentList.forEach(p -> {
+            all.forEach(item -> {
+                if (p.getMenuCode().equals(item.getParentMenuCode())) {
+                    if (CheckUtil.collectionIsEmpty(p.getChildren()))
+                        p.setChildren(Lists.newArrayList());
+                    p.getChildren().add(item);
+                }
+            });
+            this.genMenuTree(p.getChildren(), all);
+        });
+    }
+
     /**
      * 添加数据
      *
@@ -53,8 +94,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public SysMenu addData(SysMenu data) {
         this.validData(data);
         data.setMenuId(idUtil.nextId());
-        data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
-        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        TokenUser tokenUser = UserUtil.getTokenUser(false);
+        if (CheckUtil.objIsNotEmpty(tokenUser)) {
+            data.setCreateBy(tokenUser.getUserId());
+            data.setUpdateBy(tokenUser.getUserId());
+        }
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
@@ -176,27 +220,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         if (CheckUtil.objIsEmpty(menuCode))
             throw NBException.create(EErrorCode.missingArg);
         return this.list(Qw.create().eq(SysMenu.PARENT_MENU_CODE, menuCode));
-    }
-
-    @Override
-    public List<SysMenu> menuTree() {
-        List<SysMenu> result = (List<SysMenu>) (Object) redisUtil.get(CommonConstant.REDIS_MENU_TREE);
-        if (CheckUtil.objIsNotEmpty(result))
-            return result;
-        result = this.list(Qw.create().isNull(SysMenu.PARENT_MENU_CODE));
-        if (CheckUtil.collectionIsNotEmpty(result)) {
-            result.forEach(item -> this.recursiveDisMenu(item));
-        }
-        redisUtil.set(CommonConstant.REDIS_MENU_TREE, result, CommonConstant.REDIS_MENU_TREE_EXPIRE_TIME);
-        return result;
-    }
-
-    private void recursiveDisMenu(SysMenu menu) {
-        if (CheckUtil.objIsNotEmpty(menu)) {
-            menu.setChildren(this.getDisMenu(menu.getMenuCode()));
-            if (CheckUtil.collectionIsNotEmpty(menu.getChildren()))
-                menu.getChildren().forEach(item -> this.recursiveDisMenu(item));
-        }
     }
 
     /**

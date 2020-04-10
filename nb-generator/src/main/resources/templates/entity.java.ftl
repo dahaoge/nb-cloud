@@ -62,7 +62,7 @@ public class SearchParams{
 
 
 @ApiModelProperty(value = "排序字段")
-private String sort = "update_time";
+private String sort = ${entity}.UPDATE_TIME;
 
 @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
 private ESqlOrder order = ESqlOrder.DESC;

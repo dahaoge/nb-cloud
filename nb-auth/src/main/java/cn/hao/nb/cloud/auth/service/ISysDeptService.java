@@ -25,12 +25,26 @@ public interface ISysDeptService extends IService<SysDept> {
      */
     SysDept addData(SysDept data);
 
+    /**
+     * 添加数据
+     *
+     * @param deptName
+     * @param pId
+     * @return
+     */
     SysDept addData(String deptName, Long pId);
 
+    /**
+     * 添加数据
+     *
+     * @param deptName
+     * @return
+     */
     SysDept addData(String deptName);
 
     /**
      * 增量更新数据
+     *
      * @param data
      * @return
      */

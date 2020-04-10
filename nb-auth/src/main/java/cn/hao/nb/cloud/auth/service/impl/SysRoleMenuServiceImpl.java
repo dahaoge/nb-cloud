@@ -1,6 +1,7 @@
 package cn.hao.nb.cloud.auth.service.impl;
 
 import cn.hao.nb.cloud.auth.entity.SysMenu;
+import cn.hao.nb.cloud.auth.entity.SysRole;
 import cn.hao.nb.cloud.auth.entity.SysRoleMenu;
 import cn.hao.nb.cloud.auth.mapper.SysRoleMenuMapper;
 import cn.hao.nb.cloud.auth.service.ISysMenuService;
@@ -9,6 +10,7 @@ import cn.hao.nb.cloud.auth.service.ISysRoleService;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
@@ -19,6 +21,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -43,8 +46,42 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
     @Autowired
     ISysMenuService menuService;
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean coverUpdateRoleMenu(String roleCode, String menuCodes) {
+        if (CheckUtil.objIsEmpty(roleCode))
+            throw NBException.create(EErrorCode.missingArg);
+        menuCodes = CheckUtil.strIsEmpty(menuCodes) ? "" : menuCodes;
+        List<String> menuCodeList = ListUtil.getListWithOutDup(ListUtil.spliteCreate(menuCodes));
+        // 判定角色和菜单是否有效
+        SysRole role = roleService.getByRoleCode(roleCode);
+        if (CheckUtil.objIsEmpty(role))
+            throw NBException.create(EErrorCode.noData, "角色不存在");
+        List<SysMenu> dbMenus = menuService.list(Qw.create().in(SysMenu.MENU_CODE, menuCodeList));
+        if (CheckUtil.collectionIsEmpty(dbMenus))
+            throw NBException.create(EErrorCode.noData, "菜单不存在");
+        if (menuCodeList.size() != dbMenus.size())
+            throw NBException.create(EErrorCode.argCheckErr, "菜单项与数据库中的数据不匹配");
+        this.delByRoleCode(roleCode);
+        menuCodeList.forEach(item -> {
+            this.addData(roleCode, item);
+        });
+        return true;
+    }
+
+    @Override
+    public SysRoleMenu addData(String roleCode, String menuCode) {
+        if (CheckUtil.objIsEmpty(roleCode, menuCode))
+            throw NBException.create(EErrorCode.missingArg);
+        SysRoleMenu roleMenu = new SysRoleMenu();
+        roleMenu.setRoleCode(roleCode);
+        roleMenu.setMenuCode(menuCode);
+        return this.addData(roleMenu);
+    }
+
     /**
      * 添加数据
+     *
      * @param data
      * @return
      */
@@ -52,8 +89,11 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
     public SysRoleMenu addData(SysRoleMenu data) {
         this.validData(data);
         data.setRoleMenuId(idUtil.nextId());
-        data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
-        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        TokenUser tokenUser = UserUtil.getTokenUser(false);
+        if (CheckUtil.objIsNotEmpty(tokenUser)) {
+            data.setCreateBy(tokenUser.getUserId());
+            data.setUpdateBy(tokenUser.getUserId());
+        }
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);

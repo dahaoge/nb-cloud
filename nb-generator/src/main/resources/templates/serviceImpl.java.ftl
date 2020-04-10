@@ -58,8 +58,11 @@ import java.util.Map;
             </#if>
         </#if>
     </#list>
-    data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
-    data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+    TokenUser tokenUser=UserUtil.getTokenUser(false);
+    if (CheckUtil.objIsNotEmpty(tokenUser)) {
+    data.setCreateBy(tokenUser.getUserId());
+    data.setUpdateBy(tokenUser.getUserId());
+    }
     data.setVersion(null);
     data.setDeleted(null);
     data.setUpdateTime(null);

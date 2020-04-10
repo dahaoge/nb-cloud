@@ -17,8 +17,33 @@ import java.util.Map;
  * @since 2019-12-08
  */
 public interface ISysMenuService extends IService<SysMenu> {
+
+    /**
+     * 菜单树
+     *
+     * @param moduleMenus
+     * @return
+     */
+    List<SysMenu> menuTree(List<SysMenu> allMenus);
+
+    /**
+     * 菜单树
+     *
+     * @return
+     */
+    List<SysMenu> menuTree();
+
+    /**
+     * 角色菜单树
+     *
+     * @param roleId
+     * @return
+     */
+    List<SysMenu> roleMenuTree(String roleCode);
+
     /**
      * 添加数据
+     *
      * @param data
      * @return
      */
@@ -60,8 +85,6 @@ public interface ISysMenuService extends IService<SysMenu> {
     SysMenu getParent(String menuCode);
 
     List<SysMenu> getDisMenu(String menuCode);
-
-    List<SysMenu> menuTree();
 
     /**
      * 分页查询数据

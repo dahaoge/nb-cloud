@@ -6,6 +6,7 @@ import cn.hao.nb.cloud.auth.service.ISysRolePermissionService;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
@@ -45,8 +46,11 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
     public SysRolePermission addData(SysRolePermission data) {
         this.validData(data);
         data.setRolePermissionId(idUtil.nextId());
-        data.setCreateBy(UserUtil.getTokenUser(true).getUserId());
-        data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
+        TokenUser tokenUser = UserUtil.getTokenUser(false);
+        if (CheckUtil.objIsNotEmpty(tokenUser)) {
+            data.setCreateBy(tokenUser.getUserId());
+            data.setUpdateBy(tokenUser.getUserId());
+        }
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);

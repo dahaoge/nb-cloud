@@ -17,8 +17,21 @@ import java.util.Map;
  * @since 2019-12-08
  */
 public interface ISysRoleMenuService extends IService<SysRoleMenu> {
+
+    /**
+     * 覆盖更新角色菜单
+     *
+     * @param roleCode
+     * @param menuCodes
+     * @return
+     */
+    boolean coverUpdateRoleMenu(String roleCode, String menuCodes);
+
+    SysRoleMenu addData(String roleCode, String menuCode);
+
     /**
      * 添加数据
+     *
      * @param data
      * @return
      */
