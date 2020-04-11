@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     IDUtil idUtil;
     @Autowired
     CompanyMapper mapper;
+    @Autowired
+    RestTemplate restTemplate;
 
     /**
      * 添加数据

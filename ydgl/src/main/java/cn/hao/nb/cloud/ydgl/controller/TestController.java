@@ -1,5 +1,6 @@
 package cn.hao.nb.cloud.ydgl.controller;
 
+import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,11 @@ public class TestController {
     @GetMapping("/testRestTemplate")
     public String testRestTemplate() {
         return restTemplate.getForObject("http://nb-auth:/temp/test/hao", String.class);
+    }
+
+    @GetMapping("/testHttp")
+    public String testHttp() {
+        Object result = new RestTemplate().getForObject("http://192.168.31.9:10090/cm/getAllEnum", Object.class);
+        return JSON.toJSONString(result);
     }
 }
