@@ -1,0 +1,21 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: ydgl
+  cloud:
+    nacos:
+      server-addr: 117.50.43.59:8848
+      discovery:
+      config:
+        ext-config:
+          - data-id: nb-db.yaml
+            refresh: false
+          - data-id: nb-db-public.yaml
+            refresh: false
+          - data-id: nb-redis.yaml
+            refresh: false
+        shared-dataids: security-public.yaml
+        file-extension: yaml
+logging:
+  config: classpath:log4j2.xml

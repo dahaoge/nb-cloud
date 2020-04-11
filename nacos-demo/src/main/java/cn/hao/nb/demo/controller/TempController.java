@@ -10,6 +10,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @Auther: hao
@@ -28,12 +29,19 @@ public class TempController {
     private String appName;
     @Autowired
     SecurityProps securityProps;
+    @Autowired
+    RestTemplate restTemplate;
 
     @GetMapping("/appName")
-    public String appName(){
+    public String appName() {
         log.info(JSON.toJSONString(securityProps.getIgnoreUrls()));
         log.info(JSON.toJSONString(securityProps.getSourceClients()));
         return appName;
+    }
+
+    @GetMapping("/testRestTemplate")
+    public String testRestTemplate() {
+        return restTemplate.getForObject("http://auth/temp/test/hao", String.class);
     }
 
 }

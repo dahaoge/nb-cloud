@@ -1,5 +1,5 @@
 server:
-  port: 8091
+  port: 8079
 spring:
   application:
     name: nacos-demo

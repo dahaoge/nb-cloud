@@ -14,6 +14,7 @@
         <module>nb-auth</module>
         <module>nb-generator</module>
         <module>nb-basic</module>
+        <module>ydgl</module>
     </modules>
     <packaging>pom</packaging>
 
