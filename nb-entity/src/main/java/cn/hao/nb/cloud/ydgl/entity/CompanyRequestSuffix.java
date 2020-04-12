@@ -2,6 +2,7 @@ package cn.hao.nb.cloud.ydgl.entity;
 
 import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.entity.RedisUser;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
@@ -37,6 +38,15 @@ public class CompanyRequestSuffix implements Serializable {
     @Data
     public class SearchParams {
 
+        @ApiModelProperty(value = "公司id")
+        private Long comId;
+
+        @ApiModelProperty(value = "请求枚举")
+        private ECompanyRequestSuffixKey enumKey;
+
+        @ApiModelProperty(value = "请求后缀")
+        private String requestSuffix;
+
 
         @ApiModelProperty(value = "排序字段")
         private String sort = CompanyRequestSuffix.UPDATE_TIME;
@@ -47,6 +57,9 @@ public class CompanyRequestSuffix implements Serializable {
         public Qw<CompanyRequestSuffix> preWrapper(Qw<CompanyRequestSuffix> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
+            qw.eq(CompanyRequestSuffix.COM_ID, this.getComId());
+            qw.eq(CompanyRequestSuffix.ENUM_KEY, this.getEnumKey());
+            qw.like(CompanyRequestSuffix.REQUEST_SUFFIX, this.getRequestSuffix());
             if (ESqlOrder.DESC.equals(this.getOrder()))
                 qw.orderByDesc(this.getSort());
             else
@@ -93,7 +106,7 @@ public class CompanyRequestSuffix implements Serializable {
     private Long comId;
 
     @ApiModelProperty(value = "请求枚举")
-    private String enumKey;
+    private ECompanyRequestSuffixKey enumKey;
 
     @ApiModelProperty(value = "请求后缀")
     private String requestSuffix;

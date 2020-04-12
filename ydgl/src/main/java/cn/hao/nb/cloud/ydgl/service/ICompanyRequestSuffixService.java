@@ -1,6 +1,7 @@
 package cn.hao.nb.cloud.ydgl.service;
 
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
 import cn.hao.nb.cloud.ydgl.entity.CompanyRequestSuffix;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,6 +18,13 @@ import java.util.Map;
  * @since 2020-04-12
  */
 public interface ICompanyRequestSuffixService extends IService<CompanyRequestSuffix> {
+
+    Map<ECompanyRequestSuffixKey, String> getCompanyRequestSuffix(Long comId);
+
+    String getRequestSuffix(Long comId, ECompanyRequestSuffixKey enumKey);
+
+    boolean refreshRedisCompanyRequestSuffixByComId(Long comId);
+
     /**
      * 添加数据
      *

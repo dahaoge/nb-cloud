@@ -1,10 +1,16 @@
 package cn.hao.nb.cloud.ydgl.service.impl;
 
+import cn.hao.nb.cloud.common.constant.CommonConstant;
+import cn.hao.nb.cloud.common.constant.RedisKey;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qw;
+import cn.hao.nb.cloud.common.entity.TokenUser;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
+import cn.hao.nb.cloud.common.util.RedisUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import cn.hao.nb.cloud.ydgl.entity.CompanyRequestSuffix;
 import cn.hao.nb.cloud.ydgl.mapper.CompanyRequestSuffixMapper;
@@ -12,6 +18,9 @@ import cn.hao.nb.cloud.ydgl.service.ICompanyRequestSuffixService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.base.Function;
+import com.google.common.collect.Maps;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +42,63 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
     IDUtil idUtil;
     @Autowired
     CompanyRequestSuffixMapper mapper;
+    @Autowired
+    RedisUtil redisUtil;
+
+    @Override
+    public Map<ECompanyRequestSuffixKey, String> getCompanyRequestSuffix(Long comId) {
+        if (CheckUtil.objIsEmpty(comId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
+        Map<ECompanyRequestSuffixKey, String> result = (Map<ECompanyRequestSuffixKey, String>) redisUtil.hget(RedisKey.REDIS_COMPANY_REQUEST_SUFFIX, comId.toString());
+        if (CheckUtil.objIsEmpty(result)) {
+            result = Maps.newHashMap();
+
+            result.putAll(CommonConstant.DEFAULT_COMPANY_REQUEST_SUFFIX);
+
+            List<CompanyRequestSuffix> dbList = this.list(
+                    Qw.create().eq(CompanyRequestSuffix.COM_ID, comId)
+                            .select(CompanyRequestSuffix.ENUM_KEY, CompanyRequestSuffix.REQUEST_SUFFIX)
+            );
+
+            if (CheckUtil.collectionIsNotEmpty(dbList)) {
+                Map<ECompanyRequestSuffixKey, CompanyRequestSuffix> dbMap = Maps.newHashMap();
+                dbMap = Maps.uniqueIndex(dbList.iterator(), new Function<CompanyRequestSuffix, ECompanyRequestSuffixKey>() {
+                    @Nullable
+                    @Override
+                    public ECompanyRequestSuffixKey apply(@Nullable CompanyRequestSuffix item) {
+                        return item.getEnumKey();
+                    }
+                });
+                for (ECompanyRequestSuffixKey key : ECompanyRequestSuffixKey.values()) {
+                    if (CheckUtil.objIsNotEmpty(dbMap.get(key)))
+                        result.put(key, dbMap.get(key).getRequestSuffix());
+                }
+            }
+            redisUtil.hset(RedisKey.REDIS_COMPANY_REQUEST_SUFFIX, comId.toString(), result);
+        }
+        return result;
+    }
+
+    @Override
+    public String getRequestSuffix(Long comId, ECompanyRequestSuffixKey enumKey) {
+        if (CheckUtil.objIsEmpty(comId, enumKey))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("comId|enumKey");
+        Map<ECompanyRequestSuffixKey, String> map = this.getCompanyRequestSuffix(comId);
+        if (CheckUtil.objIsEmpty(map))
+            throw NBException.create(EErrorCode.noData, "公司请求后缀配置异常");
+        String result = map.get(enumKey);
+        if (CheckUtil.strIsEmpty(result))
+            throw NBException.create(EErrorCode.noData, "公司请求后缀配置异常").plusMsg(enumKey.getValue());
+        return result;
+    }
+
+    @Override
+    public boolean refreshRedisCompanyRequestSuffixByComId(Long comId) {
+        if (CheckUtil.strIsEmpty(comId.toString()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
+        redisUtil.hdel(RedisKey.REDIS_COMPANY_REQUEST_SUFFIX, comId);
+        return true;
+    }
 
     /**
      * 添加数据
@@ -54,6 +120,7 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
         data.setUpdateTime(null);
         data.setCreateTime(null);
         this.save(data);
+        this.refreshRedisCompanyRequestSuffixByComId(data.getComId());
         return data;
     }
 
@@ -74,7 +141,7 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
-        return this.updateById(data);
+        return this.updateById(data) && this.refreshRedisCompanyRequestSuffixByComId(data.getComId());
     }
 
     /**
@@ -100,7 +167,7 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
                 .set(CompanyRequestSuffix::getEnumKey, data.getEnumKey())
                 .set(CompanyRequestSuffix::getRequestSuffix, data.getRequestSuffix())
                 .eq(CompanyRequestSuffix::getTId, data.getTId())
-        );
+        ) && this.refreshRedisCompanyRequestSuffixByComId(data.getComId());
     }
 
     /**
@@ -113,7 +180,10 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
     public boolean delData(Long id) {
         if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
-        return this.removeById(id);
+        CompanyRequestSuffix data = this.getById(id);
+        if (CheckUtil.objIsEmpty(data))
+            throw NBException.create(EErrorCode.noData);
+        return this.removeById(id) && this.refreshRedisCompanyRequestSuffixByComId(data.getComId());
     }
 
     /**
@@ -228,7 +298,11 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
      */
     @Override
     public void validData(CompanyRequestSuffix data) {
-        if (CheckUtil.objIsEmpty(data))
+        if (CheckUtil.objIsEmpty(data) && CheckUtil.objIsEmpty(
+                data.getComId(),
+                data.getEnumKey(),
+                data.getRequestSuffix()
+        ))
             throw NBException.create(EErrorCode.missingArg);
     }
 }
