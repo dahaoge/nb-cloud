@@ -15,6 +15,7 @@
         <module>nb-generator</module>
         <module>nb-basic</module>
         <module>ydgl</module>
+        <module>nb-entity</module>
     </modules>
     <packaging>pom</packaging>
 

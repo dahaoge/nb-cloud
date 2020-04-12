@@ -10,13 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cn.hao.nb.cloud</groupId>
-    <artifactId>nb-basic</artifactId>
+    <artifactId>nb-entity</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>nb-basic</name>
-    <description>nb-basic</description>
+    <name>nb-entity</name>
+    <description>nb-entity</description>
 
+    <!-- project properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -32,35 +33,6 @@
             <artifactId>nb-common</artifactId>
             <version>1.0.0</version>
         </dependency>
-
-        <!-- 实体类 -->
-        <dependency>
-            <groupId>cn.hao.nb.cloud</groupId>
-            <artifactId>nb-entity</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
 
 </project>

@@ -12,6 +12,7 @@
         <module name="nb-common" />
         <module name="nb-basic" />
         <module name="nb-generator" />
+        <module name="nb-entity" />
         <module name="nb-gateway" />
       </profile>
     </annotationProcessing>
@@ -22,6 +23,7 @@
       <module name="nb-auth" options="-parameters" />
       <module name="nb-basic" options="-parameters" />
       <module name="nb-common" options="-parameters" />
+      <module name="nb-entity" options="-parameters" />
       <module name="nb-gateway" options="-parameters" />
       <module name="nb-generator" options="-parameters" />
       <module name="ydgl" options="-parameters" />

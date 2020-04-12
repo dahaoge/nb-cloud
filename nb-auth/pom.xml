@@ -33,6 +33,13 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- 实体类 -->
+        <dependency>
+            <groupId>cn.hao.nb.cloud</groupId>
+            <artifactId>nb-entity</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

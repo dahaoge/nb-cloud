@@ -18,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {"cn.hao.nb.cloud"})
-@MapperScan({"cn.hao.nb.cloud.auth.mapper"})
+@MapperScan({"cn.hao.nb.cloud.basic.mapper"})
 public class BsApplication {
 
     public static void main(String[] args) {
