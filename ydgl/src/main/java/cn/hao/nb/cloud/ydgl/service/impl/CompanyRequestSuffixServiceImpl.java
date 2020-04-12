@@ -2,41 +2,37 @@ package cn.hao.nb.cloud.ydgl.service.impl;
 
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
-import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
-import cn.hao.nb.cloud.ydgl.entity.Company;
-import cn.hao.nb.cloud.ydgl.mapper.CompanyMapper;
-import cn.hao.nb.cloud.ydgl.service.ICompanyService;
+import cn.hao.nb.cloud.ydgl.entity.CompanyRequestSuffix;
+import cn.hao.nb.cloud.ydgl.mapper.CompanyRequestSuffixMapper;
+import cn.hao.nb.cloud.ydgl.service.ICompanyRequestSuffixService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
 
 /**
  * <p>
- * 公司管理  服务实现类
+ * 公司请求后缀  服务实现类
  * </p>
  *
  * @author hao@179314039@qq.com
- * @since 2020-04-10
+ * @since 2020-04-12
  */
 @Service
-public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> implements ICompanyService {
+public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestSuffixMapper, CompanyRequestSuffix> implements ICompanyRequestSuffixService {
 
     @Autowired
     IDUtil idUtil;
     @Autowired
-    CompanyMapper mapper;
-    @Autowired
-    RestTemplate restTemplate;
+    CompanyRequestSuffixMapper mapper;
 
     /**
      * 添加数据
@@ -45,9 +41,9 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public Company addData(Company data) {
+    public CompanyRequestSuffix addData(CompanyRequestSuffix data) {
         this.validData(data);
-        data.setComId(idUtil.nextId());
+        data.setTId(idUtil.nextId());
         TokenUser tokenUser = UserUtil.getTokenUser(false);
         if (CheckUtil.objIsNotEmpty(tokenUser)) {
             data.setCreateBy(tokenUser.getUserId());
@@ -57,21 +53,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
-        data.setRootDept(null);
         this.save(data);
         return data;
-    }
-
-    @Override
-    public boolean refreshComDept(String comId) {
-        if (CheckUtil.strIsEmpty(comId))
-            throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
-        Company company = this.getById(comId);
-        if (CheckUtil.objIsEmpty(company))
-            throw NBException.create(EErrorCode.noData).plusMsg("company");
-        if (CheckUtil.strIsEmpty(company.getBaseUrl()))
-            throw NBException.create(EErrorCode.noData).plusMsg("company.baseUrl");
-        return false;
     }
 
     /**
@@ -81,9 +64,9 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public boolean incrementModifyData(Company data) {
+    public boolean incrementModifyData(CompanyRequestSuffix data) {
         if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
-                data.getComId()
+                data.getTId()
         ))
             throw NBException.create(EErrorCode.missingArg);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
@@ -91,7 +74,6 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
-        data.setRootDept(null);
         return this.updateById(data);
     }
 
@@ -102,9 +84,9 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public boolean totalAmountModifyData(Company data) {
+    public boolean totalAmountModifyData(CompanyRequestSuffix data) {
         if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(
-                data.getComId()
+                data.getTId()
         ))
             throw NBException.create(EErrorCode.missingArg);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
@@ -112,12 +94,12 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
-        return this.update(data, Wrappers.<Company>lambdaUpdate()
-                .set(Company::getUpdateBy, data.getUpdateBy())
-                .set(Company::getComName, data.getComName())
-                .set(Company::getRootDept, data.getRootDept())
-                .set(Company::getBaseUrl, data.getBaseUrl())
-                .eq(Company::getComId, data.getComId())
+        return this.update(data, Wrappers.<CompanyRequestSuffix>lambdaUpdate()
+                .set(CompanyRequestSuffix::getUpdateBy, data.getUpdateBy())
+                .set(CompanyRequestSuffix::getComId, data.getComId())
+                .set(CompanyRequestSuffix::getEnumKey, data.getEnumKey())
+                .set(CompanyRequestSuffix::getRequestSuffix, data.getRequestSuffix())
+                .eq(CompanyRequestSuffix::getTId, data.getTId())
         );
     }
 
@@ -141,7 +123,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public Company getDetail(Long id) {
+    public CompanyRequestSuffix getDetail(Long id) {
         if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
         return this.prepareReturnModel(this.getById(id));
@@ -155,7 +137,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public IPage<Company> pageData(Pg pg, Company.SearchParams searchParams) {
+    public IPage<CompanyRequestSuffix> pageData(Pg pg, CompanyRequestSuffix.SearchParams searchParams) {
         return this.prepareReturnModel(this.page(pg.page(), searchParams.preWrapper(pg.wrapper())));
     }
 
@@ -166,7 +148,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public List<Company> listData(Company.SearchParams searchParams) {
+    public List<CompanyRequestSuffix> listData(CompanyRequestSuffix.SearchParams searchParams) {
         return this.prepareReturnModel(this.list(searchParams.preWrapper(null)));
     }
 
@@ -180,7 +162,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @Override
     public IPage
             <Map
-                    <String, Object>> pageMapData(Pg pg, Company.SearchParams searchParams) {
+                    <String, Object>> pageMapData(Pg pg, CompanyRequestSuffix.SearchParams searchParams) {
         return mapper.pageMapData(pg.page(), searchParams);
     }
 
@@ -191,7 +173,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public Company prepareReturnModel(Company data) {
+    public CompanyRequestSuffix prepareReturnModel(CompanyRequestSuffix data) {
         return data;
     }
 
@@ -202,7 +184,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public IPage<Company> prepareReturnModel(IPage<Company> page) {
+    public IPage<CompanyRequestSuffix> prepareReturnModel(IPage<CompanyRequestSuffix> page) {
         if (CheckUtil.objIsNotEmpty(page) && CheckUtil.collectionIsNotEmpty(page.getRecords()))
             this.prepareReturnModel(page.getRecords());
         return page;
@@ -215,7 +197,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @return
      */
     @Override
-    public List<Company> prepareReturnModel(List<Company> list) {
+    public List<CompanyRequestSuffix> prepareReturnModel(List<CompanyRequestSuffix> list) {
         if (CheckUtil.collectionIsNotEmpty(list))
             list.forEach(item -> {
                 this.prepareReturnModel(item);
@@ -245,8 +227,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      * @param data
      */
     @Override
-    public void validData(Company data) {
-        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getComName(), data.getBaseUrl()))
+    public void validData(CompanyRequestSuffix data) {
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
     }
 }
