@@ -16,6 +16,7 @@ import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
+import cn.hao.nb.cloud.common.entity.RedisUser;
 
 import java.io.Serializable;
 import java.util.Date;
