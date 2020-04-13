@@ -1,3 +1,8 @@
+import com.google.common.collect.Lists;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+
 /**
  * @Auther: hao
  * @Date: 2020/4/12 17:56
@@ -6,8 +11,9 @@
 public class Test {
 
     public static void main(String[] args) {
-        if (Test.a() | Test.b())
-            System.out.println("c");
+        MultiValueMap map1 = new LinkedMultiValueMap<String, Object>();
+        System.out.println(MultiValueMap.class.isAssignableFrom(map1.getClass()));
+        System.out.println(MultiValueMap.class.isAssignableFrom(Lists.newArrayList().getClass()));
     }
 
     public static boolean a() {

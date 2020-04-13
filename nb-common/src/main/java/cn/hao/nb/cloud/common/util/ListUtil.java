@@ -2,10 +2,13 @@ package cn.hao.nb.cloud.common.util;
 
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.penum.EMethod;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.StringUtils;
+import com.google.common.collect.Multiset;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -189,8 +192,15 @@ public class ListUtil {
         if (null == iterator) {
             return null;
         } else {
-            return StringUtils.join(iterator.toArray(), ",");
+            return Joiner.on(",").skipNulls().join(iterator);
         }
+    }
+
+    public static <T> String join(List<T> iterator, String joinOn) {
+        if (null == iterator)
+            return null;
+        joinOn = CheckUtil.strIsEmpty(joinOn) ? "," : joinOn;
+        return Joiner.on(joinOn).skipNulls().join(iterator);
     }
 
     public static List<String> spliteCreate(String source) {
@@ -207,13 +217,7 @@ public class ListUtil {
             return null;
         }
 
-        String[] xs = source.split(splite);
-        List<String> rtn = Lists.newLinkedList();
-
-        for (String x : xs) {
-            rtn.add(x.trim());
-        }
-        return rtn;
+        return Splitter.on(splite).omitEmptyStrings().trimResults().splitToList(source);
     }
 
     public static List<Long> spliteCreateLong(String source) {
@@ -246,13 +250,11 @@ public class ListUtil {
      * @param list
      */
     public static void removeDuplicateWithOrder(List list) {
-        Set set = new HashSet();
-        List newList = new ArrayList();
-        for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-            Object element = iter.next();
-            if (set.add(element)) newList.add(element);
+        if (CheckUtil.collectionIsNotEmpty(list)) {
+            Multiset multiset = HashMultiset.create();
+            list.forEach(item -> multiset.add(item));
+            list.clear();
+            list.addAll(multiset.elementSet());
         }
-        list.clear();
-        list.addAll(newList);
     }
 }

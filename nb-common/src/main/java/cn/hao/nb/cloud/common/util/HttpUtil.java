@@ -1,17 +1,86 @@
 package cn.hao.nb.cloud.common.util;
 
 import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
+import com.google.common.collect.Lists;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class HttpUtil {
+
+    public static RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
+    public static Rv httpGetRv(String requestUrl, Map<String, Object> params) {
+        return HttpUtil.httpGet(requestUrl, params, Rv.class);
+    }
+
+    public static <T> T httpGet(String requestUrl, Map<String, Object> params, Class<T> clazz) {
+        if (CheckUtil.strIsEmpty(requestUrl))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("requestUrl");
+        if (CheckUtil.objIsEmpty(clazz))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("clazz");
+        ResponseEntity responseEntity = HttpUtil.getRestTemplate().getForEntity(preGetParams(requestUrl, params)
+                , clazz);
+        if (responseEntity.getStatusCodeValue() != 200)
+            throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
+        return (T) responseEntity.getBody();
+    }
+
+    public static Rv httpPostRv(String requestUrl, Map<String, Object> params) {
+        return HttpUtil.httpPost(requestUrl, params, Rv.class);
+    }
+
+    public static <T> T httpPost(String requestUrl, Map<String, Object> params, Class<T> clazz) {
+        if (CheckUtil.strIsEmpty(requestUrl))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("requestUrl");
+        if (CheckUtil.objIsEmpty(clazz))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("clazz");
+        MultiValueMap<String, Object> p = null;
+        if (CheckUtil.objIsNotEmpty(params)) {
+            if (MultiValueMap.class.isAssignableFrom(params.getClass()))
+                p = (MultiValueMap) params;
+            else {
+                p = new LinkedMultiValueMap<String, Object>();
+                for (String key : params.keySet()) {
+                    p.add(key, params.get(key));
+                }
+            }
+        }
+        ResponseEntity responseEntity = HttpUtil.getRestTemplate().postForEntity(requestUrl, new HttpEntity<MultiValueMap<String, Object>>(p, new HttpHeaders()), clazz);
+        if (responseEntity.getStatusCodeValue() != 200)
+            throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
+        return (T) responseEntity.getBody();
+    }
+
+    public static String preGetParams(String url, Map params) {
+        if (CheckUtil.objIsEmpty(params))
+            return url;
+        List list = Lists.newArrayList();
+        params.keySet().forEach(key -> {
+            list.add(key.toString().concat("=".concat(params.get(key).toString())));
+        });
+        String result = url.concat("?".concat(ListUtil.join(list, "&")));
+        System.out.println(result);
+        return result;
+    }
+
 
     /**
      * 获取head参数

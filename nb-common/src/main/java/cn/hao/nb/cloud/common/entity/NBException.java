@@ -89,6 +89,8 @@ public class NBException extends RuntimeException {
     }
 
     public static NBException create(Exception e) {
+        if (NBException.class.equals(e.getClass()))
+            throw NBException.create(((NBException) e).getErrorCode(), ((NBException) e).getMeMessage());
         return new NBException(e);
     }
 

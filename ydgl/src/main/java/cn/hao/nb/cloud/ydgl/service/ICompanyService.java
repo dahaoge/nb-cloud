@@ -31,7 +31,7 @@ public interface ICompanyService extends IService<Company> {
      * @param comId
      * @return
      */
-    boolean refreshComDept(String comId);
+    boolean refreshComDept(Long comId);
 
     /**
      * 增量更新数据

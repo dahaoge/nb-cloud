@@ -2,13 +2,16 @@ package cn.hao.nb.cloud.ydgl.service.impl;
 
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.entity.TokenUser;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import cn.hao.nb.cloud.ydgl.entity.Company;
 import cn.hao.nb.cloud.ydgl.mapper.CompanyMapper;
+import cn.hao.nb.cloud.ydgl.service.ICompanyRequestSuffixService;
 import cn.hao.nb.cloud.ydgl.service.ICompanyService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -37,6 +40,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     CompanyMapper mapper;
     @Autowired
     RestTemplate restTemplate;
+    @Autowired
+    ICompanyRequestSuffixService requestSuffixService;
 
     /**
      * 添加数据
@@ -63,14 +68,16 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     }
 
     @Override
-    public boolean refreshComDept(String comId) {
-        if (CheckUtil.strIsEmpty(comId))
+    public boolean refreshComDept(Long comId) {
+        if (CheckUtil.objIsEmpty(comId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
         Company company = this.getById(comId);
         if (CheckUtil.objIsEmpty(company))
             throw NBException.create(EErrorCode.noData).plusMsg("company");
         if (CheckUtil.strIsEmpty(company.getBaseUrl()))
             throw NBException.create(EErrorCode.noData).plusMsg("company.baseUrl");
+        Rv resp = new RestTemplate().getForObject(company.getBaseUrl()
+                + requestSuffixService.getRequestSuffix(comId, ECompanyRequestSuffixKey.loadDept), Rv.class);
         return false;
     }
 
