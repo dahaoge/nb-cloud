@@ -11,11 +11,14 @@ import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.*;
+import cn.hao.nb.cloud.ydglExternalApi.entity.ExternalDepartment;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +60,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     @Override
     public SysDept addData(SysDept data) {
         this.validData(data);
-        data.setDeptId(idUtil.nextId());
+        if (CheckUtil.objIsEmpty(data.getDeptId()))
+            data.setDeptId(idUtil.nextId());
         TokenUser tokenUser = UserUtil.getTokenUser(false);
         if (CheckUtil.objIsNotEmpty(tokenUser)) {
             data.setCreateBy(tokenUser.getUserId());
@@ -84,6 +88,38 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     @Override
     public SysDept addData(String deptName) {
         return this.addData(deptName, null);
+    }
+
+    @Override
+    public SysDept newFromExternalDept(ExternalDepartment externalDepartment) {
+        SysDept data = new SysDept();
+        data.setDeptName(externalDepartment.getDeptName());
+        data.setExternalDeptId(externalDepartment.getDeptId());
+        return data;
+    }
+
+    @Override
+    public SysDept refreshCompanyDeptByOutDepartment(long companyId, String externalDeptJsonList) {
+        if (CheckUtil.objIsEmpty(companyId, externalDeptJsonList))
+            throw NBException.create(EErrorCode.missingArg);
+        ExternalDepartment externalDepartment = new GsonBuilder().create().fromJson(externalDeptJsonList, new TypeToken<ExternalDepartment>() {
+        }.getType());
+        // 删除之前的数据
+        this.delByCompanyId(companyId);
+        SysDept root = this.newFromExternalDept(externalDepartment);
+        root.setPId(0L);
+        root.setCompanyId(companyId);
+        this.addChildByExternalDept(this.addData(root), externalDepartment);
+        return root;
+    }
+
+    private void addChildByExternalDept(SysDept parent, ExternalDepartment externalParent) {
+        if (CheckUtil.objIsEmpty(parent, externalParent) || CheckUtil.objIsEmpty(externalParent.getChildren()))
+            return;
+        SysDept children = this.newFromExternalDept(externalParent.getChildren());
+        children.setPId(parent.getDeptId());
+        children.setCompanyId(parent.getCompanyId());
+        this.addChildByExternalDept(this.addData(children), externalParent.getChildren());
     }
 
     /**
@@ -144,6 +180,13 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         if (CheckUtil.objIsNotEmpty(userDeptService.getOne(Qw.create().eq(SysDept.DEPT_ID, id))))
             throw NBException.create(EErrorCode.argCheckErr, "该机构下尚有绑定的用户,无法删除");
         return this.removeById(id);
+    }
+
+    @Override
+    public boolean delByCompanyId(Long companyId) {
+        if (CheckUtil.objIsEmpty(companyId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("companyId");
+        return this.remove(Qw.create().eq(SysDept.COMPANY_ID, companyId));
     }
 
     /**
@@ -217,7 +260,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         if (CheckUtil.objIsNotEmpty(result))
             return result;
 
-        result = this.listDisDeptByParentId(0L);
+        result = this.listDisDeptByParentId(deptId);
         result.forEach(item -> this.recursiveSetChildren(item));
         redisUtil.hset(this.REDIS_DEPT_TREE_KEY, deptId.toString(), result, this.REDIS_DEPT_TREE_EXPIRE_TIME);
         return result;

@@ -28,7 +28,10 @@ public class HttpUtil {
     }
 
     public static Rv httpGetRv(String requestUrl, Map<String, Object> params) {
-        return HttpUtil.httpGet(requestUrl, params, Rv.class);
+        Rv resp = HttpUtil.httpGet(requestUrl, params, Rv.class);
+        if (EErrorCode.success.getValue() != resp.getCode())
+            throw NBException.create(EErrorCode.apiErr, resp.getMsg()).plusMsg("errorCode:" + resp.getCode());
+        return resp;
     }
 
     public static <T> T httpGet(String requestUrl, Map<String, Object> params, Class<T> clazz) {
@@ -44,7 +47,10 @@ public class HttpUtil {
     }
 
     public static Rv httpPostRv(String requestUrl, Map<String, Object> params) {
-        return HttpUtil.httpPost(requestUrl, params, Rv.class);
+        Rv resp = HttpUtil.httpPost(requestUrl, params, Rv.class);
+        if (EErrorCode.success.getValue() != resp.getCode())
+            throw NBException.create(EErrorCode.apiErr, resp.getMsg()).plusMsg("errorCode:" + resp.getCode());
+        return resp;
     }
 
     public static <T> T httpPost(String requestUrl, Map<String, Object> params, Class<T> clazz) {

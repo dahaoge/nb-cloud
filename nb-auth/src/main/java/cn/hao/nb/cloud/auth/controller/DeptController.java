@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(description = "组织机构")
 @Slf4j
 @RestController
-@RequestMapping("/dept")
+@RequestMapping("/")
 public class DeptController {
 
 
@@ -30,6 +30,12 @@ public class DeptController {
     IUUserDeptService iUUserDeptService;
     @Autowired
     ISysDeptService iSysDeptService;
+
+    @ApiOperation(value = "根据外部组织机构刷新公司组织机构", notes = "根据外部组织机构刷新公司组织机构")
+    @PostMapping(value = "/sysDept/refreshCompanyDeptByOutDepartment")
+    public Rv refreshCompanyDeptByOutDepartment(Long companyId, String externalDeptJsonList) {
+        return Rv.getInstance(iSysDeptService.refreshCompanyDeptByOutDepartment(companyId, externalDeptJsonList));
+    }
 
     @ApiOperation(value = "添加组织机构", notes = "添加组织机构")
     @PostMapping(value = "/sysDept/add")

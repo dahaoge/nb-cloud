@@ -1,24 +1,20 @@
 package cn.hao.nb.cloud.ydgl.service.impl;
 
-import cn.hao.nb.cloud.common.entity.NBException;
-import cn.hao.nb.cloud.common.entity.Pg;
-import cn.hao.nb.cloud.common.entity.Rv;
-import cn.hao.nb.cloud.common.entity.TokenUser;
+import cn.hao.nb.cloud.common.entity.*;
 import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
-import cn.hao.nb.cloud.common.util.CheckUtil;
-import cn.hao.nb.cloud.common.util.IDUtil;
-import cn.hao.nb.cloud.common.util.UserUtil;
+import cn.hao.nb.cloud.common.penum.EModuleRequestPrefix;
+import cn.hao.nb.cloud.common.util.*;
 import cn.hao.nb.cloud.ydgl.entity.Company;
 import cn.hao.nb.cloud.ydgl.mapper.CompanyMapper;
 import cn.hao.nb.cloud.ydgl.service.ICompanyRequestSuffixService;
 import cn.hao.nb.cloud.ydgl.service.ICompanyService;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +35,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @Autowired
     CompanyMapper mapper;
     @Autowired
-    RestTemplate restTemplate;
+    RestTemplateUtil restTemplateUtil;
     @Autowired
     ICompanyRequestSuffixService requestSuffixService;
 
@@ -76,8 +72,11 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             throw NBException.create(EErrorCode.noData).plusMsg("company");
         if (CheckUtil.strIsEmpty(company.getBaseUrl()))
             throw NBException.create(EErrorCode.noData).plusMsg("company.baseUrl");
-        Rv resp = new RestTemplate().getForObject(company.getBaseUrl()
-                + requestSuffixService.getRequestSuffix(comId, ECompanyRequestSuffixKey.loadDept), Rv.class);
+        Rv resp = HttpUtil.httpGetRv(company.getBaseUrl().concat(requestSuffixService.getRequestSuffix(comId, ECompanyRequestSuffixKey.loadDept)), Qd.create());
+        if (CheckUtil.objIsNotEmpty(resp.getData())) {
+            restTemplateUtil.restPostRv(EModuleRequestPrefix.auth, "/sysDept/refreshCompanyDeptByOutDepartment",
+                    Qd.create().add("companyId", comId).add("refreshCompanyDeptByOutDepartment", JSON.toJSONString(resp.getData())));
+        }
         return false;
     }
 

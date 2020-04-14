@@ -12,6 +12,7 @@
         <module name="nb-common" />
         <module name="nb-basic" />
         <module name="nb-generator" />
+        <module name="ydgl-mock" />
         <module name="nb-entity" />
         <module name="nb-gateway" />
       </profile>
@@ -27,6 +28,7 @@
       <module name="nb-gateway" options="-parameters" />
       <module name="nb-generator" options="-parameters" />
       <module name="ydgl" options="-parameters" />
+      <module name="ydgl-mock" options="-parameters" />
     </option>
   </component>
 </project>

@@ -1,10 +1,10 @@
 nb:
-  serviceId: 2
+  serviceId: 4
 server:
-  port: 8082
+  port: 8084
 spring:
   application:
-    name: nb-auth
+    name: ydglMock
   cloud:
     nacos:
       server-addr: 117.50.43.59:8848

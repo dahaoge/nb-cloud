@@ -77,6 +77,10 @@ public class SysDept implements Serializable {
     private String deptName;
     @ApiModelProperty(value = "父节点id")
     private Long pId;
+    @ApiModelProperty(value = "组织机构外部id")
+    private String externalDeptId;
+    @ApiModelProperty(value = "公司id")
+    private Long companyId;
 
     @TableField(exist = false)
     private List<SysDept> children;
@@ -90,5 +94,7 @@ public class SysDept implements Serializable {
     public static final String DEPT_ID = "dept_id";
     public static final String DEPT_NAME = "dept_name";
     public static final String P_ID = "p_id";
+    public static final String EXTERNAL_DEPT_ID = "external_dept_id";
+    public static final String COMPANY_ID = "company_id";
 
 }

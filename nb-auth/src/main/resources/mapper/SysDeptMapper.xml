@@ -13,11 +13,13 @@
         <result column="deleted" property="deleted"/>
         <result column="dept_name" property="deptName"/>
         <result column="p_id" property="pId"/>
+        <result column="external_dept_id" property="externalDeptId"/>
+        <result column="company_id" property="companyId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-            version, create_by, create_time, update_by, update_time, deleted, dept_id, dept_name, p_id
+            version, create_by, create_time, update_by, update_time, deleted, dept_id, dept_name, p_id,external_dept_id,company_id
         </sql>
 
 

@@ -2,6 +2,7 @@ package cn.hao.nb.cloud.auth.service;
 
 import cn.hao.nb.cloud.auth.entity.SysDept;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.ydglExternalApi.entity.ExternalDepartment;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -42,6 +43,11 @@ public interface ISysDeptService extends IService<SysDept> {
      */
     SysDept addData(String deptName);
 
+    SysDept newFromExternalDept(ExternalDepartment externalDepartment);
+
+    SysDept refreshCompanyDeptByOutDepartment(long companyId, String externalDeptJsonList);
+
+
     /**
      * 增量更新数据
      *
@@ -65,6 +71,8 @@ public interface ISysDeptService extends IService<SysDept> {
      * @return
      */
     boolean delData(Long id);
+
+    boolean delByCompanyId(Long companyId);
 
     /**
      * 查询详情
