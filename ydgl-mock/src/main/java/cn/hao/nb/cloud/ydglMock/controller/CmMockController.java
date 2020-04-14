@@ -1,8 +1,10 @@
 package cn.hao.nb.cloud.ydglMock.controller;
 
+import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ExternalDepartment;
+import cn.hao.nb.cloud.ydglMock.ElecDesc;
 import com.github.javafaker.Faker;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
@@ -10,8 +12,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,7 +34,8 @@ public class CmMockController {
 
     @ApiOperation(value = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)", notes = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)")
     @GetMapping("/dept/loadAllDisDeptTreeByDeptId")
-    public Rv loadAllDisDeptListByDeptId(String deptId) {
+    public Rv loadAllDisDeptListByDeptId(
+            @RequestParam(value = "组织机构id", required = false) String deptId) {
         List<ExternalDepartment> result = Lists.newArrayList();
         ExternalDepartment department = new ExternalDepartment();
         department.setDeptId(CheckUtil.strIsEmpty(deptId) ? faker.idNumber().toString() : deptId);
@@ -49,4 +54,37 @@ public class CmMockController {
         result.add(department);
         return Rv.getInstance(result);
     }
+
+    @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表")
+    @GetMapping("/device/listByDeptId")
+    public Rv listDeviceByDeptId(@RequestParam(value = "组织机构Id") String deptId) {
+        return Rv.getInstance(Lists.newArrayList(
+                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称"),
+                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称"),
+                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称"),
+                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称"),
+                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称")
+        ));
+    }
+
+    @ApiOperation(value = "按天统计概览数据", notes = "按天统计概览数据")
+    @GetMapping("/totalStatisticsByDate")
+    public Rv totalStatisticsByDate(
+            @RequestParam(value = "统计时间") Date statisticsDate,
+            @RequestParam(value = "组织机构Id") String deptId
+    ) {
+        return Rv.getInstance(
+                Qd.create()
+                        .add("todayConsumption", ElecDesc.kWhDesc("今日"))
+                        .add("yesterdayConsumption", ElecDesc.kWhDesc("昨日"))
+                        .add("currentLoad", ElecDesc.kWDesc("当前"))
+                        .add("currentLoadCollectionTime", ElecDesc.timeDesc("当前负荷"))
+                        .add("todayMaxLoad", ElecDesc.kWDesc("今日最高"))
+                        .add("todayMaxLoadCollectionTime", ElecDesc.timeDesc("今日最高负荷"))
+                        .add("todayMinLoad", ElecDesc.kWDesc("今日最低"))
+                        .add("todayMinLoad", ElecDesc.timeDesc("今日最低负荷"))
+
+        );
+    }
+
 }
