@@ -71,9 +71,10 @@ public class IDUtil {
 
     /**
      * 获取自增序列
+     *
      * @return long
      */
-    public long nextId() {
+    public Long nextId() {
         return nextId(SystemClock.now() / 1000);
     }
 
@@ -83,7 +84,7 @@ public class IDUtil {
      * @param timestamp 当前Unix时间戳
      * @return long
      */
-    private synchronized long nextId(long timestamp) {
+    private synchronized Long nextId(long timestamp) {
         // 时钟回拨检查
         if (timestamp < lastTimestamp) {
             // 发生时钟回拨
