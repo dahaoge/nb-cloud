@@ -8,7 +8,6 @@
     <artifactId>nb-cloud</artifactId>
     <version>1.0.0</version>
     <modules>
-        <module>nacos-demo</module>
         <module>nb-common</module>
         <module>nb-gateway</module>
         <module>nb-auth</module>

@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ydgl" />
         <module name="nb-auth" />
-        <module name="nacos-demo" />
         <module name="nb-common" />
         <module name="nb-basic" />
         <module name="nb-generator" />
@@ -17,6 +16,9 @@
         <module name="nb-gateway" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="nacos-demo" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
