@@ -7,6 +7,7 @@ import cn.hao.nb.cloud.ydglMock.ElecDesc;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +30,10 @@ public class ElecLoadController {
     @ApiOperation(value = "按照时间周期统计负荷", notes = "按照时间周期统计负荷")
     @GetMapping("/totalStatisticsByTimeRange")
     public Rv totalStatisticsByTimeRange(
-            @RequestParam(value = "开始时间", required = true) Date startTime,
-            @RequestParam(value = "结束时间", required = true) Date endTime,
-            @RequestParam(value = "组织机构Id", required = true) String deptId,
-            @RequestParam(value = "设备id", required = false) String deviceId
+            @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
+            @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return Rv.getInstance(
                 Qd.create()
@@ -48,11 +49,11 @@ public class ElecLoadController {
     @ApiOperation(value = "按照时间周期获取负荷曲线", notes = "按照时间周期获取负荷曲线")
     @GetMapping("/getLoadList")
     public Rv statisticsByTimeRange(
-            @RequestParam(value = "取点密度") EYdglDataCollectionCycle collectionCycle,
-            @RequestParam(value = "开始时间") Date startTime,
-            @RequestParam(value = "结束时间") Date endTime,
-            @RequestParam(value = "组织机构Id") String deptId,
-            @RequestParam(value = "设备id", required = false) String deviceId
+            @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
+            @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
+            @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return Rv.getInstance(
                 Qd.create()

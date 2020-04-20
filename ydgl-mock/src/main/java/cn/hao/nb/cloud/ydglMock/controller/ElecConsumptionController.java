@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,10 +31,10 @@ public class ElecConsumptionController {
     @ApiOperation(value = "按照月份周期统计用电量", notes = "按照月份周期统计用电量")
     @GetMapping("/statisticsByMonth")
     public Rv statisticsByMonth(
-            @RequestParam(value = "开始时间") String startTime,
-            @RequestParam(value = "结束时间") String endTime,
-            @ApiParam(value = "组织机构Id", name = "deptId") String deptId,
-            @ApiParam(value = "设备id", name = "deviceId") String deviceId
+            @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
+            @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         List list = Lists.newArrayList();
         for (int i = 1; i < 10; i++) {
@@ -42,7 +43,7 @@ public class ElecConsumptionController {
                     .add("peak", ElecDesc.kWhDesc("峰"))
                     .add("valley", ElecDesc.kWhDesc("谷"))
                     .add("normal", ElecDesc.kWhDesc("平"))
-                    .add("mountainPeak", ElecDesc.kWhDesc("平")));
+                    .add("mountainPeak", ElecDesc.kWhDesc("尖峰")));
         }
         return Rv.getInstance(list);
     }
@@ -50,10 +51,10 @@ public class ElecConsumptionController {
     @ApiOperation(value = "按照天统计用电量", notes = "按照天统计用电量")
     @GetMapping("/statisticsByDay")
     public Rv statisticsByDay(
-            @RequestParam(value = "开始时间") String startTime,
-            @RequestParam(value = "结束时间") String endTime,
-            @ApiParam(value = "组织机构Id", name = "deptId") String deptId,
-            @ApiParam(value = "设备id", name = "deviceId") String deviceId
+            @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
+            @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         List list = Lists.newArrayList();
         for (int i = 1; i < 31; i++) {
@@ -63,7 +64,7 @@ public class ElecConsumptionController {
                             .add("peak", ElecDesc.kWhDesc("峰"))
                             .add("valley", ElecDesc.kWhDesc("谷"))
                             .add("normal", ElecDesc.kWhDesc("平"))
-                            .add("mountainPeak", ElecDesc.kWhDesc("平"))
+                            .add("mountainPeak", ElecDesc.kWhDesc("尖峰"))
             );
         }
         return Rv.getInstance(list);
