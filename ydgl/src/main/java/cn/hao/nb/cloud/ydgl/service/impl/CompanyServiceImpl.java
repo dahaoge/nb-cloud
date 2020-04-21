@@ -39,6 +39,16 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @Autowired
     ICompanyRequestSuffixService requestSuffixService;
 
+    @Override
+    public String getRequestUrl(Long comId, ECompanyRequestSuffixKey requestSuffixKey) {
+        Company company = this.getById(comId);
+        if (CheckUtil.objIsEmpty(company))
+            throw NBException.create(EErrorCode.noData).plusMsg("company");
+        if (CheckUtil.strIsEmpty(company.getBaseUrl()))
+            throw NBException.create(EErrorCode.noData).plusMsg("company.baseUrl");
+        return company.getBaseUrl().concat(requestSuffixService.getRequestSuffix(comId, requestSuffixKey));
+    }
+
     /**
      * 添加数据
      *
@@ -67,18 +77,14 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     public boolean refreshComDept(Long comId) {
         if (CheckUtil.objIsEmpty(comId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
-        Company company = this.getById(comId);
-        if (CheckUtil.objIsEmpty(company))
-            throw NBException.create(EErrorCode.noData).plusMsg("company");
-        if (CheckUtil.strIsEmpty(company.getBaseUrl()))
-            throw NBException.create(EErrorCode.noData).plusMsg("company.baseUrl");
-        Rv resp = HttpUtil.httpGetRv(company.getBaseUrl().concat(requestSuffixService.getRequestSuffix(comId, ECompanyRequestSuffixKey.loadDept)), Qd.create());
+        Rv resp = HttpUtil.httpGetRv(this.getRequestUrl(comId, ECompanyRequestSuffixKey.loadDept), Qd.create());
         if (CheckUtil.objIsNotEmpty(resp.getData())) {
-            restTemplateUtil.restPostRv(EModuleRequestPrefix.auth, "/sysDept/refreshCompanyDeptByOutDepartment",
-                    Qd.create().add("companyId", comId).add("refreshCompanyDeptByOutDepartment", JSON.toJSONString(resp.getData())));
+            restTemplateUtil.restPostRv(EModuleRequestPrefix.auth, "/sysDept/refreshCompanyDeptByExternalDepartment",
+                    Qd.create().add("companyId", comId).add("refreshCompanyDeptByExternalDepartment", JSON.toJSONString(resp.getData())));
         }
         return false;
     }
+
 
     /**
      * 增量更新数据

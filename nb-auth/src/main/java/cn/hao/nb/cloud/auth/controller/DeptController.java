@@ -32,9 +32,9 @@ public class DeptController {
     ISysDeptService iSysDeptService;
 
     @ApiOperation(value = "根据外部组织机构刷新公司组织机构", notes = "根据外部组织机构刷新公司组织机构")
-    @PostMapping(value = "/sysDept/refreshCompanyDeptByOutDepartment")
-    public Rv refreshCompanyDeptByOutDepartment(Long companyId, String externalDeptJsonList) {
-        return Rv.getInstance(iSysDeptService.refreshCompanyDeptByOutDepartment(companyId, externalDeptJsonList));
+    @PostMapping(value = "/sysDept/refreshCompanyDeptByExternalDepartment")
+    public Rv refreshCompanyDeptByExternalDepartment(Long companyId, String externalDeptJsonList) {
+        return Rv.getInstance(iSysDeptService.refreshCompanyDeptByExternalDepartment(companyId, externalDeptJsonList));
     }
 
     @ApiOperation(value = "添加组织机构", notes = "添加组织机构")

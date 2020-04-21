@@ -45,7 +45,7 @@ public interface ISysDeptService extends IService<SysDept> {
 
     SysDept newFromExternalDept(ExternalDepartment externalDepartment);
 
-    SysDept refreshCompanyDeptByOutDepartment(long companyId, String externalDeptJsonList);
+    SysDept refreshCompanyDeptByExternalDepartment(long companyId, String externalDeptJsonList);
 
 
     /**

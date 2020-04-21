@@ -99,7 +99,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     @Override
-    public SysDept refreshCompanyDeptByOutDepartment(long companyId, String externalDeptJsonList) {
+    public SysDept refreshCompanyDeptByExternalDepartment(long companyId, String externalDeptJsonList) {
         if (CheckUtil.objIsEmpty(companyId, externalDeptJsonList))
             throw NBException.create(EErrorCode.missingArg);
         ExternalDepartment externalDepartment = new GsonBuilder().create().fromJson(externalDeptJsonList, new TypeToken<ExternalDepartment>() {
@@ -186,6 +186,10 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     public boolean delByCompanyId(Long companyId) {
         if (CheckUtil.objIsEmpty(companyId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("companyId");
+        List<SysDept> depts = this.list(Qw.create().eq(SysDept.COMPANY_ID, companyId).select(SysDept.DEPT_ID));
+        if (CheckUtil.objIsNotEmpty(userDeptService.getOne(
+                Qw.create().in(UUserDept.DEPT_ID, ListUtil.getPkList(depts, SysDept.DEPT_ID)))))
+            throw NBException.create(EErrorCode.noData, "该公司下的组织机构已绑定了用户,请先将绑定的用户妥善处理后再删除组织机构信息");
         return this.remove(Qw.create().eq(SysDept.COMPANY_ID, companyId));
     }
 

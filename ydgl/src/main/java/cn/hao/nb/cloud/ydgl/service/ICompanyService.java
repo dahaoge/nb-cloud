@@ -1,6 +1,7 @@
 package cn.hao.nb.cloud.ydgl.service;
 
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
 import cn.hao.nb.cloud.ydgl.entity.Company;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,6 +18,9 @@ import java.util.Map;
  * @since 2020-04-10
  */
 public interface ICompanyService extends IService<Company> {
+
+    String getRequestUrl(Long comId, ECompanyRequestSuffixKey requestSuffixKey);
+
     /**
      * 添加数据
      *
@@ -138,64 +142,3 @@ public interface ICompanyService extends IService<Company> {
     void validData(Company data);
 
 }
-/*
-
-import cn.hao.nb.cloud.common.entity.Pg;
-import cn.hao.nb.cloud.common.entity.Rv;
-import com.fgzy.mc.core.entity.Company;
-import com.fgzy.mc.core.service.ICompanyService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
-
-@Autowired
-ICompanyService iCompanyService;
-
-@ApiOperation(value = "添加公司管理 ", notes = "添加公司管理 ")
-@PostMapping(value = "/company/add")
-public Rv addCompany(Company data) {
-return Rv.getInstance(iCompanyService.addData(data));
-}
-
-@ApiOperation(value = "修改公司管理 ", notes = "修改公司管理 ")
-@PostMapping(value = "/company/modify")
-public Rv modifyCompany(Company data) {
-return Rv.getInstance(iCompanyService.modifyData(data));
-}
-
-@ApiOperation(value = "删除公司管理 ", notes = "删除公司管理 ")
-@PostMapping(value = "/company/del/{id}")
-public Rv delCompany(@ApiParam(name = "id", value = "公司管理 id") @PathVariable Long id) {
-return Rv.getInstance(iCompanyService.delData(id));
-}
-
-@ApiOperation(value = "查询公司管理 ", notes = "查询公司管理 ")
-@GetMapping(value = "/company/getById/{id}")
-public Rv getCompanyById(@ApiParam(name = "id", value = "公司管理 id") @PathVariable Long id) {
-return Rv.getInstance(iCompanyService.getDetail(id));
-}
-
-@ApiOperation(value = "分页查询公司管理 ", notes = "分页查询公司管理 ")
-@GetMapping(value = "/company/page")
-public Rv pageCompany(Pg pg,Company.SearchParams searchParams) {
-return Rv.getInstance(iCompanyService.pageData(pg,searchParams));
-}
-
-@ApiOperation(value = "列表查询公司管理 ", notes = "列表查询公司管理 ")
-@GetMapping(value = "/company/list")
-public Rv listCompany(Company.SearchParams searchParams) {
-return Rv.getInstance(iCompanyService.listData(searchParams));
-}
-
-@ApiOperation(value = "分页查询公司管理 (map数据)", notes = "列表查询公司管理 (map数据)")
-@GetMapping(value = "/company/pageMap")
-public Rv pageMapCompany(Pg pg,Company.SearchParams searchParams) {
-return Rv.getInstance(iCompanyService.pageMapData(pg,searchParams));
-}
-
-
-*/

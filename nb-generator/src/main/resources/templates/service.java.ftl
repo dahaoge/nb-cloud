@@ -152,7 +152,7 @@ return Rv.getInstance(${table.serviceName?uncap_first}.addData(data));
 @ApiOperation(value = "修改${table.comment!}", notes = "修改${table.comment!}")
 @PostMapping(value = "/${entity?uncap_first}/modify")
 public Rv modify${entity}(${entity} data) {
-return Rv.getInstance(${table.serviceName?uncap_first}.modifyData(data));
+return Rv.getInstance(${table.serviceName?uncap_first}.incrementModifyData(data));
 }
 
 @ApiOperation(value = "删除${table.comment!}", notes = "删除${table.comment!}")
