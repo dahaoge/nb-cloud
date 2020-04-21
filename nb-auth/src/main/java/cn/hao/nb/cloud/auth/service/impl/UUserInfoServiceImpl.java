@@ -108,12 +108,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         this.addData(userInfo);
 
         // 添加登录渠道
-        userInfo.getUserType().getLoginChannelScops().forEach(item -> {
-            if (CheckUtil.objIsNotEmpty(phone))
-                loginChannelService.addPhoneChannel(userInfo.getUserId(), phone, item);
-            if (CheckUtil.objIsNotEmpty(loginId))
-                loginChannelService.addLoginChannel(userInfo.getUserId(), ELoginType.pwd, loginId, item);
-        });
+        loginChannelService.addByUser(userInfo);
         return userInfo;
     }
 

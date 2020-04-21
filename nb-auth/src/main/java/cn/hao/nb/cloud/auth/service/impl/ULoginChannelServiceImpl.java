@@ -107,8 +107,10 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
         if (CheckUtil.objIsEmpty(user.getUserId()))
             throw NBException.create(EErrorCode.missingArg).plusMsg("addByUser:userId");
         user.getUserType().getLoginChannelScops().forEach(item -> {
-            if (CheckUtil.strIsNotEmpty(user.getPhone()))
+            if (CheckUtil.strIsNotEmpty(user.getPhone())) {
                 this.addPhoneChannel(user.getUserId(), user.getPhone(), item);
+                this.addLoginChannel(user.getUserId(), ELoginType.pwd, user.getPhone(), item);
+            }
             if (CheckUtil.strIsNotEmpty(user.getLoginId()))
                 this.addLoginChannel(user.getUserId(), ELoginType.pwd, user.getLoginId(), item);
             if (CheckUtil.strIsNotEmpty(user.getWechatAppOpenid()))

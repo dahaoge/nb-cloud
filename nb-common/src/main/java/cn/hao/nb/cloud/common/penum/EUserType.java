@@ -11,8 +11,8 @@ import java.util.List;
  * @Description:
  */
 public enum EUserType implements PEnum<String> {
-    manager(ImmutableList.of(ELoginChannelScop.manageClient, ELoginChannelScop.BClient, ELoginChannelScop.CClient), "管理员"),
-    bUser(ImmutableList.of(ELoginChannelScop.BClient, ELoginChannelScop.CClient), "B端用户"),
+    manager(ImmutableList.of(ELoginChannelScop.manageClient), "管理员"),
+    bUser(ImmutableList.of(ELoginChannelScop.BClient), "B端用户"),
     cUser(ImmutableList.of(ELoginChannelScop.CClient), "C端用户");
 
     private String desc;
