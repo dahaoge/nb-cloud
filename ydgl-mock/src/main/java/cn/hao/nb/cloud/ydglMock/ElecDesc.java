@@ -16,12 +16,17 @@ public class ElecDesc {
 
     public static String kWhDesc(String title) {
         title = title == null ? "" : title;
-        return title.concat("用电量(单位kWh)--示例:".concat(RandomUtil.getRandomSaltL(3)));
+        return title.concat("用电量/功(单位kWh)--示例:".concat(RandomUtil.getRandomSaltL(3)));
     }
 
     public static String aDesc(String title) {
         title = title == null ? "" : title;
         return title.concat("电流(单位A)--示例:".concat(RandomUtil.getRandomSaltL(3)));
+    }
+
+    public static String vDesc(String title) {
+        title = title == null ? "" : title;
+        return title.concat("电压(单位V)--示例:".concat(RandomUtil.getRandomSaltL(3)));
     }
 
     public static String kVDesc(String title) {
