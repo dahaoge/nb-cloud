@@ -85,9 +85,9 @@ public class CmMockController {
                         .add("currentLoad", ElecDesc.kWDesc("当前"))
                         .add("currentLoadCollectionTime", ElecDesc.timeDesc("当前负荷"))
                         .add("todayMaxLoad", ElecDesc.kWDesc("今日最高"))
-                        .add("todayMaxLoadCollectionTime", ElecDesc.timeDesc("今日最高负荷"))
+                        .add("todayMaxLoadCollectionTime", ElecDesc.timeDesc("今日最高"))
                         .add("todayMinLoad", ElecDesc.kWDesc("今日最低"))
-                        .add("todayMinLoad", ElecDesc.timeDesc("今日最低负荷"))
+                        .add("todayMinLoadCollectionTime", ElecDesc.timeDesc("今日最低"))
 
         );
     }
