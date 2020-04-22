@@ -42,8 +42,6 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     @Autowired
     IULoginChannelService loginChannelService;
     @Autowired
-    IAuthService authService;
-    @Autowired
     JwtTokenUtil jwtTokenUtil;
     @Autowired
     ISysDeptService deptService;
@@ -51,6 +49,8 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     AliSmsUtil smsUtil;
     @Autowired
     CommonService commonService;
+    @Autowired
+    IUUserRoleService userRoleService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -82,7 +82,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         if (CheckUtil.objIsNotEmpty(deptIds))
             userDeptService.addUser2Depts(uUserInfo.getUserId(), deptIds);
         if (CheckUtil.objIsNotEmpty(roleCodes))
-            authService.addUserRoles(uUserInfo.getUserId(), roleCodes);
+            userRoleService.addUserRoles(uUserInfo.getUserId(), roleCodes);
         return uUserInfo;
     }
 
