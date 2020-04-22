@@ -71,6 +71,12 @@ private ESqlOrder order = ESqlOrder.DESC;
 public Qw<${entity}> preWrapper(Qw<${entity}> qw){
 if (CheckUtil.objIsEmpty(qw))
 qw = Qw.create();
+
+if (CheckUtil.strIsEmpty(this.getSort()))
+this.setSort(SysDict.UPDATE_TIME);
+if (CheckUtil.objIsEmpty(this.getOrder()))
+this.setOrder(ESqlOrder.DESC);
+
 if (ESqlOrder.DESC.equals(this.getOrder()))
 qw.orderByDesc(this.getSort());
 else

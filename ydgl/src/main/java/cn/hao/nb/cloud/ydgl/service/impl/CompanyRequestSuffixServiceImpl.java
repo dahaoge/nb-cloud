@@ -1,7 +1,6 @@
 package cn.hao.nb.cloud.ydgl.service.impl;
 
 import cn.hao.nb.cloud.common.constant.CommonConstant;
-import cn.hao.nb.cloud.common.constant.RedisKey;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qw;
@@ -12,6 +11,7 @@ import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.RedisUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
+import cn.hao.nb.cloud.ydgl.constant.RedisKey;
 import cn.hao.nb.cloud.ydgl.entity.CompanyRequestSuffix;
 import cn.hao.nb.cloud.ydgl.mapper.CompanyRequestSuffixMapper;
 import cn.hao.nb.cloud.ydgl.service.ICompanyRequestSuffixService;

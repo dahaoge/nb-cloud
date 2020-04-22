@@ -31,9 +31,16 @@ public class SysDict implements Serializable {
     @Data
     public class SearchParams {
 
+        private String dictType;
+
+        private String dictCode;
+
+        private String dictLabel;
+
+        private String dictDesc;
 
         @ApiModelProperty(value = "排序字段")
-        private String sort = "update_time";
+        private String sort = SysDict.DICT_INDEX;
 
         @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
         private ESqlOrder order = ESqlOrder.DESC;
@@ -41,6 +48,17 @@ public class SysDict implements Serializable {
         public Qw<SysDict> preWrapper(Qw<SysDict> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
+
+            qw.like(SysDict.DICT_TYPE, this.getDictType());
+            qw.like(SysDict.DICT_CODE, this.getDictCode());
+            qw.like(SysDict.DICT_LABEL, this.getDictLabel());
+            qw.like(SysDict.DICT_DESC, this.getDictDesc());
+
+            if (CheckUtil.strIsEmpty(this.getSort()))
+                this.setSort(SysDict.DICT_INDEX);
+            if (CheckUtil.objIsEmpty(this.getOrder()))
+                this.setOrder(ESqlOrder.DESC);
+
             if (ESqlOrder.DESC.equals(this.getOrder()))
                 qw.orderByDesc(this.getSort());
             else

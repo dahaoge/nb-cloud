@@ -1,4 +1,4 @@
-package cn.hao.nb.cloud.common.constant;
+package cn.hao.nb.cloud.auth.constant;
 
 /**
  * @Auther: hao
@@ -31,8 +31,4 @@ public interface RedisKey {
      */
     long REDIS_MENU_TREE_EXPIRE_TIME = 3600;
 
-    /**
-     * 公司请求后缀
-     */
-    public static final String REDIS_COMPANY_REQUEST_SUFFIX = "REDIS_COMPANY_REQUEST_SUFFIX";
 }

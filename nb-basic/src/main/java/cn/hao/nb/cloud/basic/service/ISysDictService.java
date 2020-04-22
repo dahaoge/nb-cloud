@@ -4,6 +4,7 @@ import cn.hao.nb.cloud.basic.entity.SysDict;
 import cn.hao.nb.cloud.common.entity.Pg;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.google.common.collect.Multimap;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,21 @@ import java.util.Map;
  * @since 2019-12-28
  */
 public interface ISysDictService extends IService<SysDict> {
+
+    /**
+     * 获取所有字典数据
+     *
+     * @return
+     */
+    Multimap<String, SysDict> dictMap();
+
+    /**
+     * 刷新缓存的字典
+     *
+     * @return
+     */
+    boolean refreshRedisDictMap();
+
     /**
      * 添加数据
      *
@@ -56,6 +72,8 @@ public interface ISysDictService extends IService<SysDict> {
      * @return
      */
     SysDict getDetail(Long id);
+
+    List<SysDict> getByType(String dictType);
 
     /**
      * 分页查询数据
