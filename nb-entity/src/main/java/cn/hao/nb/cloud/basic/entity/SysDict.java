@@ -31,12 +31,16 @@ public class SysDict implements Serializable {
     @Data
     public class SearchParams {
 
+        @ApiModelProperty(value = "类型")
         private String dictType;
 
+        @ApiModelProperty(value = "编码")
         private String dictCode;
 
+        @ApiModelProperty(value = "显示值")
         private String dictLabel;
 
+        @ApiModelProperty(value = "说明")
         private String dictDesc;
 
         @ApiModelProperty(value = "排序字段")
@@ -98,12 +102,16 @@ public class SysDict implements Serializable {
     @TableId(value = "dict_id", type = IdType.INPUT)
     private Long dictId;
 
+    @ApiModelProperty(value = "类型")
     private String dictType;
 
+    @ApiModelProperty(value = "编码")
     private String dictCode;
 
+    @ApiModelProperty(value = "显示值")
     private String dictLabel;
 
+    @ApiModelProperty(value = "说明")
     private String dictDesc;
 
     @ApiModelProperty(value = "字典排序")

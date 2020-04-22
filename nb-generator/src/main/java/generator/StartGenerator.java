@@ -101,7 +101,8 @@ public class StartGenerator {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         strategy.setSuperControllerClass(null);
-        strategy.setInclude(scanner("表名"));
+//        strategy.setInclude(scanner("表名"));
+        strategy.setInclude("sys_tags", "sys_dict");
 //        strategy.setInclude(
 ////                "u_user_info",
 ////                "u_login_channel",

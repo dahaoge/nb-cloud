@@ -19,6 +19,8 @@ public interface RedisKey {
 
     public static final String DICT_TYPE = "DICT_TYPE_";
 
+    public static final String REDIS_SYS_TAG_MAP_LOCK = "REDIS_SYS_TAG_MAP_LOCK";
+
     public static final String REDIS_SYS_TAG = "REDIS_ALL_TAG";
 
     public static final String TAG_MAP = "TAG_MAP";

@@ -31,6 +31,23 @@ public class SysTags implements Serializable {
     @Data
     public class SearchParams {
 
+        @ApiModelProperty(value = "编码")
+        private String tagCode;
+
+        @ApiModelProperty(value = "标签")
+        private String tagLabel;
+
+        @ApiModelProperty(value = "应用对象")
+        private String tagTarget;
+
+        @ApiModelProperty(value = "类型")
+        private String tagType;
+
+        @ApiModelProperty(value = "类型下分组")
+        private String tagGroup;
+
+        @ApiModelProperty(value = "分组名称")
+        private String tagGroupName;
 
         @ApiModelProperty(value = "排序字段")
         private String sort = "update_time";
@@ -41,6 +58,19 @@ public class SysTags implements Serializable {
         public Qw<SysTags> preWrapper(Qw<SysTags> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
+
+            qw.like(SysTags.TAG_CODE, this.getTagCode())
+                    .like(SysTags.TAG_LABEL, this.getTagLabel())
+                    .like(SysTags.TAG_TARGET, this.getTagTarget())
+                    .like(SysTags.TAG_TYPE, this.getTagType())
+                    .like(SysTags.TAG_GROUP, this.getTagGroup())
+                    .like(SysTags.TAG_GROUP_NAME, this.getTagGroupName());
+
+            if (CheckUtil.strIsEmpty(this.getSort()))
+                this.setSort(SysTags.TAG_INDEX);
+            if (CheckUtil.objIsEmpty(this.getOrder()))
+                this.setOrder(ESqlOrder.DESC);
+
             if (ESqlOrder.DESC.equals(this.getOrder()))
                 qw.orderByDesc(this.getSort());
             else
@@ -80,12 +110,16 @@ public class SysTags implements Serializable {
     @TableId(value = "tag_id", type = IdType.INPUT)
     private Long tagId;
 
+    @ApiModelProperty(value = "编码")
     private String tagCode;
 
+    @ApiModelProperty(value = "标签")
     private String tagLabel;
 
+    @ApiModelProperty(value = "应用对象")
     private String tagTarget;
 
+    @ApiModelProperty(value = "类型")
     private String tagType;
 
     private String tagIcon;
@@ -95,8 +129,10 @@ public class SysTags implements Serializable {
     @ApiModelProperty(value = "排序索引")
     private Integer tagIndex;
 
+    @ApiModelProperty(value = "类型下分组")
     private String tagGroup;
 
+    @ApiModelProperty(value = "分组名称")
     private String tagGroupName;
 
     private String appStyleNormal;
@@ -109,6 +145,7 @@ public class SysTags implements Serializable {
 
     private String webStyleNormal;
 
+    @ApiModelProperty(value = "删除标记")
     private String webStyleActive;
 
 
