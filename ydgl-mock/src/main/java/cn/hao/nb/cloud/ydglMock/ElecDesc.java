@@ -48,4 +48,20 @@ public class ElecDesc {
         title = title == null ? "" : title;
         return title.concat("采集时间,java.util.date类型");
     }
+
+    public static String dy(String title) {
+        title = title == null ? "" : title;
+        return title.concat("电压(带单位)字符串--示例:".concat(RandomUtil.getRandomSaltL(3)).concat("V|kV"));
+    }
+
+    public static String dl(String title) {
+        title = title == null ? "" : title;
+        return title.concat("电流(带单位)字符串--示例:".concat(RandomUtil.getRandomSaltL(3)).concat("A"));
+    }
+
+    public static String gl(String title) {
+        title = title == null ? "" : title;
+        return title.concat("功率(带单位)字符串--示例:").concat(RandomUtil.getRandomSaltL(3)).concat("W|kW");
+    }
+
 }

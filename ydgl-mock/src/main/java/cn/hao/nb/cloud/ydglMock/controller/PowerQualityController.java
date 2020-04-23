@@ -156,4 +156,29 @@ public class PowerQualityController {
         );
     }
 
+    @ApiOperation(value = "电能质量---基本检测", notes = "电能质量---基本检测")
+    @GetMapping("/monitor/basic")
+    public Rv electricKWHMonitor(
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
+        return Rv.getInstance(
+                Qd.create()
+                        .add("voltageDirectionA", ElecDesc.dy("A向"))
+                        .add("voltageDirectionB", ElecDesc.dy("B向"))
+                        .add("voltageDirectionC", ElecDesc.dy("C向"))
+                        .add("voltageDirectionAB", ElecDesc.dy("AB向"))
+                        .add("voltageDirectionAC", ElecDesc.dy("AC向"))
+                        .add("voltageDirectionBC", ElecDesc.dy("BC向"))
+                        .add("currentDirectionA", ElecDesc.dl("A向"))
+                        .add("currentDirectionB", ElecDesc.dl("B向"))
+                        .add("currentDirectionC", ElecDesc.dl("C向"))
+                        .add("currentDirectionZero", ElecDesc.dl("零序"))
+                        .add("ygLoad", ElecDesc.gl("有功"))
+                        .add("wgLoad", ElecDesc.gl("无功"))
+                        .add("szLoad", ElecDesc.gl("视在"))
+                        .add("loadFactor", "功率因数")
+                        .add("frequency", "频率(带单位)---示例:50Hz|kHz")
+        );
+    }
+
 }
