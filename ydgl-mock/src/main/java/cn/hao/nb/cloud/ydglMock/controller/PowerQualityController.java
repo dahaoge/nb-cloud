@@ -1,8 +1,13 @@
 package cn.hao.nb.cloud.ydglMock.controller;
 
+import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
+import cn.hao.nb.cloud.ydglExternalApi.entity.CurrentItem;
+import cn.hao.nb.cloud.ydglExternalApi.entity.KWhItem;
+import cn.hao.nb.cloud.ydglExternalApi.entity.VoltageItem;
 import cn.hao.nb.cloud.ydglMock.ElecDesc;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +26,8 @@ import java.util.Date;
 @RestController("/powerQuality")
 public class PowerQualityController {
 
-    @ApiOperation(value = "用电监控---电流", notes = "用电监控---电流\ndata:{current:'当前电流',timeRange:'按照时间区间和采集密度获取的列表数据'}")
+    @ApiOperation(value = "用电监控---电流", notes = "用电监控---电流\ndata:{current:'当前电流',timeRange:'按照时间区间和采集密度获取的列表数据'}\n" +
+            "实体:CurrentItem")
     @GetMapping("/monitor/elecCurrent")
     public Rv electricCurrentMonitor(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
@@ -30,41 +36,16 @@ public class PowerQualityController {
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
         return Rv.getInstance(
-                Qd.create().add("current", Qd.create()
-                        .add("directionA", ElecDesc.aDesc("a向"))
-                        .add("directionB", ElecDesc.aDesc("b向"))
-                        .add("directionC", ElecDesc.aDesc("c向"))
+                Qd.create().add("current", new CurrentItem()
                 ).add("timeRange", Lists.newArrayList(
-                        Qd.create()
-                                .add("directionA", ElecDesc.aDesc("a向"))
-                                .add("directionB", ElecDesc.aDesc("b向"))
-                                .add("directionC", ElecDesc.aDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("directionA", ElecDesc.aDesc("a向"))
-                                .add("directionB", ElecDesc.aDesc("b向"))
-                                .add("directionC", ElecDesc.aDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("directionA", ElecDesc.aDesc("a向"))
-                                .add("directionB", ElecDesc.aDesc("b向"))
-                                .add("directionC", ElecDesc.aDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("directionA", ElecDesc.aDesc("a向"))
-                                .add("directionB", ElecDesc.aDesc("b向"))
-                                .add("directionC", ElecDesc.aDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("directionA", ElecDesc.aDesc("a向"))
-                                .add("directionB", ElecDesc.aDesc("b向"))
-                                .add("directionC", ElecDesc.aDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc(""))
+                        new CurrentItem(), new CurrentItem(),
+                        new CurrentItem(), new CurrentItem()
                 ))
         );
     }
 
-    @ApiOperation(value = "用电监控---电压", notes = "用电监控---电压\ndata:{current:'当前电压',timeRange:'按照时间区间和采集密度获取的列表数据'}")
+    @ApiOperation(value = "用电监控---电压", notes = "用电监控---电压\ndata:{current:'当前电压',timeRange:'按照时间区间和采集密度获取的列表数据'}\n" +
+            "实体:VoltageItem")
     @GetMapping("/monitor/voltage")
     public Rv electricVoltageMonitor(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
@@ -73,36 +54,12 @@ public class PowerQualityController {
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
         return Rv.getInstance(
-                Qd.create().add("current", Qd.create()
-                        .add("directionA", ElecDesc.vDesc("a向"))
-                        .add("directionB", ElecDesc.vDesc("b向"))
-                        .add("directionC", ElecDesc.vDesc("c向"))
+                Qd.create().add("current", new VoltageItem()
                 ).add("timeRange", Lists.newArrayList(
-                        Qd.create()
-                                .add("directionA", ElecDesc.vDesc("a向"))
-                                .add("directionB", ElecDesc.vDesc("b向"))
-                                .add("directionC", ElecDesc.vDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("directionA", ElecDesc.vDesc("a向"))
-                                .add("directionB", ElecDesc.vDesc("b向"))
-                                .add("directionC", ElecDesc.vDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("directionA", ElecDesc.vDesc("a向"))
-                                .add("directionB", ElecDesc.vDesc("b向"))
-                                .add("directionC", ElecDesc.vDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("directionA", ElecDesc.vDesc("a向"))
-                                .add("directionB", ElecDesc.vDesc("b向"))
-                                .add("directionC", ElecDesc.vDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("directionA", ElecDesc.vDesc("a向"))
-                                .add("directionB", ElecDesc.vDesc("b向"))
-                                .add("directionC", ElecDesc.vDesc("c向"))
-                                .add("collectionTime", ElecDesc.timeDesc(""))
+                        new VoltageItem(),
+                        new VoltageItem(),
+                        new VoltageItem(),
+                        new VoltageItem()
                 ))
         );
     }
@@ -116,49 +73,19 @@ public class PowerQualityController {
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
         return Rv.getInstance(
-                Qd.create().add("current", Qd.create()
-                        .add("positiveActive", ElecDesc.kWhDesc("正向有功"))
-                        .add("positiveReactive", ElecDesc.kWhDesc("正向无功"))
-                        .add("reverseActive", ElecDesc.kWhDesc("反向有功"))
-                        .add("reverseReactive", ElecDesc.kWhDesc("反向无功"))
+                Qd.create().add("current", new KWhItem()
                 ).add("timeRange", Lists.newArrayList(
-                        Qd.create()
-                                .add("positiveActive", ElecDesc.kWhDesc("正向有功"))
-                                .add("positiveReactive", ElecDesc.kWhDesc("正向无功"))
-                                .add("reverseActive", ElecDesc.kWhDesc("反向有功"))
-                                .add("reverseReactive", ElecDesc.kWhDesc("反向无功"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("positiveActive", ElecDesc.kWhDesc("正向有功"))
-                                .add("positiveReactive", ElecDesc.kWhDesc("正向无功"))
-                                .add("reverseActive", ElecDesc.kWhDesc("反向有功"))
-                                .add("reverseReactive", ElecDesc.kWhDesc("反向无功"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("positiveActive", ElecDesc.kWhDesc("正向有功"))
-                                .add("positiveReactive", ElecDesc.kWhDesc("正向无功"))
-                                .add("reverseActive", ElecDesc.kWhDesc("反向有功"))
-                                .add("reverseReactive", ElecDesc.kWhDesc("反向无功"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("positiveActive", ElecDesc.kWhDesc("正向有功"))
-                                .add("positiveReactive", ElecDesc.kWhDesc("正向无功"))
-                                .add("reverseActive", ElecDesc.kWhDesc("反向有功"))
-                                .add("reverseReactive", ElecDesc.kWhDesc("反向无功"))
-                                .add("collectionTime", ElecDesc.timeDesc("")),
-                        Qd.create()
-                                .add("positiveActive", ElecDesc.kWhDesc("正向有功"))
-                                .add("positiveReactive", ElecDesc.kWhDesc("正向无功"))
-                                .add("reverseActive", ElecDesc.kWhDesc("反向有功"))
-                                .add("reverseReactive", ElecDesc.kWhDesc("反向无功"))
-                                .add("collectionTime", ElecDesc.timeDesc(""))
+                        new KWhItem(),
+                        new KWhItem(),
+                        new KWhItem(),
+                        new KWhItem()
                 ))
         );
     }
 
     @ApiOperation(value = "电能质量---基本检测", notes = "电能质量---基本检测")
     @GetMapping("/monitor/basic")
-    public Rv electricKWHMonitor(
+    public Rv electricBasicMonitor(
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
         return Rv.getInstance(
@@ -179,6 +106,39 @@ public class PowerQualityController {
                         .add("loadFactor", "功率因数")
                         .add("frequency", "频率(带单位)---示例:50Hz|kHz")
         );
+    }
+
+    @ApiOperation(value = "电能质量---畸变", notes = "电能质量---畸变\n{distortion:{畸变值},distortionRate:{畸变率}}")
+    @GetMapping("/monitor/distortion")
+    public Rv electricDistortionMonitor(
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
+        return Rv.getInstance(
+                Qd.create()
+                        .add("distortion",
+                                Qd.create()
+                                        .add("ua", ElecDesc.dypc("UA"))
+                                        .add("ub", ElecDesc.dypc("UB"))
+                                        .add("uc", ElecDesc.dypc("UC"))
+                                        .add("uab", ElecDesc.dypc("UAB"))
+                                        .add("uac", ElecDesc.dypc("UAC"))
+                                        .add("ubc", ElecDesc.dypc("UBC"))
+                        )
+                        .add("distortionRate",
+                                Qd.create()
+                                        .add("directionA", ElecDesc.bfb("A相畸变率"))
+                                        .add("directionB", ElecDesc.bfb("B相畸变率"))
+                                        .add("directionC", ElecDesc.bfb("C相畸变率"))
+                        )
+        );
+    }
+
+    @ApiOperation(value = "电能质量---不平衡度", notes = "电能质量---不平衡度\n{distortion:{畸变值},distortionRate:{畸变率}}")
+    @GetMapping("/monitor/imbalance")
+    public Rv electricImbalance(
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
+        throw NBException.create(EErrorCode.noData, "暂时未采集该项目数据");
     }
 
 }

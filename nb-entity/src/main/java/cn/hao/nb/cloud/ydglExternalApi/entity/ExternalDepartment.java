@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Auther: hao
  * @Date: 2020/4/14 11:18
@@ -12,7 +14,9 @@ import lombok.Data;
 @Data
 @ApiModel(value = "外部组织机构", description = "外部组织机构\n" +
         "1.当组织机构名称区分全称和简称时取简称")
-public class ExternalDepartment {
+public class ExternalDepartment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "组织机构id")
     String deptId;

@@ -64,4 +64,14 @@ public class ElecDesc {
         return title.concat("功率(带单位)字符串--示例:").concat(RandomUtil.getRandomSaltL(3)).concat("W|kW");
     }
 
+    public static String dypc(String title) {
+        title = title == null ? "" : title;
+        return title.concat("电压偏差(带单位)字符串");
+    }
+
+    public static String bfb(String title) {
+        title = title == null ? "" : title;
+        return title.concat("百分比(数字)");
+    }
+
 }

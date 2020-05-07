@@ -1,8 +1,7 @@
 package cn.hao.nb.cloud.ydglMock.controller;
 
-import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
-import cn.hao.nb.cloud.ydglMock.ElecDesc;
+import cn.hao.nb.cloud.ydglExternalApi.entity.ElecConsumptionData;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +27,8 @@ import java.util.List;
 public class ElecConsumptionController {
 
 
-    @ApiOperation(value = "按照月份周期统计用电量", notes = "按照月份周期统计用电量")
+    @ApiOperation(value = "按照月份周期统计用电量", notes = "按照月份周期统计用电量\n实体:ElecConsumptionData" +
+            "\ntime字段:yyyy-MM")
     @GetMapping("/statisticsByMonth")
     public Rv statisticsByMonth(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
@@ -38,17 +38,13 @@ public class ElecConsumptionController {
     ) {
         List list = Lists.newArrayList();
         for (int i = 1; i < 10; i++) {
-            list.add(Qd.create()
-                    .add("time", "2020-" + (i < 10 ? "0" + i : i))
-                    .add("peak", ElecDesc.kWhDesc("峰"))
-                    .add("valley", ElecDesc.kWhDesc("谷"))
-                    .add("normal", ElecDesc.kWhDesc("平"))
-                    .add("mountainPeak", ElecDesc.kWhDesc("尖峰")));
+            list.add(new ElecConsumptionData());
         }
         return Rv.getInstance(list);
     }
 
-    @ApiOperation(value = "按照天统计用电量", notes = "按照天统计用电量")
+    @ApiOperation(value = "按照天统计用电量", notes = "按照天统计用电量\n实体:ElecConsumptionData" +
+            "\nntime字段:yyyy-MM")
     @GetMapping("/statisticsByDay")
     public Rv statisticsByDay(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
@@ -58,14 +54,7 @@ public class ElecConsumptionController {
     ) {
         List list = Lists.newArrayList();
         for (int i = 1; i < 31; i++) {
-            list.add(
-                    Qd.create()
-                            .add("time", "04-" + (i < 10 ? "0" + i : i))
-                            .add("peak", ElecDesc.kWhDesc("峰"))
-                            .add("valley", ElecDesc.kWhDesc("谷"))
-                            .add("normal", ElecDesc.kWhDesc("平"))
-                            .add("mountainPeak", ElecDesc.kWhDesc("尖峰"))
-            );
+            list.add(new ElecConsumptionData());
         }
         return Rv.getInstance(list);
     }

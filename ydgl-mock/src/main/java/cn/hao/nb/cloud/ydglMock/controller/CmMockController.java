@@ -1,11 +1,14 @@
 package cn.hao.nb.cloud.ydglMock.controller;
 
-import cn.hao.nb.cloud.common.entity.Qd;
+import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
+import cn.hao.nb.cloud.ydglExternalApi.entity.DeviceAlarmMsg;
+import cn.hao.nb.cloud.ydglExternalApi.entity.DeviceInfo;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ExternalDepartment;
-import cn.hao.nb.cloud.ydglMock.ElecDesc;
+import cn.hao.nb.cloud.ydglExternalApi.entity.TotalStatisiticsData;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.javafaker.Faker;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
@@ -60,36 +63,38 @@ public class CmMockController {
         return Rv.getInstance(department);
     }
 
-    @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表")
+    @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表\n实体:DeviceInfo")
     @GetMapping("/device/listByDeptId")
     public Rv listDeviceByDeptId(@ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId) {
         return Rv.getInstance(Lists.newArrayList(
-                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称"),
-                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称"),
-                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称"),
-                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称"),
-                Qd.create().add("deviceId", "设备Id").add("deviceName", "设备名称")
+                new DeviceInfo(),
+                new DeviceInfo()
         ));
     }
 
-    @ApiOperation(value = "按天统计概览数据", notes = "按天统计概览数据")
+    @ApiOperation(value = "按天统计概览数据", notes = "按天统计概览数据\n实体:TotalStatisiticsData")
     @GetMapping("/totalStatisticsByDate")
     public Rv totalStatisticsByDate(
             @ApiParam(value = "统计时间", name = "statisticsDate", required = true) @RequestParam Date statisticsDate,
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId
     ) {
         return Rv.getInstance(
-                Qd.create()
-                        .add("todayConsumption", ElecDesc.kWhDesc("今日"))
-                        .add("yesterdayConsumption", ElecDesc.kWhDesc("昨日"))
-                        .add("currentLoad", ElecDesc.kWDesc("当前"))
-                        .add("currentLoadCollectionTime", ElecDesc.timeDesc("当前负荷"))
-                        .add("todayMaxLoad", ElecDesc.kWDesc("今日最高"))
-                        .add("todayMaxLoadCollectionTime", ElecDesc.timeDesc("今日最高"))
-                        .add("todayMinLoad", ElecDesc.kWDesc("今日最低"))
-                        .add("todayMinLoadCollectionTime", ElecDesc.timeDesc("今日最低"))
-
+                new TotalStatisiticsData()
         );
+    }
+
+    @ApiOperation(value = "设备告警信息", notes = "设备告警信息\n实体:DeviceAlarmMsg")
+    @GetMapping("/getDeviceAlarmMsg")
+    public Rv getDeviceAlarmMsg(
+            Pg pg,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备Id", name = "deviceId") String deviceId) {
+        IPage result = pg.page();
+        result.setRecords(Lists.newArrayList(
+                new DeviceAlarmMsg(),
+                new DeviceAlarmMsg()
+        ));
+        return Rv.getInstance(result);
     }
 
 }

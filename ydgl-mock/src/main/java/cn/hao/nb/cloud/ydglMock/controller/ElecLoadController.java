@@ -3,6 +3,8 @@ package cn.hao.nb.cloud.ydglMock.controller;
 import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
+import cn.hao.nb.cloud.ydglExternalApi.entity.LoadItem;
+import cn.hao.nb.cloud.ydglExternalApi.entity.TimeRangeLoadData;
 import cn.hao.nb.cloud.ydglMock.ElecDesc;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
@@ -27,7 +29,7 @@ import java.util.Date;
 @RequestMapping("/ydgl/elecLoad")
 public class ElecLoadController {
 
-    @ApiOperation(value = "按照时间周期统计负荷", notes = "按照时间周期统计负荷")
+    @ApiOperation(value = "按照时间周期统计负荷", notes = "按照时间周期统计负荷\n实体:TimeRangeLoadData")
     @GetMapping("/totalStatisticsByTimeRange")
     public Rv totalStatisticsByTimeRange(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
@@ -36,17 +38,14 @@ public class ElecLoadController {
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return Rv.getInstance(
-                Qd.create()
-                        .add("minLoad", ElecDesc.kWDesc("最小"))
-                        .add("minLoadTime", ElecDesc.timeDesc("最小负荷"))
-                        .add("currentLoad", ElecDesc.kWDesc("当前"))
-                        .add("currentLoadTime", ElecDesc.timeDesc("当前负荷"))
-                        .add("maxLoad", ElecDesc.kWDesc("最大"))
-                        .add("maxLoadTime", ElecDesc.timeDesc("最大负荷"))
+                new TimeRangeLoadData()
         );
     }
 
-    @ApiOperation(value = "按照时间周期获取负荷曲线", notes = "按照时间周期获取负荷曲线")
+    @ApiOperation(value = "按照时间周期获取负荷曲线", notes = "按照时间周期获取负荷曲线\n" +
+            "实体:LoadItem\n" +
+            "loadList:负荷采点列表\n" +
+            "baseDayLoad:基准日负荷")
     @GetMapping("/getLoadList")
     public Rv statisticsByTimeRange(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
@@ -58,18 +57,8 @@ public class ElecLoadController {
         return Rv.getInstance(
                 Qd.create()
                         .add("loadList", Lists.newArrayList(
-                                Qd.create()
-                                        .add("collectionTime", ElecDesc.timeDesc(""))
-                                        .add("load", ElecDesc.kWDesc("")),
-                                Qd.create()
-                                        .add("collectionTime", ElecDesc.timeDesc(""))
-                                        .add("load", ElecDesc.kWDesc("")),
-                                Qd.create()
-                                        .add("collectionTime", ElecDesc.timeDesc(""))
-                                        .add("load", ElecDesc.kWDesc("")),
-                                Qd.create()
-                                        .add("collectionTime", ElecDesc.timeDesc(""))
-                                        .add("load", ElecDesc.kWDesc(""))
+                                new LoadItem(),
+                                new LoadItem()
                         ))
                         .add("baseDayLoad", ElecDesc.kWDesc("基准日"))
 
