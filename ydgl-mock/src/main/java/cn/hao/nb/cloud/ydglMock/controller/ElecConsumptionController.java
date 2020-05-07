@@ -44,7 +44,7 @@ public class ElecConsumptionController {
     }
 
     @ApiOperation(value = "按照天统计用电量", notes = "按照天统计用电量\n实体:ElecConsumptionData" +
-            "\nntime字段:yyyy-MM")
+            "\ntime字段:yyyy-MM-dd")
     @GetMapping("/statisticsByDay")
     public Rv statisticsByDay(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,

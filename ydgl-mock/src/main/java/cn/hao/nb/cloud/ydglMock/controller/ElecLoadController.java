@@ -64,4 +64,66 @@ public class ElecLoadController {
 
         );
     }
+
+    @ApiOperation(value = "日负荷分析", notes = "日负荷分析\n" +
+            "实体:TimeRangeLoadData\n" +
+            "实体:LoadItem\n" +
+            "loadStatistics:当日负荷统计(TimeRangeLoadData)\n" +
+            "currentList:当日负荷列表(LoadItem)\n" +
+            "lastList:昨日负荷列表(LoadItem)")
+    @GetMapping("/statisticsByDay")
+    public Rv statisticsByDay(
+            @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
+            @ApiParam(value = "时间", name = "day", required = true) @RequestParam Date day,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
+    ) {
+        return Rv.getInstance(
+                Qd.create()
+                        .add("loadStatistics", new TimeRangeLoadData())
+                        .add("currentList", Lists.newArrayList(
+                                new LoadItem(),
+                                new LoadItem(),
+                                new LoadItem(),
+                                new LoadItem()
+                        ))
+                        .add("lastList", Lists.newArrayList(
+                                new LoadItem(),
+                                new LoadItem(),
+                                new LoadItem(),
+                                new LoadItem()
+                        ))
+
+        );
+    }
+
+    @ApiOperation(value = "月负荷分析", notes = "月负荷分析\n" +
+            "实体:TimeRangeLoadData\n" +
+            "loadStatistics:负荷统计(TimeRangeLoadData)\n" +
+            "currentList:当月负荷列表(TimeRangeLoadData)\n" +
+            "lastList:上月负荷列表(TimeRangeLoadData)")
+    @GetMapping("/statisticsByMonth")
+    public Rv statisticsByMonth(
+            @ApiParam(value = "月度时间", name = "month", required = true) @RequestParam Date month,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
+    ) {
+        return Rv.getInstance(
+                Qd.create()
+                        .add("loadStatistics", new TimeRangeLoadData())
+                        .add("currentList", Lists.newArrayList(
+                                new TimeRangeLoadData(),
+                                new TimeRangeLoadData(),
+                                new TimeRangeLoadData(),
+                                new TimeRangeLoadData()
+                        ))
+                        .add("lastList", Lists.newArrayList(
+                                new TimeRangeLoadData(),
+                                new TimeRangeLoadData(),
+                                new TimeRangeLoadData(),
+                                new TimeRangeLoadData()
+                        ))
+
+        );
+    }
 }
