@@ -97,8 +97,9 @@ public class CmMockController {
     @ApiOperation(value = "获取单位产能比排名", notes = "获取单位产能比排名\n实体:UnitOutputItem")
     @GetMapping("/getUnitOutputRankByMonth")
     public Rv getUnitOutputRankByMonth(
-            Pg pg,
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId) {
+            @ApiParam(value = "月份", name = "month", required = true) @RequestParam Date month,
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
+    ) {
         return Rv.getInstance(
                 Lists.newArrayList(
                         new UnitOutputItem(),
