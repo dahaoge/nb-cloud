@@ -4,10 +4,7 @@ import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
-import cn.hao.nb.cloud.ydglExternalApi.entity.DeviceAlarmMsg;
-import cn.hao.nb.cloud.ydglExternalApi.entity.DeviceInfo;
-import cn.hao.nb.cloud.ydglExternalApi.entity.ExternalDepartment;
-import cn.hao.nb.cloud.ydglExternalApi.entity.TotalStatisiticsData;
+import cn.hao.nb.cloud.ydglExternalApi.entity.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.javafaker.Faker;
 import com.google.common.collect.Lists;
@@ -95,6 +92,22 @@ public class CmMockController {
                 new DeviceAlarmMsg()
         ));
         return Rv.getInstance(result);
+    }
+
+    @ApiOperation(value = "获取单位产能比排名", notes = "获取单位产能比排名\n实体:UnitOutputItem")
+    @GetMapping("/getUnitOutputRankByMonth")
+    public Rv getUnitOutputRankByMonth(
+            Pg pg,
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId) {
+        return Rv.getInstance(
+                Lists.newArrayList(
+                        new UnitOutputItem(),
+                        new UnitOutputItem(),
+                        new UnitOutputItem(),
+                        new UnitOutputItem(),
+                        new UnitOutputItem()
+                )
+        );
     }
 
 }
