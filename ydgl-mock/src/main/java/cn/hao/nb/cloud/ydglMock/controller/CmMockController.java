@@ -2,6 +2,8 @@ package cn.hao.nb.cloud.ydglMock.controller;
 
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
+import cn.hao.nb.cloud.common.penum.EYdglDeviceType;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.ydglExternalApi.entity.*;
@@ -62,7 +64,8 @@ public class CmMockController {
 
     @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表\n实体:DeviceInfo")
     @GetMapping("/device/listByDeptId")
-    public Rv listDeviceByDeptId(@ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId) {
+    public Rv listDeviceByDeptId(@ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+                                 @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType) {
         return Rv.getInstance(Lists.newArrayList(
                 new DeviceInfo(),
                 new DeviceInfo()
@@ -108,6 +111,19 @@ public class CmMockController {
                         new UnitOutputItem(),
                         new UnitOutputItem()
                 )
+        );
+    }
+
+    @ApiOperation(value = "年度或月度电费账单", notes = "年度或月度电费账单\n实体:ElecBill" +
+            "\nEYdglDataCollectionCycle:可选值month1|year1")
+    @GetMapping("/getElecBill")
+    public Rv getElecBill(
+            @ApiParam(value = "年份或月份时间", name = "time", required = true) @RequestParam Date time,
+            @ApiParam(value = "年|月", name = "dataCollectionCycle", required = true) @RequestParam EYdglDataCollectionCycle dataCollectionCycle,
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
+    ) {
+        return Rv.getInstance(
+                new ElecBill()
         );
     }
 
