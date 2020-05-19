@@ -257,6 +257,13 @@ import java.util.Map;
     public void validData(${entity} data) {
     if (CheckUtil.objIsEmpty(data))
     throw NBException.create(EErrorCode.missingArg);
+
+    <#list table.fields as field>
+        <#if !field.keyFlag && "version" != field.name && "create_by" != field.name && "create_time" != field.name && "update_time" != field.name && "deleted" != field.name>
+            if (CheckUtil.objIsEmpty(data.get${field.capitalName}()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("${field.propertyName}");
+        </#if>
+    </#list>
     }
     }
 </#if>
