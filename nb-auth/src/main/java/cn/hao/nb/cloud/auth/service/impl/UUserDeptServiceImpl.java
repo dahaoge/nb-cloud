@@ -257,8 +257,12 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
      */
     @Override
     public void validData(UUserDept data) {
-        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getUserId(), data.getDeptId()))
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getUserId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("userId");
+        if (CheckUtil.objIsEmpty(data.getDeptId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("deptId");
         TokenUser tokenUser = UserUtil.getTokenUser(true);
         if (CheckUtil.collectionIsEmpty(tokenUser.getAuthDeptList()) || !tokenUser.getAuthDeptList().contains(data.getDeptId()))
             throw NBException.create(EErrorCode.authDecodeError, "没有该组织的数据权限");

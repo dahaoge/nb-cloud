@@ -316,5 +316,9 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
     public void validData(SysRoleMenu data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getRoleCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("roleCode");
+        if (CheckUtil.objIsEmpty(data.getMenuCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("menuCode");
     }
 }

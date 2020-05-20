@@ -330,8 +330,21 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public void validData(SysMenu data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
-        if (CheckUtil.objIsEmpty(data.getMenuId()) && CheckUtil.objIsEmpty(data.getMenuCode()))
-            throw NBException.create(EErrorCode.missingArg);
+
+//        if (CheckUtil.objIsEmpty(data.getParentMenuCode()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("parentMenuCode");
+        if (CheckUtil.objIsEmpty(data.getMenuCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("menuCode");
+        if (CheckUtil.objIsEmpty(data.getMenuName()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("menuName");
+//        if (CheckUtil.objIsEmpty(data.getMenuPath()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("menuPath");
+        if (CheckUtil.objIsEmpty(data.getMenuIndex()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("menuIndex");
+//        if (CheckUtil.objIsEmpty(data.getMenuIcon()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("menuIcon");
+        if (CheckUtil.objIsEmpty(data.getMenuType()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("menuType");
 
         this.beUsedCheck(data);
 

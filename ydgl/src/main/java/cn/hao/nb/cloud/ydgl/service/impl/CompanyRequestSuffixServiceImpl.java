@@ -298,11 +298,13 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
      */
     @Override
     public void validData(CompanyRequestSuffix data) {
-        if (CheckUtil.objIsEmpty(data) && CheckUtil.objIsEmpty(
-                data.getComId(),
-                data.getEnumKey(),
-                data.getRequestSuffix()
-        ))
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getComId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
+        if (CheckUtil.objIsEmpty(data.getEnumKey()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("enumKey");
+        if (CheckUtil.objIsEmpty(data.getRequestSuffix()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("requestSuffix");
     }
 }

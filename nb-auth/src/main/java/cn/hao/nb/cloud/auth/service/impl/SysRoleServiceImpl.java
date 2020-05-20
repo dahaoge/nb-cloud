@@ -250,8 +250,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      */
     @Override
     public void validData(SysRole data) {
-        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getRoleCode(), data.getRoleName()))
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getRoleCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("roleCode");
+        if (CheckUtil.objIsEmpty(data.getRoleName()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("roleName");
         this.beUsedCheck(data);
     }
 

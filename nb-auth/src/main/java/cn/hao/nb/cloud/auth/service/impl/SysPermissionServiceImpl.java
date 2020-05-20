@@ -252,8 +252,10 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     public void validData(SysPermission data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
-        if (CheckUtil.objIsEmpty(data.getPermissionId()) && CheckUtil.objIsEmpty(data.getPermissionCode(), data.getPermissionName()))
-            throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getPermissionCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("permissionCode");
+        if (CheckUtil.objIsEmpty(data.getPermissionName()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("permissionName");
         this.beUsedCheck(data);
     }
 

@@ -239,5 +239,33 @@ public class SysAppVersionServiceImpl extends ServiceImpl<SysAppVersionMapper, S
     public void validData(SysAppVersion data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getApp()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("app");
+//        if (CheckUtil.objIsEmpty(data.getAppPlatform()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("appPlatform");
+//        if (CheckUtil.objIsEmpty(data.getAppDownloadChannel()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("appDownloadChannel");
+        if (CheckUtil.objIsEmpty(data.getAppVersionType()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("appVersionType");
+        if (CheckUtil.objIsEmpty(data.getAppVersion()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("appVersion");
+        if (CheckUtil.objIsEmpty(data.getIsMust()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("isMust");
+        if (CheckUtil.objIsEmpty(data.getAppVersionName()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("appVersionName");
+        if (CheckUtil.objIsEmpty(data.getVersionDesc()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("versionDesc");
+        if (CheckUtil.objIsEmpty(data.getUpdateDesc()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("updateDesc");
+        if (CheckUtil.objIsEmpty(data.getVersionStartTime()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("versionStartTime");
+//        if (CheckUtil.objIsEmpty(data.getAppSize()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("appSize");
+//        if (CheckUtil.objIsEmpty(data.getDownloadUrlHash()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("downloadUrlHash");
+        if (CheckUtil.objIsEmpty(data.getHasPublished()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("hasPublished");
+        if (CheckUtil.objIsEmpty(data.getVersionNum()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("versionNum");
     }
 }

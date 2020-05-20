@@ -102,7 +102,8 @@ public class StartGenerator {
         strategy.setRestControllerStyle(true);
         strategy.setSuperControllerClass(null);
 //        strategy.setInclude(scanner("表名"));
-        strategy.setInclude("sys_tags", "sys_dict");
+        strategy.setInclude("sys_app_version", "sys_dept", "sys_dict", "sys_menu", "sys_permission", "sys_role", "sys_role_menu", "sys_role_permission", "sys_tags", "u_login_channel", "u_user_dept", "u_user_info", "u_user_role", "ydgl_company", "ydgl_company_request_suffix");
+//        strategy.setInclude("sys_tags", "sys_dict");
 //        strategy.setInclude(
 ////                "u_user_info",
 ////                "u_login_channel",

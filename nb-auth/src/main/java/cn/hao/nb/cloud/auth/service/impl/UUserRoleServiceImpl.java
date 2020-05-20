@@ -281,5 +281,9 @@ public class UUserRoleServiceImpl extends ServiceImpl<UUserRoleMapper, UUserRole
     public void validData(UUserRole data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getUserId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("userId");
+        if (CheckUtil.objIsEmpty(data.getRoleCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("roleCode");
     }
 }

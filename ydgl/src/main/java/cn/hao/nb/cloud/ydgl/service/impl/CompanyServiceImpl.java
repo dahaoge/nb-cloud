@@ -258,7 +258,13 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
      */
     @Override
     public void validData(Company data) {
-        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getComName(), data.getBaseUrl()))
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getComName()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("comName");
+        if (CheckUtil.objIsEmpty(data.getRootDept()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("rootDept");
+        if (CheckUtil.objIsEmpty(data.getBaseUrl()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("baseUrl");
     }
 }

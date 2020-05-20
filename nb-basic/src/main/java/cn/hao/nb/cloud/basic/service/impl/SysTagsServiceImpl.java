@@ -239,5 +239,35 @@ public class SysTagsServiceImpl extends ServiceImpl<SysTagsMapper, SysTags> impl
     public void validData(SysTags data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getTagCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("tagCode");
+        if (CheckUtil.objIsEmpty(data.getTagLabel()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("tagLabel");
+//        if (CheckUtil.objIsEmpty(data.getTagTarget()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("tagTarget");
+//        if (CheckUtil.objIsEmpty(data.getTagType()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("tagType");
+//        if (CheckUtil.objIsEmpty(data.getTagIcon()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("tagIcon");
+//        if (CheckUtil.objIsEmpty(data.getTagIconActive()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("tagIconActive");
+        if (CheckUtil.objIsEmpty(data.getTagIndex()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("tagIndex");
+//        if (CheckUtil.objIsEmpty(data.getTagGroup()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("tagGroup");
+//        if (CheckUtil.objIsEmpty(data.getTagGroupName()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("tagGroupName");
+//        if (CheckUtil.objIsEmpty(data.getAppStyleNormal()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("appStyleNormal");
+//        if (CheckUtil.objIsEmpty(data.getAppStyleActive()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("appStyleActive");
+//        if (CheckUtil.objIsEmpty(data.getMiniAppStyleNormal()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("miniAppStyleNormal");
+//        if (CheckUtil.objIsEmpty(data.getMiniAppStyleActive()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("miniAppStyleActive");
+//        if (CheckUtil.objIsEmpty(data.getWebStyleNormal()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("webStyleNormal");
+//        if (CheckUtil.objIsEmpty(data.getWebStyleActive()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("webStyleActive");
     }
 }

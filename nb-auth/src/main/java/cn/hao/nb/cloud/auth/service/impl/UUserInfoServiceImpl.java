@@ -516,6 +516,34 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     public void validData(UUserInfo data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getUserName()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("userName");
+//        if (CheckUtil.objIsEmpty(data.getPhone()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("phone");
+//        if (CheckUtil.objIsEmpty(data.getIcnum()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("icnum");
+//        if (CheckUtil.objIsEmpty(data.getIcon()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("icon");
+//        if (CheckUtil.objIsEmpty(data.getLoginId()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("loginId");
+//        if (CheckUtil.objIsEmpty(data.getLoginPwd()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("loginPwd");
+        if (CheckUtil.objIsEmpty(data.getSalt()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("salt");
+        if (CheckUtil.objIsEmpty(data.getIsLocked()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("isLocked");
+//        if (CheckUtil.objIsEmpty(data.getUnlockTime()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("unlockTime");
+        if (CheckUtil.objIsEmpty(data.getUserType()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("userType");
+//        if (CheckUtil.objIsEmpty(data.getWechatMpOpenid()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("wechatMpOpenid");
+//        if (CheckUtil.objIsEmpty(data.getWechatUnionid()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("wechatUnionid");
+//        if (CheckUtil.objIsEmpty(data.getWechatPnOpenid()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("wechatPnOpenid");
+//        if (CheckUtil.objIsEmpty(data.getWechatAppOpenid()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("wechatAppOpenid");
         if (CheckUtil.objIsEmpty(data.getUserId())) {
             if (CheckUtil.objIsEmpty(data.getPhone(), data.getUserName(), data.getIsLocked(), data.getIsLocked()))
                 throw NBException.create(EErrorCode.missingArg);

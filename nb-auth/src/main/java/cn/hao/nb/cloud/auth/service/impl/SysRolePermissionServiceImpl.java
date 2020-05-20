@@ -250,7 +250,11 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
      */
     @Override
     public void validData(SysRolePermission data) {
-        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getPermissionCode(), data.getRoleCode()))
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getRoleCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("roleCode");
+        if (CheckUtil.objIsEmpty(data.getPermissionCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("permissionCode");
     }
 }

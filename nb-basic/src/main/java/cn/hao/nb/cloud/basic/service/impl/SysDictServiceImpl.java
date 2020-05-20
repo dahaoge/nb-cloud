@@ -292,5 +292,16 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     public void validData(SysDict data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+
+        if (CheckUtil.objIsEmpty(data.getDictType()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("dictType");
+        if (CheckUtil.objIsEmpty(data.getDictCode()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("dictCode");
+        if (CheckUtil.objIsEmpty(data.getDictLabel()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("dictLabel");
+//        if (CheckUtil.objIsEmpty(data.getDictDesc()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("dictDesc");
+        if (CheckUtil.objIsEmpty(data.getDictIndex()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("dictIndex");
     }
 }

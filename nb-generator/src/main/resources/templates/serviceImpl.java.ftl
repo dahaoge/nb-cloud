@@ -259,7 +259,8 @@ import java.util.Map;
     throw NBException.create(EErrorCode.missingArg);
 
     <#list table.fields as field>
-        <#if !field.keyFlag && "version" != field.name && "create_by" != field.name && "create_time" != field.name && "update_time" != field.name && "deleted" != field.name>
+        <#if !field.keyFlag && "version" != field.name && "create_by" != field.name && "create_time" != field.name &&
+        "update_time" != field.name && "deleted" != field.name&& "update_by" != field.name>
             if (CheckUtil.objIsEmpty(data.get${field.capitalName}()))
             throw NBException.create(EErrorCode.missingArg).plusMsg("${field.propertyName}");
         </#if>

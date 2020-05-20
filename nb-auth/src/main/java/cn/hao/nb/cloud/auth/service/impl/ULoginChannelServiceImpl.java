@@ -406,8 +406,16 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
      */
     @Override
     public void validData(ULoginChannel data) {
-        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getLoginId(), data.getUserId(), data.getLoginType(), data.getLoginChannelScope()))
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getUserId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("userId");
+        if (CheckUtil.objIsEmpty(data.getLoginType()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("loginType");
+        if (CheckUtil.objIsEmpty(data.getLoginId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("loginId");
+        if (CheckUtil.objIsEmpty(data.getLoginChannelScope()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("loginChannelScope");
         this.validLoginId(data);
     }
 

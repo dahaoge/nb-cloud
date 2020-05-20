@@ -408,9 +408,15 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
      */
     @Override
     public void validData(SysDept data) {
-        if (CheckUtil.objIsEmpty(data, data.getDeptName()))
+        if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
         if (CheckUtil.objIsEmpty(data.getPId()))
             data.setPId(0L);
+        if (CheckUtil.objIsEmpty(data.getDeptName()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("deptName");
+        if (CheckUtil.objIsEmpty(data.getExternalDeptId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("externalDeptId");
+        if (CheckUtil.objIsEmpty(data.getCompanyId()))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("companyId");
     }
 }
