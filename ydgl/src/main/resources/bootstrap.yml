@@ -7,7 +7,7 @@ spring:
     name: ydgl
   cloud:
     nacos:
-      server-addr: 117.50.43.59:8848
+      server-addr:  115.159.196.73:18848
       discovery:
       config:
         ext-config:
@@ -16,6 +16,8 @@ spring:
           - data-id: nb-db-public.yaml
             refresh: false
           - data-id: nb-redis.yaml
+            refresh: false
+          - data-id: nb-server-default.yaml
             refresh: false
         shared-dataids: security-public.yaml
         file-extension: yaml

@@ -35,6 +35,8 @@ public class SourceVerificationFilter implements GlobalFilter, Ordered {
 
         AntPathMatcher matcher = new AntPathMatcher();
         Route route = (Route) exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
+        if ("ydgl-mock".endsWith(route.getUri().getHost()))
+            return chain.filter(exchange);
         if (exchange.getRequest().getPath().value().indexOf(route.getId().substring(ROUTE_DEFINITION_ID_PREFIX.length())) == 1) {
             String path = exchange.getRequest().getPath().value().substring(route.getId().substring(ROUTE_DEFINITION_ID_PREFIX.length()).length() + 1);
             for (String ignoreUrl : securityProps.getIgnoreUrls()) {

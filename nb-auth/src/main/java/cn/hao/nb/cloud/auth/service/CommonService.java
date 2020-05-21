@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.auth.service;
 
+import cn.hao.nb.cloud.auth.constant.RedisKey;
 import cn.hao.nb.cloud.auth.entity.UUserInfo;
-import cn.hao.nb.cloud.common.constant.RedisKey;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.RedisUser;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
