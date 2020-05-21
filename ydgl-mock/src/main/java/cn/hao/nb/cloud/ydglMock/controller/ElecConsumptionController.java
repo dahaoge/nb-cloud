@@ -30,7 +30,7 @@ public class ElecConsumptionController {
     @ApiOperation(value = "按照月份周期统计用电量", notes = "按照月份周期统计用电量\n实体:ElecConsumptionData" +
             "\ntime字段:yyyy-MM")
     @GetMapping("/statisticsByMonth")
-    public Rv statisticsByMonth(
+    public Rv<List<ElecConsumptionData>> statisticsByMonth(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
@@ -46,7 +46,7 @@ public class ElecConsumptionController {
     @ApiOperation(value = "按照天统计用电量", notes = "按照天统计用电量\n实体:ElecConsumptionData" +
             "\ntime字段:yyyy-MM-dd")
     @GetMapping("/statisticsByDay")
-    public Rv statisticsByDay(
+    public Rv<List<ElecConsumptionData>> statisticsByDay(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,

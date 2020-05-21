@@ -2,7 +2,6 @@ package cn.hao.nb.cloud.ydglMock.controller;
 
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Rv;
-import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
 import cn.hao.nb.cloud.common.penum.EYdglDeviceType;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
@@ -42,7 +41,7 @@ public class CmMockController {
 
     @ApiOperation(value = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)", notes = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)\n涉及实体:ExternalDepartment")
     @GetMapping("/dept/loadAllDisDeptTreeByDeptId")
-    public Rv loadAllDisDeptListByDeptId(
+    public Rv<ExternalDepartment> loadAllDisDeptListByDeptId(
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId) {
         List<ExternalDepartment> result = Lists.newArrayList();
         ExternalDepartment department = new ExternalDepartment();
@@ -64,8 +63,8 @@ public class CmMockController {
 
     @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表\n实体:DeviceInfo")
     @GetMapping("/device/listByDeptId")
-    public Rv listDeviceByDeptId(@ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
-                                 @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType) {
+    public Rv<List<DeviceInfo>> listDeviceByDeptId(@ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+                                                   @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType) {
         return Rv.getInstance(Lists.newArrayList(
                 new DeviceInfo(),
                 new DeviceInfo()
@@ -74,7 +73,7 @@ public class CmMockController {
 
     @ApiOperation(value = "按天统计概览数据", notes = "按天统计概览数据\n实体:TotalStatisiticsData")
     @GetMapping("/totalStatisticsByDate")
-    public Rv totalStatisticsByDate(
+    public Rv<TotalStatisiticsData> totalStatisticsByDate(
             @ApiParam(value = "统计时间", name = "statisticsDate", required = true) @RequestParam Date statisticsDate,
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId
     ) {
@@ -85,7 +84,7 @@ public class CmMockController {
 
     @ApiOperation(value = "设备告警信息", notes = "设备告警信息\n实体:DeviceAlarmMsg")
     @GetMapping("/getDeviceAlarmMsg")
-    public Rv getDeviceAlarmMsg(
+    public Rv<List<DeviceAlarmMsg>> getDeviceAlarmMsg(
             Pg pg,
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") String deviceId) {
@@ -99,7 +98,7 @@ public class CmMockController {
 
     @ApiOperation(value = "获取单位产能比排名", notes = "获取单位产能比排名\n实体:UnitOutputItem")
     @GetMapping("/getUnitOutputRankByMonth")
-    public Rv getUnitOutputRankByMonth(
+    public Rv<List<UnitOutputItem>> getUnitOutputRankByMonth(
             @ApiParam(value = "月份", name = "month", required = true) @RequestParam Date month,
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
     ) {
@@ -111,19 +110,6 @@ public class CmMockController {
                         new UnitOutputItem(),
                         new UnitOutputItem()
                 )
-        );
-    }
-
-    @ApiOperation(value = "年度或月度电费账单", notes = "年度或月度电费账单\n实体:ElecBill" +
-            "\nEYdglDataCollectionCycle:可选值month1|year1")
-    @GetMapping("/getElecBill")
-    public Rv getElecBill(
-            @ApiParam(value = "年份或月份时间", name = "time", required = true) @RequestParam Date time,
-            @ApiParam(value = "年|月", name = "dataCollectionCycle", required = true) @RequestParam EYdglDataCollectionCycle dataCollectionCycle,
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
-    ) {
-        return Rv.getInstance(
-                new ElecBill()
         );
     }
 

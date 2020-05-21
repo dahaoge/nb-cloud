@@ -15,18 +15,10 @@ import java.util.Date;
  */
 @Data
 @ApiModel(value = "电费账单", description = "电费账单")
-public class ElecBill implements Serializable {
+public class ElecBill extends ElecAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "组织机构id")
-    String deptId;
-    @ApiModelProperty(value = "组织机构名称")
-    String deptName;
-    @ApiModelProperty(value = "户号")
-    String elecAccountNum;
-    @ApiModelProperty(value = "地址")
-    String address;
     @ApiModelProperty(value = "账单时间")
     Date billTime;
     @ApiModelProperty(value = "金额")
