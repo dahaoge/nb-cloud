@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.ydglMock.controller;
 
 import cn.hao.nb.cloud.common.entity.Rv;
-import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
+import cn.hao.nb.cloud.common.penum.EDateType;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecBill;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecMonthFeeGuess;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecYearFeeStatistics;
@@ -28,11 +28,11 @@ import java.util.Date;
 public class ElecFeeController {
 
     @ApiOperation(value = "年度或月度电费账单", notes = "年度或月度电费账单\n实体:ElecBill" +
-            "\nEYdglDataCollectionCycle:可选值month1|year1")
+            "\nEDateType:可选值day|month")
     @GetMapping("/getElecBill")
     public Rv<ElecBill> getElecBill(
             @ApiParam(value = "年份或月份时间", name = "time", required = true) @RequestParam Date time,
-            @ApiParam(value = "年|月", name = "dataCollectionCycle", required = true) @RequestParam EYdglDataCollectionCycle dataCollectionCycle,
+            @ApiParam(value = "年|月", name = "dateType", required = true) @RequestParam EDateType dateType,
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
     ) {
         return Rv.getInstance(

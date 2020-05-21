@@ -2,6 +2,7 @@ package cn.hao.nb.cloud.ydglMock.controller;
 
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.EDateType;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
 import cn.hao.nb.cloud.ydglExternalApi.entity.*;
@@ -92,6 +93,17 @@ public class PowerQualityController {
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
         throw NBException.create(EErrorCode.noData, "暂时未采集该项目数据");
+    }
+
+    @ApiOperation(value = "电能质量统计", notes = "电能质量统计\n实体:VoltageDeviationStatistics")
+    @GetMapping("/statistics")
+    public Rv<VoltageDeviationStatistics> statistics(
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId,
+            @ApiParam(value = "统计时间", name = "time", required = true) @RequestParam Date time,
+            @ApiParam(value = "月|日", name = "dateType", required = true) @RequestParam EDateType dateType
+    ) {
+        return Rv.getInstance(new VoltageDeviationStatistics());
     }
 
 }
