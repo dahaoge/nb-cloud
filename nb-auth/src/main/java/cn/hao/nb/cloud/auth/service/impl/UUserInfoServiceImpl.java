@@ -53,6 +53,18 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     IUUserRoleService userRoleService;
 
     @Override
+    public boolean bindUser2Company(Long userId, Long companyId) {
+        if (userId == null)
+            throw NBException.create(EErrorCode.missingArg).plusMsg("bindUser2Company.userId");
+        if (companyId == null)
+            throw NBException.create(EErrorCode.missingArg).plusMsg("bindUser2Company.companyId");
+        UUserInfo temp = new UUserInfo();
+        temp.setUserId(userId);
+        temp.setCompanyId(companyId);
+        return this.incrementModifyData(temp);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public UUserInfo addCUser(String phone, String loginId, String userName, String pwd) {
         return this.addUser(phone, loginId, userName, EUserType.cUser, pwd);
@@ -263,6 +275,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
                 data.getUserId()
         ))
             throw NBException.create(EErrorCode.missingArg);
+        this.validData(data);
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);

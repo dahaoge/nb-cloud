@@ -25,13 +25,14 @@
         <result column="wechat_unionid" property="wechatUnionid"/>
         <result column="wechat_pn_openid" property="wechatPnOpenid"/>
         <result column="wechat_app_openid" property="wechatAppOpenid"/>
+        <result column="company_id" property="companyId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
             version, create_by, create_time, update_by, update_time, deleted, user_id, user_name,
             phone, icnum, icon, login_id, login_pwd, salt, is_locked, unlock_time,user_type,
-             wechat_mp_openid, wechat_unionid, wechat_pn_openid, wechat_app_openid
+             wechat_mp_openid, wechat_unionid, wechat_pn_openid, wechat_app_openid,company_id
         </sql>
 
 

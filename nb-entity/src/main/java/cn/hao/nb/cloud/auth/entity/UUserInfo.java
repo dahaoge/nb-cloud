@@ -129,6 +129,9 @@ public class UUserInfo implements Serializable {
     @ApiModelProperty(value = "微信开放平台绑定app获取的openId")
     private String wechatAppOpenid;
 
+    @ApiModelProperty("公司id")
+    public Long companyId;
+
     public static final String VERSION = "version";
     public static final String CREATE_BY = "create_by";
     public static final String CREATE_TIME = "create_time";
@@ -154,5 +157,6 @@ public class UUserInfo implements Serializable {
     public static final String WECHAT_PN_OPENID = "wechat_pn_openid";
 
     public static final String WECHAT_APP_OPENID = "wechat_app_openid";
+    public static final String COMPANY_ID = "company_id";
 
 }

@@ -21,6 +21,15 @@ import java.util.Map;
 public interface IUUserInfoService extends IService<UUserInfo> {
 
     /**
+     * 绑定用户公司
+     *
+     * @param userId
+     * @param companyId
+     * @return
+     */
+    boolean bindUser2Company(Long userId, Long companyId);
+
+    /**
      * C端用户注册(添加)
      *
      * @param phone
