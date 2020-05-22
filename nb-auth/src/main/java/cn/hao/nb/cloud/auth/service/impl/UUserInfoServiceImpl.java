@@ -210,13 +210,19 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
-    public Qd getLoginInfo(Long userId) {
+    public Qd getLoginInfo(Long userId, ELoginChannelScop loginChannelScop, ESourceClient client) {
+        if (CheckUtil.objIsEmpty(userId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("getLoginInfo.userId");
         TokenUser tokenUser = authMapper.getTokenUserById(userId);
         if (CheckUtil.objIsEmpty(tokenUser))
             throw NBException.create(EErrorCode.authIdentityErr, "查询不到用户信息");
+        if (CheckUtil.objIsEmpty(loginChannelScop))
+            loginChannelScop = UserUtil.getLoginChannelScop();
+        if (CheckUtil.objIsEmpty(client))
+            client = UserUtil.getAndValidRequestClient();
         Qd result = Qd.create();
 
-        if (ELoginChannelScop.manageClient == UserUtil.getLoginChannelScop()) {
+        if (ELoginChannelScop.manageClient == loginChannelScop) {
             List<String> roleList = ListUtil.getPkList(authMapper.getUserRoles(tokenUser.getUserId()), SysRole.ROLE_CODE);
             tokenUser.setRoleList(roleList);
 
@@ -224,8 +230,13 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             tokenUser.setMenuList(ListUtil.getPkList(authMapper.getUserMenus(tokenUser.getUserId()), SysMenu.MENU_CODE));
         }
         tokenUser.setAuthDeptList(ListUtil.getPkList(userDeptService.listByUserId(userId), UUserDept.DEPT_ID));
-        result.add("tokenUser", tokenUser).add("token", jwtTokenUtil.generateToken(tokenUser));
+        result.add("tokenUser", tokenUser).add("token", jwtTokenUtil.generateToken(tokenUser, client));
         return result;
+    }
+
+    @Override
+    public Qd getLoginInfo(Long userId) {
+        return this.getLoginInfo(userId, null, null);
     }
 
     @Override

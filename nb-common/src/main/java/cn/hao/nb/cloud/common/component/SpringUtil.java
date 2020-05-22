@@ -1,9 +1,15 @@
 package cn.hao.nb.cloud.common.component;
 
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Auther: hao
@@ -25,6 +31,24 @@ public class SpringUtil implements ApplicationContextAware {
         if (SpringUtil.applicationContext == null) {
             SpringUtil.applicationContext = applicationContext;
         }
+    }
+
+    public static HttpServletRequest getRequest() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            throw NBException.create(EErrorCode.c500, "获取request失败");
+        }
+        return requestAttributes.getRequest();
+    }
+
+    public static HttpServletRequest getRequest(boolean isRequired) {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            if (isRequired)
+                throw NBException.create(EErrorCode.c500, "获取request失败");
+            else return null;
+        }
+        return requestAttributes.getRequest();
     }
 
     //通过name获取 Bean.

@@ -14,8 +14,10 @@ import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.ListUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +54,50 @@ public class TempController {
     @GetMapping("/test/{str}")
     public String test(@PathVariable String str) {
         return "hellow " + str;
+    }
+
+    @GetMapping("/getHeaderParams")
+    public Rv getHeaderParams(Long userId) {
+        UUserInfo userInfo = userInfoService.getById(userId);
+        List<Qd> headerParams = Lists.newArrayList();
+        securityProps.getSourceClients().keySet().forEach(key -> {
+            Map<String, String> map = securityProps.getSourceClients().get(key);
+            String sk = map.get("sk");
+            ESourceClient client = ESourceClient.valueOf(map.get("name"));
+            userInfo.getUserType().getLoginChannelScops().forEach(loginChannelScope -> {
+                if (loginChannelScope.getClients().contains(client)) {
+                    Map loginInfo = userInfoService.getLoginInfo(userId, UserUtil.getLoginChannelScop(client), client);
+                    String token = (String) loginInfo.get("token");
+                    Qd qd = Qd.create()
+                            .add(SecurityConstants.HEADER_TOKEN_SPLIT, token)
+                            .add("client", map.get("name"))
+                            .add(SecurityConstants.HEADER_SOURCE_AK_KEY, map.get("ak"))
+                            .add(SecurityConstants.HEADER_SOURCE_SIGN_KEY, AesUtil.encrypt(sk + "$$" + DateTime.now().plusYears(1).toDate().getTime(), sk));
+                    headerParams.add(qd);
+                }
+            });
+        });
+        return Rv.getInstance(
+                Qd.create()
+                        .add("headerParams", headerParams)
+                        .add("userInfo", userInfo)
+        );
+    }
+
+    @GetMapping("/getAkSk")
+    public Rv getAkSk() {
+        List result = Lists.newArrayList();
+        securityProps.getSourceClients().keySet().forEach(key -> {
+            Map<String, String> map = securityProps.getSourceClients().get(key);
+            String sk = map.get("sk");
+            ESourceClient client = ESourceClient.valueOf(map.get("name"));
+            Qd qd = Qd.create()
+                    .add("client", client)
+                    .add(SecurityConstants.HEADER_SOURCE_AK_KEY, map.get("ak"))
+                    .add(SecurityConstants.HEADER_SOURCE_SIGN_KEY, AesUtil.encrypt(sk + "$$" + DateTime.now().plusYears(1).toDate().getTime(), sk));
+            result.add(qd);
+        });
+        return Rv.getInstance(result);
     }
 
     @GetMapping("/getUserByPhone/{phone}")

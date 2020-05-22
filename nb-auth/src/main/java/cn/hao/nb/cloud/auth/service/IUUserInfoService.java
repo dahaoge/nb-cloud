@@ -3,6 +3,8 @@ package cn.hao.nb.cloud.auth.service;
 import cn.hao.nb.cloud.auth.entity.UUserInfo;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qd;
+import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
+import cn.hao.nb.cloud.common.penum.ESourceClient;
 import cn.hao.nb.cloud.common.penum.EYn;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -77,13 +79,17 @@ public interface IUUserInfoService extends IService<UUserInfo> {
 
     /**
      * 获取登录信息(会刷新token)
+     *
      * @param userId
      * @return
      */
+    Qd getLoginInfo(Long userId, ELoginChannelScop loginChannelScop, ESourceClient client);
+
     Qd getLoginInfo(Long userId);
 
     /**
      * 改变用户锁定状态
+     *
      * @param userId
      * @param isLocked
      * @return

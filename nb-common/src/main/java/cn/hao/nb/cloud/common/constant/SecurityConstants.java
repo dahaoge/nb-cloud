@@ -20,4 +20,7 @@ public class SecurityConstants {
     public static final String SOURCE_VERIFICATION_ENTITY_SK_KEY = "sk";
 
     public static final String SOURCE_VERIFICATION_ENTITY_NAME_KEY = "name";
+
+    public static final String HEADER_CLIENT_TYPE = "clientType";
+
 }

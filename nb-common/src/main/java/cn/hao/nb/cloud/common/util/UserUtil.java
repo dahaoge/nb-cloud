@@ -6,6 +6,7 @@ import cn.hao.nb.cloud.common.component.props.SecurityProps;
 import cn.hao.nb.cloud.common.constant.SecurityConstants;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.TokenUser;
+import cn.hao.nb.cloud.common.penum.EClientType;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.ELoginChannelScop;
 import cn.hao.nb.cloud.common.penum.ESourceClient;
@@ -77,11 +78,7 @@ public class UserUtil {
      * @return
      */
     public static Map<String, String> getSourceVerificationEntity() {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes == null) {
-            throw NBException.create(EErrorCode.c500);
-        }
-        return UserUtil.getSourceVerificationEntity(requestAttributes.getRequest());
+        return UserUtil.getSourceVerificationEntity(SpringUtil.getRequest());
     }
 
 
@@ -91,11 +88,7 @@ public class UserUtil {
      * @return
      */
     public static ESourceClient getAndValidRequestClient() {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes == null) {
-            throw NBException.create(EErrorCode.c500);
-        }
-        return UserUtil.getAndValidRequestClient(requestAttributes.getRequest());
+        return UserUtil.getAndValidRequestClient(SpringUtil.getRequest());
     }
 
     /**
@@ -120,12 +113,23 @@ public class UserUtil {
         throw NBException.create(EErrorCode.authIdentityErr, "未获取到登录渠道");
     }
 
-    public static ELoginChannelScop getLoginChannelScop() {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes == null) {
-            throw NBException.create(EErrorCode.c500);
+    public static ELoginChannelScop getLoginChannelScop(ESourceClient sourceClient) {
+        for (ELoginChannelScop loginChannelScop : ELoginChannelScop.class.getEnumConstants()) {
+            if (loginChannelScop.getClients().contains(sourceClient))
+                return loginChannelScop;
         }
-        return UserUtil.getLoginChannelScop(requestAttributes.getRequest());
+        throw NBException.create(EErrorCode.authIdentityErr, "未获取到登录渠道");
+    }
+
+    public static ELoginChannelScop getLoginChannelScop() {
+        return UserUtil.getLoginChannelScop(SpringUtil.getRequest());
+    }
+
+    public static EClientType getClientType() {
+        String clientType = SpringUtil.getRequest().getHeader(SecurityConstants.HEADER_CLIENT_TYPE);
+        if (CheckUtil.strIsEmpty(clientType))
+            return null;
+        return EClientType.valueOf(clientType);
     }
 
     /**
@@ -182,7 +186,7 @@ public class UserUtil {
         }
 
 
-        String authorization = requestAttributes.getRequest().getHeader(SecurityConstants.HEADER_TOKEN_KEY);
+        String authorization = SpringUtil.getRequest().getHeader(SecurityConstants.HEADER_TOKEN_KEY);
 
         if (!required && CheckUtil.strIsEmpty(authorization)) {
             return null;
