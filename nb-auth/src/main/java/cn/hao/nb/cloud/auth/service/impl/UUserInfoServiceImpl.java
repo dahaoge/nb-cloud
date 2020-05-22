@@ -53,6 +53,18 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     IUUserRoleService userRoleService;
 
     @Override
+    public boolean perfMyBasicInfomation(String userName, String icNum, String icon) {
+        if (CheckUtil.strIsEmpty(userName) && CheckUtil.strIsEmpty(icNum) && CheckUtil.strIsEmpty(icon))
+            throw NBException.create(EErrorCode.missingArg);
+        UUserInfo temp = new UUserInfo();
+        temp.setUserId(UserUtil.getTokenUser(true).getUserId());
+        temp.setUserName(userName);
+        temp.setIcnum(icNum);
+        temp.setIcon(icon);
+        return this.incrementModifyData(temp);
+    }
+
+    @Override
     public boolean bindUser2Company(Long userId, Long companyId) {
         if (userId == null)
             throw NBException.create(EErrorCode.missingArg).plusMsg("bindUser2Company.userId");

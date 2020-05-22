@@ -27,6 +27,19 @@ public class UserController {
     @Autowired
     IUUserInfoService iUUserInfoService;
 
+    @ApiOperation(value = "锁定账号")
+    @PostMapping("/uUserInfo/perfMyBasicInfomation")
+    public Rv<Boolean> perfMyBasicInfomation(String userName, String icNum, String icon) {
+        return Rv.getInstance(iUUserInfoService.perfMyBasicInfomation(userName, icNum, icon));
+    }
+
+    @PreAuthorize("hasAuthority('user:mange')")
+    @ApiOperation(value = "将用户绑定到制定公司")
+    @PostMapping("/manage/uUserInfo/bindUser2Company")
+    public Rv bindUser2Company(Long userId, Long companyId) {
+        return Rv.getInstance(iUUserInfoService.bindUser2Company(userId, companyId));
+    }
+
     @PreAuthorize("hasAuthority('user:mange')")
     @ApiOperation(value = "锁定账号")
     @PostMapping("/manage/uUserInfo/lockUser/{userId}")

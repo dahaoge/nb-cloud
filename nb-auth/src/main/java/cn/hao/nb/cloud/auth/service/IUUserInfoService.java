@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public interface IUUserInfoService extends IService<UUserInfo> {
 
+    boolean perfMyBasicInfomation(String userName, String icNum, String icon);
+
     /**
      * 绑定用户公司
      *
