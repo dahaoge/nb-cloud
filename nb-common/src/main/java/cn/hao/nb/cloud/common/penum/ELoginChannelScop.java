@@ -41,4 +41,11 @@ public enum ELoginChannelScop implements PEnum<String> {
     public List<ESourceClient> getClients() {
         return clients;
     }
+
+    public EUserType getUserType() {
+        return ELoginChannelScop.manageClient == this ?
+                EUserType.manager :
+                ELoginChannelScop.BClient == this ?
+                        EUserType.bUser : EUserType.cUser;
+    }
 }

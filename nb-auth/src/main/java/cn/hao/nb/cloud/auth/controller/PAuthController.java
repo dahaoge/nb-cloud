@@ -61,16 +61,16 @@ public class PAuthController {
         return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.addBUser(phone, loginId, userName, deptIds, null).getUserId()));
     }
 
-    @ApiOperation(value = "B端用户注册")
-    @PostMapping("/bUser/regist")
-    public Rv registBUser(String phone, String loginId, String userName, String deptIds, String pwd) {
-        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.addBUser(phone, loginId, userName, deptIds, pwd).getUserId()));
+    @ApiOperation(value = "C端或B端用户手机号注册")
+    @PostMapping("/bcUser/registByPhone")
+    public Rv bcUserRegistByPhone(String phone, String smsCheckCode) {
+        return Rv.getInstance(iUUserInfoService.registByPhone(phone, smsCheckCode));
     }
 
     @ApiOperation(value = "C端用户注册")
-    @PostMapping("/cUser/regist")
-    public Rv registCUser(String phone, String loginId, String userName, String pwd) {
-        return Rv.getInstance(iUUserInfoService.getLoginInfo(iUUserInfoService.addCUser(phone, loginId, userName, pwd).getUserId()));
+    @PostMapping("/bcUser/registByLoginId")
+    public Rv bcUserRegistByLoginId(String loginId, String userName, String pwd1, String pwd2) {
+        return Rv.getInstance(iUUserInfoService.registByLoginId(loginId, userName, pwd1, pwd2));
     }
 
     @ApiOperation(value = "获取登录信息(会刷新token)")

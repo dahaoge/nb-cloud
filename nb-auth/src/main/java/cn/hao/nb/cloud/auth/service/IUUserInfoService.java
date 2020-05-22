@@ -40,6 +40,7 @@ public interface IUUserInfoService extends IService<UUserInfo> {
 
     /**
      * B端用户注册(添加)
+     *
      * @param phone
      * @param userName
      * @param deptIds
@@ -47,8 +48,13 @@ public interface IUUserInfoService extends IService<UUserInfo> {
      */
     UUserInfo addBUser(String phone, String loginId, String userName, String deptIds, String pwd);
 
+    UUserInfo registByPhone(String phone, String smsCheckCode);
+
+    UUserInfo registByLoginId(String loginId, String userName, String pwd1, String pwd2);
+
     /**
      * 管理端用户注册(添加)
+     *
      * @param phone
      * @param userName
      * @param deptIds

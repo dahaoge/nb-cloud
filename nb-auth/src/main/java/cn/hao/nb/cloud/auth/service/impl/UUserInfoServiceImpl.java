@@ -85,6 +85,32 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
+    public UUserInfo registByPhone(String phone, String smsCheckCode) {
+        if (CheckUtil.strIsEmpty(phone, smsCheckCode))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("phone|smsCheckCode");
+        if (!smsUtil.checkSms(phone, smsCheckCode))
+            throw NBException.create(EErrorCode.argCheckErr, "错误的短信验证码");
+        return this.addUser(phone, null, null, UserUtil.getLoginChannelScop().getUserType(), null);
+    }
+
+    @Override
+    public UUserInfo registByLoginId(String loginId, String userName, String pwd1, String pwd2) {
+        if (CheckUtil.strIsEmpty(loginId))
+            throw NBException.create(EErrorCode.missingArg, "登录ID不能为空");
+        if (CheckUtil.strIsEmpty(userName))
+            throw NBException.create(EErrorCode.missingArg, "用户名不能为空");
+        if (CheckUtil.strIsEmpty(pwd1, pwd2))
+            throw NBException.create(EErrorCode.missingArg, "密码不能为空");
+        if (userName.length() < 3)
+            throw NBException.create(EErrorCode.argCheckErr, "用户名不能少于3位");
+        if (pwd1.length() < 6)
+            throw NBException.create(EErrorCode.argCheckErr, "密码长度不能少于3位");
+        if (!pwd1.equals(pwd2))
+            throw NBException.create(EErrorCode.argCheckErr, "两次输入的密码不一致");
+        return this.addUser(null, loginId, userName, UserUtil.getLoginChannelScop().getUserType(), pwd1);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public UUserInfo addManager(String phone, String loginId, String userName, String deptIds, String pwd, String roleCodes) {
         if (CheckUtil.objIsEmpty(userName))
@@ -103,7 +129,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             throw NBException.create(EErrorCode.missingArg);
         if (CheckUtil.objIsEmpty(phone) && CheckUtil.objIsEmpty(loginId))
             throw NBException.create(EErrorCode.missingArg, "登录ID和电话号码不能同时为空");
-        if (EUserType.cUser == userType && CheckUtil.objIsEmpty(pwd))
+        if (EUserType.manager != userType && CheckUtil.objIsEmpty(pwd) && CheckUtil.strIsEmpty(phone))
             throw NBException.create(EErrorCode.missingArg, "使用登录ID注册的用户密码为必填项");
         UUserInfo userInfo = new UUserInfo();
         userInfo.setSalt(RandomUtil.getRandomSaltL(6));
@@ -113,9 +139,10 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         userInfo.setUserName(userName);
         userInfo.setLoginPwd(CheckUtil.strIsNotEmpty(pwd)
                 ? this.getDefaultPwd(pwd, userInfo.getSalt())
-                : CheckUtil.strIsEmpty(phone)
-                ? this.getDefaultPwd("12345678", userInfo.getSalt())
-                : this.getDefaultPwd(phone.substring(3), userInfo.getSalt()));
+                : CheckUtil.strIsNotEmpty(phone)
+                ? this.getDefaultPwd(phone.substring(3), userInfo.getSalt())
+                : this.getDefaultPwd("12345678", userInfo.getSalt())
+        );
         userInfo.setUserType(userType);
         this.addData(userInfo);
 
@@ -184,7 +211,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             tokenUser.setPermissionList(ListUtil.getPkList(authMapper.getUserPermission(tokenUser.getUserId()), SysPermission.PERMISSION_CODE));
             tokenUser.setMenuList(ListUtil.getPkList(authMapper.getUserMenus(tokenUser.getUserId()), SysMenu.MENU_CODE));
         }
-        tokenUser.setAuthDeptList(ListUtil.getPkList(deptService.listAllDisDeptByUserId(userId), SysDept.DEPT_ID));
+        tokenUser.setAuthDeptList(ListUtil.getPkList(userDeptService.listByUserId(userId), UUserDept.DEPT_ID));
         result.add("tokenUser", tokenUser).add("token", jwtTokenUtil.generateToken(tokenUser));
         return result;
     }
@@ -210,8 +237,8 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
         return this.changeUserLock(userId, EYn.n);
     }
 
-    private String getDefaultPwd(String loginId, String salt) {
-        return UserUtil.encodePwd(loginId, salt);
+    private String getDefaultPwd(String pwd, String salt) {
+        return UserUtil.encodePwd(pwd, salt);
     }
 
 
