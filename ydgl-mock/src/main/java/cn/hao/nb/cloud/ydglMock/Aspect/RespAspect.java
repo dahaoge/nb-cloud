@@ -1,58 +1,54 @@
+package cn.hao.nb.cloud.ydglMock.Aspect;
+
 import cn.hao.nb.cloud.common.entity.Qd;
+import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.util.CheckUtil;
-import cn.hao.nb.cloud.common.util.ClassUtil;
 import cn.hao.nb.cloud.ydglExternalApi.entity.CurrentItem;
-import cn.hao.nb.cloud.ydglExternalApi.entity.ElecQualityStatistics;
+import com.alibaba.fastjson.JSON;
 import com.github.javafaker.Faker;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.context.annotation.Configuration;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @Auther: hao
- * @Date: 2020/4/20 14:54
+ * @Date: 2020/5/22 16:22
  * @Description:
  */
-public class Test {
+@Configuration
+@Aspect
+@Slf4j
+public class RespAspect {
+
+    private final String ExpGetResultDataPonit = "execution(* cn.hao.nb.cloud.ydglMock.controller..*.*(..))";
 
     Faker faker = Faker.instance(new Locale("zh", "CN"));
 
-    public static void main(String[] args) {
-        new Test().setEntityData(new ElecQualityStatistics());
-        new Test().setEntityData(Qd.create().add("aa", new ElecQualityStatistics()));
-        new Test().setEntityData(Lists.newArrayList(new ElecQualityStatistics()));
-        Map map = new HashMap();
-        map.put("bb", new ElecQualityStatistics());
-        new Test().setEntityData(map);
-
-    }
-
-    public void test() {
-        ElecQualityStatistics data = new ElecQualityStatistics();
-        for (Field field : data.getClass().getDeclaredFields()) {
-            System.out.println("name--" + field.getName());
-            System.out.println("type--" + field.getGenericType());
-            if (field.getGenericType().toString().contains(data.getClass().getPackage().getName())) {
-                try {
-//                    Object item=field.getDeclaringClass().newInstance();
-//                    System.out.println(item);
-                    System.out.println(field.getType().getDeclaredConstructors().length);
-                    if (field.getType().getDeclaredConstructors().length > 0) {
-                        Constructor c = field.getType().getDeclaredConstructors()[0];
-                        System.out.println(c);
-                        c.setAccessible(true);
-                        if (c.getParameterCount() == 1)
-                            System.out.println(c.newInstance(data.getClass().newInstance()));
-                        else System.out.println(c.newInstance());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+    /**
+     * 后置返回通知
+     * 这里需要注意的是:
+     * 如果参数中的第一个参数为JoinPoint，则第二个参数为返回值的信息
+     * 如果参数中的第一个参数不为JoinPoint，则第一个参数为returning中对应的参数
+     * returning 限定了只有目标方法返回值与通知方法相应参数类型时才能执行后置返回通知，否则不执行，对于returning对应的通知方法参数为Object类型将匹配任何目标返回值
+     */
+    @AfterReturning(value = ExpGetResultDataPonit, returning = "keys")
+    public void doAfterReturningAdvice1(JoinPoint joinPoint, Object keys) {
+        if (keys instanceof Rv && CheckUtil.objIsNotEmpty(((Rv) keys).getData())) {
+            Rv rv = (Rv) keys;
+            this.setEntityData(rv.getData());
         }
     }
 
@@ -71,15 +67,19 @@ public class Test {
             });
         } else if (CurrentItem.class.getPackage().getName().equals(data.getClass().getPackage().getName())) {
             try {
+
                 List<String> methodNames = Lists.newArrayList();
                 for (Method item : data.getClass().getMethods()) {
                     methodNames.add(item.getName());
                 }
                 Field[] fields = data.getClass().getDeclaredFields(); //获取实体类的所有属性，返回Field数组
                 for (Field itemField : fields) {
-
+                    String desc = "";
+                    for (Annotation annotation : itemField.getAnnotations()) {
+                        if (annotation.annotationType().getName().contains("ApiModelProperty"))
+                            desc = JSON.parseObject(JSON.toJSONString(annotation)).getString("value");
+                    }
                     String name = itemField.getName(); //获取属性的名字
-                    System.out.println("name--" + name);
                     name = name.substring(0, 1).toUpperCase() + name.substring(1); //将属性的首字符大写，方便构造get，set方法
                     if ("SerialVersionUID".equals(name) || !methodNames.contains("set" + name))
                         continue;
@@ -99,7 +99,7 @@ public class Test {
 
 //                    this.setEntityData();
                     } else if (type.contains("java.lang.String")) {
-                        o = faker.name().title();
+                        o = desc;
                     } else if (type.contains("java.lang.Integer")) {
                         o = faker.number().randomDigitNotZero();
                     } else if (type.contains("java.lang.Long")) {
@@ -113,7 +113,6 @@ public class Test {
                     } else if (type.contains("java.util.Date")) {
                         o = faker.date().birthday();
                     }
-                    System.out.println(o);
                     setMethod.invoke(data, o);
                 }
             } catch (Exception e) {
@@ -122,30 +121,5 @@ public class Test {
         }
     }
 
-    public void printBean() {
-        List<Class<?>> classes = ClassUtil.getClasses("cn.hao.nb.cloud.ydglExternalApi.entity");
-        classes.forEach(item -> {
-            String methodName = "get".concat(item.getSimpleName());
-            System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
-            System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
-        });
-        List<Class<?>> classes1 = ClassUtil.getClasses("cn.hao.nb.cloud.auth.entity");
-        classes1.forEach(item -> {
-            String methodName = "get".concat(item.getSimpleName());
-            System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
-            System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
-        });
-        List<Class<?>> classes2 = ClassUtil.getClasses("cn.hao.nb.cloud.basic.entity");
-        classes2.forEach(item -> {
-            String methodName = "get".concat(item.getSimpleName());
-            System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
-            System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
-        });
-        List<Class<?>> classes3 = ClassUtil.getClasses("cn.hao.nb.cloud.ydgl.entity");
-        classes3.forEach(item -> {
-            String methodName = "get".concat(item.getSimpleName());
-            System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
-            System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
-        });
-    }
+
 }

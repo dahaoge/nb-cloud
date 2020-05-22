@@ -87,7 +87,7 @@ public class CmMockController {
     public Rv<List<DeviceAlarmMsg>> getDeviceAlarmMsg(
             Pg pg,
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
-            @ApiParam(value = "设备Id", name = "deviceId") String deviceId) {
+            @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
         IPage result = pg.page();
         result.setRecords(Lists.newArrayList(
                 new DeviceAlarmMsg(),
