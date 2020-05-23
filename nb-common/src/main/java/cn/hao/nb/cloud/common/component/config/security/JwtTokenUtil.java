@@ -85,13 +85,13 @@ public class JwtTokenUtil implements Serializable {
 //        Date expirationDate = DateTime.now().plusDays(30).toDate();
         String token = Jwts.builder().setClaims(claims).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, secret).compact();
 
-        String userId = (String) claims.get("sub");
+        Long userId = (Long) claims.get("sub");
 //        redisTemplate.opsForHash().put(ACCESS_KEY, token, Byte.MIN_VALUE);
         redisUtil.hset(ACCESS_KEY, token, Byte.MIN_VALUE);
 //        redisTemplate.opsForHash().put(USER_TOKEN_KEY, client.getValue() + "_" + userId, token);
-        redisUtil.hset(USER_TOKEN_KEY, client.getValue() + "_" + userId, token);
+        redisUtil.hset(USER_TOKEN_KEY, client.getValue() + "_" + userId.toString(), token);
         log.info("\n\033[1;93;32m【标记】\033[m");
-        log.info("\n端: {} 用户: {} 刷新token: {}", client.getValue(), userId, token.substring(token.length() - 20));
+        log.info("\n端: {} 用户: {} 刷新token: {}", client.getValue(), userId.toString(), token.substring(token.length() - 20));
         return token;
     }
 

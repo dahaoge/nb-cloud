@@ -97,6 +97,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UUserInfo registByPhone(String phone, String smsCheckCode) {
         if (CheckUtil.strIsEmpty(phone, smsCheckCode))
             throw NBException.create(EErrorCode.missingArg).plusMsg("phone|smsCheckCode");
@@ -106,6 +107,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UUserInfo registByLoginId(String loginId, String userName, String pwd1, String pwd2) {
         if (CheckUtil.strIsEmpty(loginId))
             throw NBException.create(EErrorCode.missingArg, "登录ID不能为空");
@@ -579,8 +581,8 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
     public void validData(UUserInfo data) {
         if (CheckUtil.objIsEmpty(data))
             throw NBException.create(EErrorCode.missingArg);
-        if (CheckUtil.objIsEmpty(data.getUserName()))
-            throw NBException.create(EErrorCode.missingArg).plusMsg("userName");
+//        if (CheckUtil.objIsEmpty(data.getUserName()))
+//            throw NBException.create(EErrorCode.missingArg).plusMsg("userName");
 //        if (CheckUtil.objIsEmpty(data.getPhone()))
 //            throw NBException.create(EErrorCode.missingArg).plusMsg("phone");
 //        if (CheckUtil.objIsEmpty(data.getIcnum()))
@@ -607,9 +609,7 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
 //            throw NBException.create(EErrorCode.missingArg).plusMsg("wechatPnOpenid");
 //        if (CheckUtil.objIsEmpty(data.getWechatAppOpenid()))
 //            throw NBException.create(EErrorCode.missingArg).plusMsg("wechatAppOpenid");
-        if (CheckUtil.objIsEmpty(data.getUserId())) {
-            if (CheckUtil.objIsEmpty(data.getPhone(), data.getUserName(), data.getIsLocked(), data.getIsLocked()))
-                throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.objIsEmpty(data.getUserId()) && CheckUtil.strIsNotEmpty(data.getPhone())) {
             this.validUserPhone(data);
         }
     }

@@ -1,10 +1,10 @@
 package cn.hao.nb.cloud.common.component.config;
 
+import cn.hao.nb.cloud.common.component.SpringUtil;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.HttpUtil;
-import cn.hao.nb.cloud.common.util.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
