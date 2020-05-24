@@ -419,4 +419,5 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         if (CheckUtil.objIsEmpty(data.getCompanyId()))
             throw NBException.create(EErrorCode.missingArg).plusMsg("companyId");
     }
+
 }

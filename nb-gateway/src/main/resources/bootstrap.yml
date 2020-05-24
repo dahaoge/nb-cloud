@@ -7,6 +7,7 @@ spring:
     nacos:
       server-addr:  115.159.196.73:18848
       discovery:
+        namespace: 0509fd90-6235-4695-a40d-938844f16bcb
       config:
         ext-config:
           - data-id: nb-db.yaml

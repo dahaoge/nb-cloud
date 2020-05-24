@@ -115,6 +115,8 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
             data.setCreateBy(tokenUser.getUserId());
             data.setUpdateBy(tokenUser.getUserId());
         }
+        if (!data.getRequestSuffix().startsWith("/"))
+            data.setRequestSuffix("/" + data.getRequestSuffix());
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);

@@ -2,7 +2,6 @@ package cn.hao.nb.cloud.common.component.config.redisConfig;
 
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +17,8 @@ import java.nio.charset.Charset;
 public class NBRedisStringSerializer implements RedisSerializer<String> {
 
     private final Charset charset;
-    @Value("${spring.application.name}")
-    private String applicationName;
+    //    @Value("${spring.application.name}")
+    private String applicationName = "nb-cloud";
 
     private String keyPrefix() {
         return applicationName + "_";

@@ -64,6 +64,9 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             data.setCreateBy(tokenUser.getUserId());
             data.setUpdateBy(tokenUser.getUserId());
         }
+        if (CheckUtil.strIsNotEmpty(data.getBaseUrl()))
+            data.setBaseUrl(data.getBaseUrl().substring(0, data.getBaseUrl().length() - 1));
+
         data.setVersion(null);
         data.setDeleted(null);
         data.setUpdateTime(null);
@@ -78,11 +81,13 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         if (CheckUtil.objIsEmpty(comId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
         Rv resp = HttpUtil.httpGetRv(this.getRequestUrl(comId, ECompanyRequestSuffixKey.loadDept), Qd.create());
+        if (resp.getCode() != 0)
+            throw NBException.create(EErrorCode.apiErr, resp.getMsg()).plusMsg(resp.getCode() + "");
         if (CheckUtil.objIsNotEmpty(resp.getData())) {
             restTemplateUtil.restPostRv(EModuleRequestPrefix.auth, "/sysDept/refreshCompanyDeptByExternalDepartment",
                     Qd.create().add("companyId", comId).add("refreshCompanyDeptByExternalDepartment", JSON.toJSONString(resp.getData())));
         }
-        return false;
+        return true;
     }
 
 
@@ -98,6 +103,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 data.getComId()
         ))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.strIsNotEmpty(data.getBaseUrl()))
+            data.setBaseUrl(data.getBaseUrl().substring(0, data.getBaseUrl().length() - 1));
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);
@@ -119,6 +126,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 data.getComId()
         ))
             throw NBException.create(EErrorCode.missingArg);
+        if (CheckUtil.strIsNotEmpty(data.getBaseUrl()))
+            data.setBaseUrl(data.getBaseUrl().substring(0, data.getBaseUrl().length() - 1));
         data.setUpdateBy(UserUtil.getTokenUser(true).getUserId());
         data.setVersion(null);
         data.setDeleted(null);

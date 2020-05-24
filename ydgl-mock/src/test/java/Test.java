@@ -10,7 +10,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @Auther: hao
@@ -22,13 +25,15 @@ public class Test {
     Faker faker = Faker.instance(new Locale("zh", "CN"));
 
     public static void main(String[] args) {
-        new Test().setEntityData(new ElecQualityStatistics());
-        new Test().setEntityData(Qd.create().add("aa", new ElecQualityStatistics()));
-        new Test().setEntityData(Lists.newArrayList(new ElecQualityStatistics()));
-        Map map = new HashMap();
-        map.put("bb", new ElecQualityStatistics());
-        new Test().setEntityData(map);
-
+        String path1 = "https://xqc.ymjt.com.cn/ymapi/";
+        String path2 = "https://xqc.ymjt.com.cn/ymapi";
+        String suffix1 = "/company/add";
+        String suffix2 = "company/add";
+        System.out.println(path1.endsWith("/"));
+        System.out.println(path2.endsWith("/"));
+        System.out.println(suffix1.startsWith("/"));
+        System.out.println(suffix2.startsWith("/"));
+        System.out.println(path1.substring(0, path1.length() - 1));
     }
 
     public void test() {

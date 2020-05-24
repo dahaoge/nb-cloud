@@ -21,6 +21,6 @@ public interface CommonConstant {
     String CONTENT_TYPE = "application/json; charset=utf-8";
 
     ImmutableMap DEFAULT_COMPANY_REQUEST_SUFFIX = ImmutableMap.of(
-            ECompanyRequestSuffixKey.loadDept, "/ydgl/company/loadDept"
+            ECompanyRequestSuffixKey.loadDept, "/ydgl/cm/company/loadDept"
     );
 }

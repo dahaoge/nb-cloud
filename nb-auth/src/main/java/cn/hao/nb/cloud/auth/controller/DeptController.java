@@ -79,17 +79,17 @@ public class DeptController {
         return Rv.getInstance(iSysDeptService.pageMapData(pg, searchParams));
     }
 
-    @ApiOperation(value = "根据用户id列表查询所有组织机构")
-    @GetMapping("/sysDept/listAllDisDeptByUserId/{userId}")
-    public Rv listAllDisDeptByUserId(@PathVariable Long userId) {
-        return Rv.getInstance(iSysDeptService.listAllDisDeptByUserId(userId));
-    }
-
-    @ApiOperation(value = "根据父id查询列表查询所有组织机构")
-    @GetMapping("/sysDept/listAllDisDeptByParentId/{pId}")
-    public Rv listAllDisDeptByParentId(@PathVariable Long pId) {
-        return Rv.getInstance(iSysDeptService.listAllDisDeptByParentId(pId));
-    }
+//    @ApiOperation(value = "根据用户id列表查询所有组织机构")
+//    @GetMapping("/sysDept/listAllDisDeptByUserId/{userId}")
+//    public Rv listAllDisDeptByUserId(@PathVariable Long userId) {
+//        return Rv.getInstance(iSysDeptService.listAllDisDeptByUserId(userId));
+//    }
+//
+//    @ApiOperation(value = "根据父id查询列表查询所有组织机构")
+//    @GetMapping("/sysDept/listAllDisDeptByParentId/{pId}")
+//    public Rv listAllDisDeptByParentId(@PathVariable Long pId) {
+//        return Rv.getInstance(iSysDeptService.listAllDisDeptByParentId(pId));
+//    }
 
     @ApiOperation(value = "根据父id查询下级组织机构")
     @GetMapping("/sysDept/listDisDeptByParentId/{pId}")

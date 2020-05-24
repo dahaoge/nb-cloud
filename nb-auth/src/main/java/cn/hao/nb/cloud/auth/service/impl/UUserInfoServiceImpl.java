@@ -231,7 +231,18 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             tokenUser.setPermissionList(ListUtil.getPkList(authMapper.getUserPermission(tokenUser.getUserId()), SysPermission.PERMISSION_CODE));
             tokenUser.setMenuList(ListUtil.getPkList(authMapper.getUserMenus(tokenUser.getUserId()), SysMenu.MENU_CODE));
         }
-        tokenUser.setAuthDeptList(ListUtil.getPkList(userDeptService.listByUserId(userId), UUserDept.DEPT_ID));
+        List<SysDept> depts = deptService.listByUserId(userId);
+        List<Map<String, Object>> deptMaps = Lists.newArrayList();
+        if (CheckUtil.collectionIsNotEmpty(depts))
+            depts.forEach(item -> {
+                deptMaps.add(
+                        Qd.create()
+                                .add("deptId", item.getDeptId())
+                                .add("deptName", item.getDeptName())
+                                .add("externalDeptId", item.getExternalDeptId())
+                );
+            });
+        tokenUser.setAuthDeptList(deptMaps);
         result.add("tokenUser", tokenUser).add("token", jwtTokenUtil.generateToken(tokenUser, client));
         return result;
     }
