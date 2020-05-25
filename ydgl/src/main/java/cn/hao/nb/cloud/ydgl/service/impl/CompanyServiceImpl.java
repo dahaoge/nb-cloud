@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.ydgl.service.impl;
 
 import cn.hao.nb.cloud.common.entity.*;
-import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EModuleRequestPrefix;
 import cn.hao.nb.cloud.common.util.*;
@@ -40,7 +40,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     ICompanyRequestSuffixService requestSuffixService;
 
     @Override
-    public String getRequestUrl(Long comId, ECompanyRequestSuffixKey requestSuffixKey) {
+    public String getRequestUrl(Long comId, ECompanyRequestSuffix requestSuffixKey) {
         Company company = this.getById(comId);
         if (CheckUtil.objIsEmpty(company))
             throw NBException.create(EErrorCode.noData).plusMsg("company");
@@ -80,7 +80,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     public boolean refreshComDept(Long comId) {
         if (CheckUtil.objIsEmpty(comId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
-        Rv resp = HttpUtil.httpGetRv(this.getRequestUrl(comId, ECompanyRequestSuffixKey.loadDept), Qd.create());
+        Rv resp = HttpUtil.httpGetRv(this.getRequestUrl(comId, ECompanyRequestSuffix.loadDept), Qd.create());
         if (resp.getCode() != 0)
             throw NBException.create(EErrorCode.apiErr, resp.getMsg()).plusMsg(resp.getCode() + "");
         if (CheckUtil.objIsNotEmpty(resp.getData())) {

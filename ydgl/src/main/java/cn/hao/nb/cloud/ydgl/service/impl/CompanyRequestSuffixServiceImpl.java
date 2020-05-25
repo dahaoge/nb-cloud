@@ -1,11 +1,10 @@
 package cn.hao.nb.cloud.ydgl.service.impl;
 
-import cn.hao.nb.cloud.common.constant.CommonConstant;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.entity.TokenUser;
-import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
@@ -46,14 +45,14 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
     RedisUtil redisUtil;
 
     @Override
-    public Map<ECompanyRequestSuffixKey, String> getCompanyRequestSuffix(Long comId) {
+    public Map<ECompanyRequestSuffix, String> getCompanyRequestSuffix(Long comId) {
         if (CheckUtil.objIsEmpty(comId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
-        Map<ECompanyRequestSuffixKey, String> result = (Map<ECompanyRequestSuffixKey, String>) redisUtil.hget(RedisKey.REDIS_COMPANY_REQUEST_SUFFIX, comId.toString());
+        Map<ECompanyRequestSuffix, String> result = (Map<ECompanyRequestSuffix, String>) redisUtil.hget(RedisKey.REDIS_COMPANY_REQUEST_SUFFIX, comId.toString());
         if (CheckUtil.objIsEmpty(result)) {
             result = Maps.newHashMap();
 
-            result.putAll(CommonConstant.DEFAULT_COMPANY_REQUEST_SUFFIX);
+            result.putAll(ECompanyRequestSuffix.toMap());
 
             List<CompanyRequestSuffix> dbList = this.list(
                     Qw.create().eq(CompanyRequestSuffix.COM_ID, comId)
@@ -61,15 +60,15 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
             );
 
             if (CheckUtil.collectionIsNotEmpty(dbList)) {
-                Map<ECompanyRequestSuffixKey, CompanyRequestSuffix> dbMap = Maps.newHashMap();
-                dbMap = Maps.uniqueIndex(dbList.iterator(), new Function<CompanyRequestSuffix, ECompanyRequestSuffixKey>() {
+                Map<ECompanyRequestSuffix, CompanyRequestSuffix> dbMap = Maps.newHashMap();
+                dbMap = Maps.uniqueIndex(dbList.iterator(), new Function<CompanyRequestSuffix, ECompanyRequestSuffix>() {
                     @Nullable
                     @Override
-                    public ECompanyRequestSuffixKey apply(@Nullable CompanyRequestSuffix item) {
+                    public ECompanyRequestSuffix apply(@Nullable CompanyRequestSuffix item) {
                         return item.getEnumKey();
                     }
                 });
-                for (ECompanyRequestSuffixKey key : ECompanyRequestSuffixKey.values()) {
+                for (ECompanyRequestSuffix key : ECompanyRequestSuffix.values()) {
                     if (CheckUtil.objIsNotEmpty(dbMap.get(key)))
                         result.put(key, dbMap.get(key).getRequestSuffix());
                 }
@@ -80,10 +79,10 @@ public class CompanyRequestSuffixServiceImpl extends ServiceImpl<CompanyRequestS
     }
 
     @Override
-    public String getRequestSuffix(Long comId, ECompanyRequestSuffixKey enumKey) {
+    public String getRequestSuffix(Long comId, ECompanyRequestSuffix enumKey) {
         if (CheckUtil.objIsEmpty(comId, enumKey))
             throw NBException.create(EErrorCode.missingArg).plusMsg("comId|enumKey");
-        Map<ECompanyRequestSuffixKey, String> map = this.getCompanyRequestSuffix(comId);
+        Map<ECompanyRequestSuffix, String> map = this.getCompanyRequestSuffix(comId);
         if (CheckUtil.objIsEmpty(map))
             throw NBException.create(EErrorCode.noData, "公司请求后缀配置异常");
         String result = map.get(enumKey);

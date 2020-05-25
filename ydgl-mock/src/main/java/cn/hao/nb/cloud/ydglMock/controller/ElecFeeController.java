@@ -1,7 +1,9 @@
 package cn.hao.nb.cloud.ydglMock.controller;
 
+import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.penum.EDateType;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecBill;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecMonthFeeGuess;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecYearFeeStatistics;
@@ -35,9 +37,10 @@ public class ElecFeeController {
             @ApiParam(value = "年|月", name = "dateType", required = true) @RequestParam EDateType dateType,
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
     ) {
-        return Rv.getInstance(
-                new ElecBill()
-        );
+//        return Rv.getInstance(
+//                new ElecBill()
+//        );
+        throw NBException.create(EErrorCode.c404, "功能暂未开放");
     }
 
     @ApiOperation(value = "按年统计各月份平均电价", notes = "按年统计各月份平均电价" +
@@ -47,7 +50,8 @@ public class ElecFeeController {
             @ApiParam(value = "年份", name = "year", required = true) @RequestParam Date year,
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
     ) {
-        return Rv.getInstance(new ElecYearFeeStatistics());
+//        return Rv.getInstance(new ElecYearFeeStatistics());
+        throw NBException.create(EErrorCode.c404, "功能暂未开放");
     }
 
     @ApiOperation(value = "按月份电费估算", notes = "按月份电费估算" +

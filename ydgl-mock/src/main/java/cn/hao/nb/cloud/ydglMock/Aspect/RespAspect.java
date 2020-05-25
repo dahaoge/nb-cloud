@@ -45,7 +45,7 @@ public class RespAspect {
      * returning 限定了只有目标方法返回值与通知方法相应参数类型时才能执行后置返回通知，否则不执行，对于returning对应的通知方法参数为Object类型将匹配任何目标返回值
      */
     @AfterReturning(value = ExpGetResultDataPonit, returning = "keys")
-    public void doAfterReturningAdvice1(JoinPoint joinPoint, Object keys) {
+    public void doAfterReturningAdvice(JoinPoint joinPoint, Object keys) {
         if (keys instanceof Rv && CheckUtil.objIsNotEmpty(((Rv) keys).getData())) {
             Rv rv = (Rv) keys;
             this.setEntityData(rv.getData());

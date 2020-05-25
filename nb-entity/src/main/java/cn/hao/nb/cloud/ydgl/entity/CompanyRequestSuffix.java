@@ -2,7 +2,7 @@ package cn.hao.nb.cloud.ydgl.entity;
 
 import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.entity.RedisUser;
-import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import com.baomidou.mybatisplus.annotation.*;
@@ -42,7 +42,7 @@ public class CompanyRequestSuffix implements Serializable {
         private Long comId;
 
         @ApiModelProperty(value = "请求枚举")
-        private ECompanyRequestSuffixKey enumKey;
+        private ECompanyRequestSuffix enumKey;
 
         @ApiModelProperty(value = "请求后缀")
         private String requestSuffix;
@@ -106,7 +106,7 @@ public class CompanyRequestSuffix implements Serializable {
     private Long comId;
 
     @ApiModelProperty(value = "请求枚举")
-    private ECompanyRequestSuffixKey enumKey;
+    private ECompanyRequestSuffix enumKey;
 
     @ApiModelProperty(value = "请求后缀")
     private String requestSuffix;

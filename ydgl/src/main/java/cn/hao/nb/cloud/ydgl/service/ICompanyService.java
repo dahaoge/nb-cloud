@@ -1,7 +1,7 @@
 package cn.hao.nb.cloud.ydgl.service;
 
 import cn.hao.nb.cloud.common.entity.Pg;
-import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffixKey;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.ydgl.entity.Company;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public interface ICompanyService extends IService<Company> {
 
-    String getRequestUrl(Long comId, ECompanyRequestSuffixKey requestSuffixKey);
+    String getRequestUrl(Long comId, ECompanyRequestSuffix requestSuffixKey);
 
     /**
      * 添加数据

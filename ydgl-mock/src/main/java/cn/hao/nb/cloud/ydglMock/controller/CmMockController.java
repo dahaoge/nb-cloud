@@ -1,7 +1,9 @@
 package cn.hao.nb.cloud.ydglMock.controller;
 
+import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EYdglDeviceType;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
@@ -63,8 +65,8 @@ public class CmMockController {
 
     @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表\n实体:DeviceInfo")
     @GetMapping("/device/listByDeptId")
-    public Rv<List<DeviceInfo>> listDeviceByDeptId(@ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
-                                                   @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType) {
+    public Rv<List<DeviceInfo>> listDeviceByDeptIdAndType(@ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+                                                          @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType) {
         return Rv.getInstance(Lists.newArrayList(
                 new DeviceInfo(),
                 new DeviceInfo()
@@ -93,7 +95,8 @@ public class CmMockController {
                 new DeviceAlarmMsg(),
                 new DeviceAlarmMsg()
         ));
-        return Rv.getInstance(result);
+//        return Rv.getInstance(result);
+        throw NBException.create(EErrorCode.c404, "功能暂未开放");
     }
 
     @ApiOperation(value = "获取单位产能比排名", notes = "获取单位产能比排名\n实体:UnitOutputItem")
