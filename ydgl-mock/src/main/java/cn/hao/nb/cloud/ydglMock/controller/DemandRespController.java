@@ -2,6 +2,7 @@ package cn.hao.nb.cloud.ydglMock.controller;
 
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.ydglExternalApi.entity.DemandRespMonitor;
+import cn.hao.nb.cloud.ydglExternalApi.entity.DemandRespStatistics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,11 +26,20 @@ import java.util.Date;
 public class DemandRespController {
 
     @ApiOperation(value = "实时监测数据", notes = "实时监测数据" +
-            "\n")
-    @GetMapping("/monitor")
+            "\nDemandRespMonitor,DemandResp,LoadItem,DemandRespAlarm")
+    @GetMapping("/dailyMonitor")
     public Rv<DemandRespMonitor> getDemandRespMonitorData(
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam String deptId,
             @ApiParam(value = "日期", name = "time", required = false) @RequestParam Date time) {
         return Rv.getInstance(DemandRespMonitor.createMockData());
+    }
+
+    @ApiOperation(value = "调控效果分析", notes = "调控效果分析" +
+            "\nDemandRespStatistics,DemandRespResultStatisticItem,DemandRespDetailItem,DemandRespDetail")
+    @GetMapping("/demandRespResultFx")
+    public Rv<DemandRespStatistics> demandRespResultFx(
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam String deptId,
+            @ApiParam(value = "年", name = "year", required = false) @RequestParam Date year) {
+        return Rv.getInstance(DemandRespStatistics.createMockData());
     }
 }

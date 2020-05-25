@@ -7,29 +7,26 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @Auther: hao
- * @Date: 2020/5/25 20:48
+ * @Date: 2020/5/25 22:36
  * @Description:
  */
 @Data
-@ApiModel(value = "需求响应", description = "需求响应")
-public class DemandResp implements Serializable {
+@ApiModel(value = "需求响应结果统计项", description = "需求响应结果统计项")
+public class DemandRespResultStatisticItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("需求类型-削峰|填谷")
+    @ApiModelProperty("需求类型")
     EDemandType demandType;
     @ApiModelProperty("响应类型")
     EDemandRespType respType;
-    @ApiModelProperty("响应开始时间")
-    Date demandBeginTime;
-    @ApiModelProperty("响应结束时间")
-    Date demandEndTime;
-    @ApiModelProperty("约定响应量")
-    String promissKw;
-    @ApiModelProperty("实际响应量")
-    String actualKw;
+    @ApiModelProperty("有效次数")
+    Integer effectiveCnt;
+    @ApiModelProperty("无效次数")
+    Integer invalidCnt;
+    @ApiModelProperty("未响应次数")
+    Integer noRespCnt;
 }
