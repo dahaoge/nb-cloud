@@ -62,6 +62,21 @@ public class ElecQualityStatistics implements Serializable {
     @ApiModelProperty("电压负序偏差")
     ImbalanceStatistics negativeDeviation;
 
+    public static ElecQualityStatistics createMockData() {
+        ElecQualityStatistics data = new ElecQualityStatistics();
+        data.setPositiveA(VoltageDeviationStatistics.create());
+        data.setPositiveB(VoltageDeviationStatistics.create());
+        data.setPositiveC(VoltageDeviationStatistics.create());
+        data.setNegativeA(VoltageDeviationStatistics.create());
+        data.setNegativeB(VoltageDeviationStatistics.create());
+        data.setNegativeC(VoltageDeviationStatistics.create());
+        data.setHzStatistics(ElecQualityStatistics.createHzStatistics());
+        data.setPowerFactorStatistics(ElecQualityStatistics.createPowerFactorStatistics());
+        data.setPositiveDeviation(ElecQualityStatistics.createImbalanceStatistics());
+        data.setNegativeDeviation(ElecQualityStatistics.createImbalanceStatistics());
+        return data;
+    }
+
     @Data
     @ApiModel("频率统计结果")
     public class HzStatistics implements Serializable {
@@ -74,6 +89,10 @@ public class ElecQualityStatistics implements Serializable {
         Long hzQualifiedTime;
         @ApiModelProperty("异常时间,单位秒(s)")
         Long hzbnormalTime;
+    }
+
+    public static HzStatistics createHzStatistics() {
+        return new ElecQualityStatistics().new HzStatistics();
     }
 
     @Data
@@ -89,6 +108,10 @@ public class ElecQualityStatistics implements Serializable {
         Float avgPowerFactor;
     }
 
+    public static PowerFactorStatistics createPowerFactorStatistics() {
+        return new ElecQualityStatistics().new PowerFactorStatistics();
+    }
+
     @Data
     @ApiModel("不平衡度统计结果")
     public class ImbalanceStatistics implements Serializable {
@@ -100,6 +123,10 @@ public class ElecQualityStatistics implements Serializable {
         Integer positiveSequence;
         @ApiModelProperty("负序")
         Integer negativeSequence;
+    }
+
+    public static ImbalanceStatistics createImbalanceStatistics() {
+        return new ElecQualityStatistics().new ImbalanceStatistics();
     }
 
 

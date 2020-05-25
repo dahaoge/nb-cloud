@@ -1,5 +1,6 @@
 package cn.hao.nb.cloud.ydglExternalApi.entity;
 
+import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -21,4 +22,15 @@ public class ElecYearFeeStatistics extends ElecAccount implements Serializable {
     List<ElecFeeItem> monthFees;
     @ApiModelProperty("年份")
     Date year;
+
+    public static ElecYearFeeStatistics createMockData() {
+        ElecYearFeeStatistics data = new ElecYearFeeStatistics();
+        data.setMonthFees(
+                Lists.newArrayList(
+                        new ElecFeeItem(),
+                        new ElecFeeItem()
+                )
+        );
+        return data;
+    }
 }

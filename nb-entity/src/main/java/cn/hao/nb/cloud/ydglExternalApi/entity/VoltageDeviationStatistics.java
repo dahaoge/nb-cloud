@@ -28,4 +28,8 @@ public class VoltageDeviationStatistics implements Serializable {
     @ApiModelProperty(value = "越限次数")
     Float overLimitCnt;
 
+    public static VoltageDeviationStatistics create() {
+        return new VoltageDeviationStatistics();
+    }
+
 }

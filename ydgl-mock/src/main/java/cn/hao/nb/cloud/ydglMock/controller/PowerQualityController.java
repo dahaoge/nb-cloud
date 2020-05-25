@@ -107,7 +107,7 @@ public class PowerQualityController {
             @ApiParam(value = "统计时间", name = "time", required = true) @RequestParam Date time,
             @ApiParam(value = "月|日", name = "dateType", required = true) @RequestParam EDateType dateType
     ) {
-//        return Rv.getInstance(new VoltageDeviationStatistics());
+//        return Rv.getInstance(ElecQualityStatistics.createMockData());
         throw NBException.create(EErrorCode.c404, "功能暂未开放");
     }
 
