@@ -25,15 +25,7 @@ public class Test {
     Faker faker = Faker.instance(new Locale("zh", "CN"));
 
     public static void main(String[] args) {
-        String path1 = "https://xqc.ymjt.com.cn/ymapi/";
-        String path2 = "https://xqc.ymjt.com.cn/ymapi";
-        String suffix1 = "/company/add";
-        String suffix2 = "company/add";
-        System.out.println(path1.endsWith("/"));
-        System.out.println(path2.endsWith("/"));
-        System.out.println(suffix1.startsWith("/"));
-        System.out.println(suffix2.startsWith("/"));
-        System.out.println(path1.substring(0, path1.length() - 1));
+        new Test().printBean();
     }
 
     public void test() {
@@ -130,27 +122,35 @@ public class Test {
     public void printBean() {
         List<Class<?>> classes = ClassUtil.getClasses("cn.hao.nb.cloud.ydglExternalApi.entity");
         classes.forEach(item -> {
-            String methodName = "get".concat(item.getSimpleName());
-            System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
-            System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
+            if (!item.getName().contains("SearchParams")) {
+                String methodName = "get".concat(item.getSimpleName());
+                System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
+                System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
+            }
         });
         List<Class<?>> classes1 = ClassUtil.getClasses("cn.hao.nb.cloud.auth.entity");
         classes1.forEach(item -> {
-            String methodName = "get".concat(item.getSimpleName());
-            System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
-            System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
+            if (!item.getName().contains("SearchParams")) {
+                String methodName = "get".concat(item.getSimpleName());
+                System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
+                System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
+            }
         });
         List<Class<?>> classes2 = ClassUtil.getClasses("cn.hao.nb.cloud.basic.entity");
         classes2.forEach(item -> {
-            String methodName = "get".concat(item.getSimpleName());
-            System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
-            System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
+            if (!item.getName().contains("SearchParams")) {
+                String methodName = "get".concat(item.getSimpleName());
+                System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
+                System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
+            }
         });
         List<Class<?>> classes3 = ClassUtil.getClasses("cn.hao.nb.cloud.ydgl.entity");
         classes3.forEach(item -> {
-            String methodName = "get".concat(item.getSimpleName());
-            System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
-            System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
+            if (!item.getName().contains("SearchParams")) {
+                String methodName = "get".concat(item.getSimpleName());
+                System.out.println("@GetMapping(\"/".concat(methodName).concat("\")"));
+                System.out.println("public ".concat(item.getSimpleName()).concat(" ").concat(methodName).concat("(){return null;}"));
+            }
         });
     }
 }

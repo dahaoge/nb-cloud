@@ -29,6 +29,11 @@ public class EntityController {
         return null;
     }
 
+    @GetMapping("/getDemandRespAlarm")
+    public DemandRespAlarm getDemandRespAlarm() {
+        return null;
+    }
+
     @GetMapping("/getUnitOutputItem")
     public UnitOutputItem getUnitOutputItem() {
         return null;
@@ -51,6 +56,11 @@ public class EntityController {
 
     @GetMapping("/getMonitorData")
     public MonitorData getMonitorData() {
+        return null;
+    }
+
+    @GetMapping("/getDemandRespResultStatisticItem")
+    public DemandRespResultStatisticItem getDemandRespResultStatisticItem() {
         return null;
     }
 
@@ -84,6 +94,11 @@ public class EntityController {
         return null;
     }
 
+    @GetMapping("/getDemandRespStatistics")
+    public DemandRespStatistics getDemandRespStatistics() {
+        return null;
+    }
+
     @GetMapping("/getTotalStatisiticsData")
     public TotalStatisiticsData getTotalStatisiticsData() {
         return null;
@@ -109,8 +124,18 @@ public class EntityController {
         return null;
     }
 
+    @GetMapping("/getDemandRespDetail")
+    public DemandRespDetail getDemandRespDetail() {
+        return null;
+    }
+
     @GetMapping("/getElecFeeItem")
     public ElecFeeItem getElecFeeItem() {
+        return null;
+    }
+
+    @GetMapping("/getDemandResp")
+    public DemandResp getDemandResp() {
         return null;
     }
 
@@ -124,8 +149,18 @@ public class EntityController {
         return null;
     }
 
+    @GetMapping("/getDemandRespDetailItem")
+    public DemandRespDetailItem getDemandRespDetailItem() {
+        return null;
+    }
+
     @GetMapping("/getDeviceInfo")
     public DeviceInfo getDeviceInfo() {
+        return null;
+    }
+
+    @GetMapping("/getDemandRespMonitor")
+    public DemandRespMonitor getDemandRespMonitor() {
         return null;
     }
 
@@ -223,6 +258,5 @@ public class EntityController {
     public Company getCompany() {
         return null;
     }
-
 
 }
