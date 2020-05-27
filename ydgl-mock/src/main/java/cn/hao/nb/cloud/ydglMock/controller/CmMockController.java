@@ -65,8 +65,11 @@ public class CmMockController {
 
     @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表\n实体:DeviceInfo")
     @GetMapping("/device/listByDeptId")
-    public Rv<List<DeviceInfo>> listDeviceByDeptIdAndType(@ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
-                                                          @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType) {
+    public Rv<List<DeviceInfo>> listDeviceByDeptIdAndType(
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
+            @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType,
+            @ApiParam(value = "父级设备id", name = "parentDeviceId", required = false) @RequestParam(required = false) String parentDeviceId
+    ) {
         return Rv.getInstance(Lists.newArrayList(
                 new DeviceInfo(),
                 new DeviceInfo()

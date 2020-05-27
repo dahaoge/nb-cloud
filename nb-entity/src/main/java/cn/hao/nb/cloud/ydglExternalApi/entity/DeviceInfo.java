@@ -21,4 +21,6 @@ public class DeviceInfo implements Serializable {
     String deviceId;
     @ApiModelProperty(value = "设备名称")
     String deviceName;
+    @ApiModelProperty("父级设备ID")
+    String pId;
 }
