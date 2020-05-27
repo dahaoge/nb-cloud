@@ -21,7 +21,9 @@ public enum ECompanyRequestSuffix implements PEnum<String> {
     totalStatisticsLoadByTimeRange("按照时间周期统计负荷", "/ydgl/elecLoad/totalStatisticsByTimeRange"),
     getLoadList("按照时间周期获取负荷曲线", "/ydgl/elecLoad/getLoadList"),
     statisticsLoadByDay("日负荷分析", "/ydgl/elecLoad/statisticsByDay"),
-    statisticsLoadByMonth("月负荷分析", "/ydgl/elecLoad/statisticsByMonth");
+    statisticsLoadByMonth("月负荷分析", "/ydgl/elecLoad/statisticsByMonth"),
+    demandRespDailyMonitor("需求响应实时监控数据", "/ydgl/demandResp/dailyMonitor"),
+    demandRespResultFx("需求响应调控结果分析", "/ydgl/demandResp/demandRespResultFx");
 
 
     private String desc;
@@ -57,5 +59,9 @@ public enum ECompanyRequestSuffix implements PEnum<String> {
             result.put(item, item.getPath());
         }
         return result;
+    }
+
+    public String toDesc() {
+        return this.desc.concat("[").concat(this.path).concat("]");
     }
 }

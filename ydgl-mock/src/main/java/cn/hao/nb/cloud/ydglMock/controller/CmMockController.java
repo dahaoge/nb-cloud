@@ -3,6 +3,7 @@ package cn.hao.nb.cloud.ydglMock.controller;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EYdglDeviceType;
 import cn.hao.nb.cloud.common.util.CheckUtil;
@@ -41,6 +42,27 @@ public class CmMockController {
 
     Faker faker = Faker.instance(new Locale("zh", "CN"));
 
+    @ApiOperation(value = "接口更新日志", notes = "接口更新日志")
+    @GetMapping("/controllerUpdateLog")
+    public Rv<List<String>> controllerUpdateLog() {
+        return Rv.getInstance(
+                Lists.newArrayList(
+                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.listDeviceByDeptIdAndType.toDesc()).concat("  "),
+                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.demandRespDailyMonitor.toDesc()).concat("  "),
+                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.demandRespResultFx.toDesc()).concat("  "),
+                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.guessMonthFee.toDesc()).concat("  "),
+                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.totalStatisticsLoadByTimeRange.toDesc()).concat("  返回值->实体"),
+                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.getLoadList.toDesc()).concat("  返回值->实体"),
+                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.statisticsElecConsumptionByMonth.toDesc()).concat("  返回值->实体"),
+                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.statisticsElecConsumptionByDay.toDesc()).concat("  返回值->实体"),
+                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.totalStatisticsByDate.toDesc()).concat("  返回值->实体"),
+                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.statisticsLoadByDay.toDesc()).concat("  "),
+                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.statisticsLoadByMonth.toDesc()).concat("  "),
+                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.getUnitOutputRankByMonth.toDesc()).concat("  ")
+                )
+        );
+    }
+
     @ApiOperation(value = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)", notes = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)\n涉及实体:ExternalDepartment")
     @GetMapping("/dept/loadAllDisDeptTreeByDeptId")
     public Rv<ExternalDepartment> loadAllDisDeptListByDeptId(
@@ -63,7 +85,8 @@ public class CmMockController {
         return Rv.getInstance(department);
     }
 
-    @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表\n实体:DeviceInfo")
+    @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表" +
+            "\n实体:DeviceInfo")
     @GetMapping("/device/listByDeptId")
     public Rv<List<DeviceInfo>> listDeviceByDeptIdAndType(
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
