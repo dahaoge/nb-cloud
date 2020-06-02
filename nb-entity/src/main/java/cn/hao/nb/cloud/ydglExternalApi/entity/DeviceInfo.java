@@ -1,10 +1,12 @@
 package cn.hao.nb.cloud.ydglExternalApi.entity;
 
+import cn.hao.nb.cloud.common.penum.EYdglDeviceType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @Auther: hao
@@ -23,4 +25,12 @@ public class DeviceInfo implements Serializable {
     String deviceName;
     @ApiModelProperty("父级设备ID")
     String pId;
+    @ApiModelProperty("设备类型")
+    EYdglDeviceType deviceType;
+    @ApiModelProperty("子设备列表")
+    List<DeviceInfo> childrens;
+
+    public DeviceInfo(List<DeviceInfo> childrens) {
+        this.childrens = childrens;
+    }
 }

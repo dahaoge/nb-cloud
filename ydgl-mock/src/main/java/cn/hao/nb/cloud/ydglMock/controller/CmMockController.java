@@ -47,6 +47,8 @@ public class CmMockController {
     public Rv<List<String>> controllerUpdateLog() {
         return Rv.getInstance(
                 Lists.newArrayList(
+                        "feat:2020年06月02日17:46:31  ".concat(ECompanyRequestSuffix.deviceTree.toDesc()).concat("  "),
+                        "deprecated:2020年06月02日17:46:31  ".concat(ECompanyRequestSuffix.listDeviceByDeptIdAndType.toDesc()).concat("  "),
                         "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.listDeviceByDeptIdAndType.toDesc()).concat("  "),
                         "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.demandRespDailyMonitor.toDesc()).concat("  "),
                         "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.demandRespResultFx.toDesc()).concat("  "),
@@ -67,7 +69,6 @@ public class CmMockController {
     @GetMapping("/dept/loadAllDisDeptTreeByDeptId")
     public Rv<ExternalDepartment> loadAllDisDeptListByDeptId(
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId) {
-        List<ExternalDepartment> result = Lists.newArrayList();
         ExternalDepartment department = new ExternalDepartment();
         department.setDeptId(CheckUtil.strIsEmpty(deptId) ? idUtil.nextId().toString() : deptId);
         department.setDeptName("公司名称");
@@ -93,9 +94,23 @@ public class CmMockController {
             @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType,
             @ApiParam(value = "父级设备id", name = "parentDeviceId", required = false) @RequestParam(required = false) String parentDeviceId
     ) {
+//        return Rv.getInstance(Lists.newArrayList(
+//                new DeviceInfo(),
+//                new DeviceInfo()
+//        ));
+        throw NBException.create(EErrorCode.c404, "功能暂未开放");
+    }
+
+
+    @ApiOperation(value = "根据组织机构id获取设备树(仅包含站房及线路即可)", notes = "根据组织机构id获取设备树(仅包含站房及线路即可)" +
+            "\n实体:DeviceInfo")
+    @GetMapping("/device/tree")
+    public Rv<List<DeviceInfo>> deviceTree(
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId
+    ) {
         return Rv.getInstance(Lists.newArrayList(
-                new DeviceInfo(),
-                new DeviceInfo()
+                new DeviceInfo(Lists.newArrayList(new DeviceInfo(), new DeviceInfo())),
+                new DeviceInfo(Lists.newArrayList(new DeviceInfo(), new DeviceInfo()))
         ));
     }
 

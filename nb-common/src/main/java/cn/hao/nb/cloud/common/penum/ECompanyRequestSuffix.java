@@ -12,6 +12,8 @@ import java.util.Map;
  */
 public enum ECompanyRequestSuffix implements PEnum<String> {
     loadDept("拉取组织架构信息", "/ydgl/cm/dept/loadAllDisDeptTreeByDeptId"),
+    deviceTree("根据组织机构id获取设备树", "/ydgl/cm/device/tree"),
+    @Deprecated
     listDeviceByDeptIdAndType("拉取设备信息", "/ydgl/cm/device/listByDeptId"),
     totalStatisticsByDate("按天统计概览数据", "/ydgl/cm/totalStatisticsByDate"),
     getUnitOutputRankByMonth("单位产能比排名", "/ydgl/cm/getUnitOutputRankByMonth"),
