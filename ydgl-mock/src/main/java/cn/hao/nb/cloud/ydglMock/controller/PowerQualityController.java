@@ -19,12 +19,13 @@ import java.util.Date;
  * @Date: 2020/4/20 20:00
  * @Description:
  */
-@RestController("/powerQuality")
+@RestController("/ydgl/powerQuality")
 public class PowerQualityController {
 
     @ApiOperation(value = "用电监控---电流", notes = "用电监控---电流\n" +
             "实体:monitorData,CurrentItem")
     @GetMapping("/monitor/elecCurrent")
+    @Deprecated
     public Rv<MonitorData<CurrentItem>> electricCurrentMonitor(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
@@ -41,6 +42,7 @@ public class PowerQualityController {
     @ApiOperation(value = "用电监控---电压", notes = "用电监控---电压\ndata:{current:'当前电压',timeRange:'按照时间区间和采集密度获取的列表数据'}\n" +
             "实体:VoltageItem")
     @GetMapping("/monitor/voltage")
+    @Deprecated
     public Rv<MonitorData<VoltageItem>> electricVoltageMonitor(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
@@ -55,6 +57,7 @@ public class PowerQualityController {
 
     @ApiOperation(value = "用电监控---示数", notes = "用电监控---示数\ndata:{current:'当前电压',timeRange:'按照时间区间和采集密度获取的列表数据'}")
     @GetMapping("/monitor/kwh")
+    @Deprecated
     public Rv<MonitorData<KWhItem>> electricKWHMonitor(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
@@ -70,6 +73,7 @@ public class PowerQualityController {
     @ApiOperation(value = "电能质量---基本检测", notes = "电能质量---基本检测\n" +
             "实体:ElecBasicQuality")
     @GetMapping("/monitor/basic")
+    @Deprecated
     public Rv<ElecBasicQuality> electricBasicMonitor(
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
@@ -82,6 +86,7 @@ public class PowerQualityController {
     @ApiOperation(value = "电能质量---畸变", notes = "电能质量---畸变\n" +
             "实体:ValtageJb")
     @GetMapping("/monitor/distortion")
+    @Deprecated
     public Rv<ValtageJb> electricDistortionMonitor(
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
@@ -93,6 +98,7 @@ public class PowerQualityController {
 
     @ApiOperation(value = "电能质量---不平衡度", notes = "电能质量---不平衡度\n{distortion:{畸变值},distortionRate:{畸变率}}")
     @GetMapping("/monitor/imbalance")
+    @Deprecated
     public Rv electricImbalance(
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
@@ -101,6 +107,7 @@ public class PowerQualityController {
 
     @ApiOperation(value = "电能质量统计", notes = "电能质量统计\n实体:VoltageDeviationStatistics")
     @GetMapping("/statistics")
+    @Deprecated
     public Rv<VoltageDeviationStatistics> statistics(
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId,

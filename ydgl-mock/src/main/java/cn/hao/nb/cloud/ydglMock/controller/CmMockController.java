@@ -47,6 +47,8 @@ public class CmMockController {
     public Rv<List<String>> controllerUpdateLog() {
         return Rv.getInstance(
                 Lists.newArrayList(
+                        "feat:2020年06月03日14:33:06  ".concat("注解暂时废弃的接口").concat("  "),
+                        "feat:2020年06月03日14:32:49  ".concat("需求响应接口和电能质量接口增加/ydgl的前缀").concat("  "),
                         "feat:2020年06月02日17:46:31  ".concat(ECompanyRequestSuffix.deviceTree.toDesc()).concat("  "),
                         "deprecated:2020年06月02日17:46:31  ".concat(ECompanyRequestSuffix.listDeviceByDeptIdAndType.toDesc()).concat("  "),
                         "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.listDeviceByDeptIdAndType.toDesc()).concat("  "),
@@ -89,6 +91,7 @@ public class CmMockController {
     @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表" +
             "\n实体:DeviceInfo")
     @GetMapping("/device/listByDeptId")
+    @Deprecated
     public Rv<List<DeviceInfo>> listDeviceByDeptIdAndType(
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType,
@@ -127,6 +130,7 @@ public class CmMockController {
 
     @ApiOperation(value = "设备告警信息", notes = "设备告警信息\n实体:DeviceAlarmMsg")
     @GetMapping("/getDeviceAlarmMsg")
+    @Deprecated
     public Rv<List<DeviceAlarmMsg>> getDeviceAlarmMsg(
             Pg pg,
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,

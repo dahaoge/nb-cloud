@@ -22,7 +22,7 @@ import java.util.Date;
 @Api(description = "需求响应接口")
 @Slf4j
 @RestController
-@RequestMapping("/demandResp")
+@RequestMapping("/ydgl/demandResp")
 public class DemandRespController {
 
     @ApiOperation(value = "实时监测数据", notes = "实时监测数据" +

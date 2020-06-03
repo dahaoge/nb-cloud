@@ -32,6 +32,7 @@ public class ElecFeeController {
     @ApiOperation(value = "年度或月度电费账单", notes = "年度或月度电费账单\n实体:ElecBill" +
             "\nEDateType:可选值day|month")
     @GetMapping("/getElecBill")
+    @Deprecated
     public Rv<ElecBill> getElecBill(
             @ApiParam(value = "年份或月份时间", name = "time", required = true) @RequestParam Date time,
             @ApiParam(value = "年|月", name = "dateType", required = true) @RequestParam EDateType dateType,
@@ -46,6 +47,7 @@ public class ElecFeeController {
     @ApiOperation(value = "按年统计各月份平均电价", notes = "按年统计各月份平均电价" +
             "\n实体:ElecYearFeeStatistics")
     @GetMapping("/avgElecFeeByYear")
+    @Deprecated
     public Rv<ElecYearFeeStatistics> avgElecFeeByYear(
             @ApiParam(value = "年份", name = "year", required = true) @RequestParam Date year,
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId

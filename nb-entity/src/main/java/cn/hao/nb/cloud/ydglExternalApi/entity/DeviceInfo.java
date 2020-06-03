@@ -30,6 +30,9 @@ public class DeviceInfo implements Serializable {
     @ApiModelProperty("子设备列表")
     List<DeviceInfo> childrens;
 
+    public DeviceInfo() {
+    }
+
     public DeviceInfo(List<DeviceInfo> childrens) {
         this.childrens = childrens;
     }

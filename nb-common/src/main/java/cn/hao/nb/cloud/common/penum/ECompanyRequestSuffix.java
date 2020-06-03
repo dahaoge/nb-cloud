@@ -25,7 +25,27 @@ public enum ECompanyRequestSuffix implements PEnum<String> {
     statisticsLoadByDay("日负荷分析", "/ydgl/elecLoad/statisticsByDay"),
     statisticsLoadByMonth("月负荷分析", "/ydgl/elecLoad/statisticsByMonth"),
     demandRespDailyMonitor("需求响应实时监控数据", "/ydgl/demandResp/dailyMonitor"),
-    demandRespResultFx("需求响应调控结果分析", "/ydgl/demandResp/demandRespResultFx");
+    demandRespResultFx("需求响应调控结果分析", "/ydgl/demandResp/demandRespResultFx"),
+    @Deprecated
+    getDeviceAlarmMsg("设备告警信息", "/ydgl/cm/getDeviceAlarmMsg"),
+    @Deprecated
+    getElecBill("年度或月度电费账单", "/ydgl/elecFee/getElecBill"),
+    @Deprecated
+    avgElecFeeByYear("按年统计各月份平均电价", "/ydgl/elecFee/avgElecFeeByYear"),
+    @Deprecated
+    powerQualityElectricCurrentMonitor("用电监控---电流", "/ydgl/powerQuality/monitor/elecCurrent"),
+    @Deprecated
+    powerQualityElectricVoltageMonitor("用电监控---电压", "/ydgl/powerQuality/monitor/voltage"),
+    @Deprecated
+    powerQualityElectricKWHMonitor("用电监控---示数", "/ydgl/powerQuality/monitor/kwh"),
+    @Deprecated
+    powerQualityElectricBasicMonitor("电能质量---基本检测", "/ydgl/powerQuality/monitor/basic"),
+    @Deprecated
+    powerQualityElectricDistortionMonitor("电能质量---畸变", "/ydgl/powerQuality/monitor/distortion"),
+    @Deprecated
+    powerQualityElectricImbalance("电能质量---不平衡度", "/ydgl/powerQuality/monitor/imbalance"),
+    @Deprecated
+    powerQualityStatistics("电能质量统计", "/ydgl/powerQuality/statistics");
 
 
     private String desc;
