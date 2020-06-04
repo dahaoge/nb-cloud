@@ -5,7 +5,10 @@ import cn.hao.nb.cloud.auth.mapper.AuthMapper;
 import cn.hao.nb.cloud.auth.mapper.UUserInfoMapper;
 import cn.hao.nb.cloud.auth.service.*;
 import cn.hao.nb.cloud.common.component.config.security.JwtTokenUtil;
-import cn.hao.nb.cloud.common.entity.*;
+import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qd;
+import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.*;
 import cn.hao.nb.cloud.common.util.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -627,13 +630,13 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
 
     @Override
     public void validUserPhone(UUserInfo data) {
-        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getPhone()))
-            throw NBException.create(EErrorCode.missingArg);
-        Qw qw = Qw.create().eq(UUserInfo.PHONE, data.getPhone());
-        if (CheckUtil.objIsNotEmpty(data.getUserId()))
-            qw.ne(UUserInfo.USER_ID, data.getUserId());
-        if (this.count(qw) > 0)
-            throw NBException.create(EErrorCode.beUsed, "手机号已被使用");
+//        if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getPhone()))
+//            throw NBException.create(EErrorCode.missingArg);
+//        Qw qw = Qw.create().eq(UUserInfo.PHONE, data.getPhone());
+//        if (CheckUtil.objIsNotEmpty(data.getUserId()))
+//            qw.ne(UUserInfo.USER_ID, data.getUserId());
+//        if (this.count(qw) > 0)
+//            throw NBException.create(EErrorCode.beUsed, "手机号已被使用");
     }
 
     @Override

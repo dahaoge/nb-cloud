@@ -41,7 +41,7 @@ public class PAuthController {
         return Rv.getInstance(iUUserInfoService.getLoginInfo(userInfo.getUserId()));
     }
 
-    @ApiOperation(value = "短信验证码登录(默认密码为手机号后8位)")
+    @ApiOperation(value = "短信验证码登录")
     @GetMapping("/login/bySmsCheckCode")
     public Rv loginBySmsCheckCode(@RequestParam String phone, @RequestParam String smsCheckCode) {
         UUserInfo userInfo = iUUserInfoService.loginByCheckSms(phone, smsCheckCode);

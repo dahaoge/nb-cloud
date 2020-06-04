@@ -422,7 +422,8 @@ public class ULoginChannelServiceImpl extends ServiceImpl<ULoginChannelMapper, U
     public void validLoginId(ULoginChannel data) {
         if (CheckUtil.objIsEmpty(data) || CheckUtil.objIsEmpty(data.getLoginId()))
             throw NBException.create(EErrorCode.missingArg);
-        Qw qw = Qw.create().eq(ULoginChannel.LOGIN_ID, data.getLoginId());
+        Qw qw = Qw.create().eq(ULoginChannel.LOGIN_ID, data.getLoginId())
+                .eq(ULoginChannel.LOGIN_CHANNEL_SCOPE, data.getLoginChannelScope());
         if (CheckUtil.objIsNotEmpty(data.getUserId()))
             qw.ne(ULoginChannel.USER_ID, data.getUserId());
         if (this.count(qw) > 0)

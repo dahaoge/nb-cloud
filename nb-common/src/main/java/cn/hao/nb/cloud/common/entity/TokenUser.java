@@ -91,6 +91,10 @@ public class TokenUser implements Serializable, UserDetails {
         return this.loginId;
     }
 
+    public String getUserName() {
+        return this.userName;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

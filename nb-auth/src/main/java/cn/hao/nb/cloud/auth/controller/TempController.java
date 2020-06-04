@@ -16,14 +16,12 @@ import cn.hao.nb.cloud.common.util.UserUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
 import java.util.List;
@@ -50,6 +48,13 @@ public class TempController {
     AuthMapper authMapper;
     @Autowired
     ISysDeptService deptService;
+
+    @ApiOperation(value = "添加管理员账号")
+    @PostMapping("/manager/add")
+    public Rv addManager(String phone, String loginId, String userName, String deptIds, String roleCodes) {
+        return Rv.getInstance(userInfoService.getLoginInfo(
+                userInfoService.addManager(phone, loginId, userName, deptIds, null, roleCodes).getUserId()));
+    }
 
     @GetMapping("/test/{str}")
     public String test(@PathVariable String str) {
