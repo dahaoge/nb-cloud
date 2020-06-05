@@ -1,12 +1,16 @@
-package cn.hao.nb.cloud.ydglMock.controller;
+package cn.hao.nb.cloud.ydgl.controller;
 
+import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
+import cn.hao.nb.cloud.ydgl.service.impl.CommonService;
 import cn.hao.nb.cloud.ydglExternalApi.entity.DemandRespMonitor;
 import cn.hao.nb.cloud.ydglExternalApi.entity.DemandRespStatistics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,13 +29,21 @@ import java.util.Date;
 @RequestMapping("/ydgl/demandResp")
 public class DemandRespController {
 
+    @Autowired
+    CommonService commonService;
+
     @ApiOperation(value = "实时监测数据", notes = "实时监测数据" +
             "\nDemandRespMonitor,DemandResp,LoadItem,DemandRespAlarm")
     @GetMapping("/dailyMonitor")
     public Rv<DemandRespMonitor> getDemandRespMonitorData(
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam Long deptId,
             @ApiParam(value = "日期", name = "time", required = false) @RequestParam Date time) {
-        return Rv.getInstance(DemandRespMonitor.createMockData());
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.demandRespDailyMonitor,
+                Qd.create()
+                        .add("deptId", deptId)
+                        .add("time", time)
+        );
     }
 
     @ApiOperation(value = "调控效果分析", notes = "调控效果分析" +
@@ -40,6 +52,11 @@ public class DemandRespController {
     public Rv<DemandRespStatistics> demandRespResultFx(
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam Long deptId,
             @ApiParam(value = "年", name = "year", required = false) @RequestParam Date year) {
-        return Rv.getInstance(DemandRespStatistics.createMockData());
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.demandRespResultFx,
+                Qd.create()
+                        .add("deptId", deptId)
+                        .add("year", year)
+        );
     }
 }

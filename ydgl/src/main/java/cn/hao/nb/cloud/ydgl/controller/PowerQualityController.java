@@ -1,4 +1,4 @@
-package cn.hao.nb.cloud.ydglMock.controller;
+package cn.hao.nb.cloud.ydgl.controller;
 
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Rv;

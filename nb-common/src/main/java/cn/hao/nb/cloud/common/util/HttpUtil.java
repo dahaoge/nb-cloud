@@ -4,13 +4,23 @@ import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import com.google.common.collect.Lists;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -24,8 +34,32 @@ import java.util.regex.Pattern;
 public class HttpUtil {
 
     public static RestTemplate getRestTemplate() {
-        return new RestTemplate();
+        HttpComponentsClientHttpRequestFactory factory = HttpUtil.clientHttpRequestFactory;
+        if (CheckUtil.objIsEmpty(factory)) {
+            TrustStrategy acceptingTrustStrategy = (x509Certificates, authType) -> true;
+            SSLContext sslContext = null;
+            try {
+                sslContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
+            } catch (Exception e) {
+                throw NBException.create(EErrorCode.c500, "请求创建失败");
+            }
+            SSLConnectionSocketFactory connectionSocketFactory = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+
+            HttpClientBuilder httpClientBuilder = HttpClients.custom();
+            httpClientBuilder.setSSLSocketFactory(connectionSocketFactory);
+            CloseableHttpClient httpClient = httpClientBuilder.build();
+            factory = new HttpComponentsClientHttpRequestFactory();
+            factory.setHttpClient(httpClient);
+            factory.setConnectTimeout(15000);
+            factory.setReadTimeout(5000);
+            HttpUtil.clientHttpRequestFactory = factory;
+        }
+
+        return new RestTemplate(factory);
     }
+
+    public static HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = null;
+
 
     public static Rv httpGetRv(String requestUrl, Map<String, Object> params) {
         Rv resp = HttpUtil.httpGet(requestUrl, params, Rv.class);
@@ -39,8 +73,12 @@ public class HttpUtil {
             throw NBException.create(EErrorCode.missingArg).plusMsg("requestUrl");
         if (CheckUtil.objIsEmpty(clazz))
             throw NBException.create(EErrorCode.missingArg).plusMsg("clazz");
-        ResponseEntity responseEntity = HttpUtil.getRestTemplate().getForEntity(preGetParams(requestUrl, params)
-                , clazz);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+        HttpEntity httpEntity = new HttpEntity(headers);
+
+        ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(preGetParams(requestUrl, params), HttpMethod.GET, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
         return (T) responseEntity.getBody();
@@ -69,21 +107,25 @@ public class HttpUtil {
                 }
             }
         }
-        ResponseEntity responseEntity = HttpUtil.getRestTemplate().postForEntity(requestUrl, new HttpEntity<MultiValueMap<String, Object>>(p, new HttpHeaders()), clazz);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+        HttpEntity httpEntity = new HttpEntity<MultiValueMap<String, Object>>(p, headers);
+        ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(requestUrl, HttpMethod.POST, httpEntity, clazz);
+//        ResponseEntity responseEntity = HttpUtil.getRestTemplate().postForEntity(requestUrl, new HttpEntity<MultiValueMap<String, Object>>(p, new HttpHeaders()), clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
         return (T) responseEntity.getBody();
     }
 
     public static String preGetParams(String url, Map params) {
-        if (CheckUtil.objIsEmpty(params))
+        if (CheckUtil.objIsEmpty(params) || CheckUtil.collectionIsEmpty(params.keySet()))
             return url;
         List list = Lists.newArrayList();
         params.keySet().forEach(key -> {
-            list.add(key.toString().concat("=".concat(params.get(key).toString())));
+            if (CheckUtil.objIsNotEmpty(params.get(key)))
+                list.add(key.toString().concat("=".concat((String) params.get(key))));
         });
         String result = url.concat("?".concat(ListUtil.join(list, "&")));
-        System.out.println(result);
         return result;
     }
 

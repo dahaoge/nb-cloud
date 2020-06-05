@@ -98,6 +98,10 @@ public interface ISysDeptService extends IService<SysDept> {
 
     List<SysDept> listByUserId(Long userId);
 
+    List<SysDept> listByUser();
+
+    List<SysDept> userDeptTree();
+
     /**
      * 分页查询数据
      *

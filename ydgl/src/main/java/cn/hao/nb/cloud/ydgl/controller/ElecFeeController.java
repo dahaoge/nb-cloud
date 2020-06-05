@@ -1,9 +1,12 @@
-package cn.hao.nb.cloud.ydglMock.controller;
+package cn.hao.nb.cloud.ydgl.controller;
 
 import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EDateType;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
+import cn.hao.nb.cloud.ydgl.service.impl.CommonService;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecBill;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecMonthFeeGuess;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecYearFeeStatistics;
@@ -11,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +32,9 @@ import java.util.Date;
 @RestController
 @RequestMapping("/ydgl/elecFee")
 public class ElecFeeController {
+
+    @Autowired
+    CommonService commonService;
 
     @ApiOperation(value = "年度或月度电费账单", notes = "年度或月度电费账单\n实体:ElecBill" +
             "\nEDateType:可选值day|month")
@@ -63,6 +70,11 @@ public class ElecFeeController {
             @ApiParam(value = "月份", name = "month", required = true) @RequestParam Date month,
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) Long deptId
     ) {
-        return Rv.getInstance(new ElecMonthFeeGuess());
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.guessMonthFee,
+                Qd.create()
+                        .add("month", month)
+                        .add("deptId", deptId)
+        );
     }
 }

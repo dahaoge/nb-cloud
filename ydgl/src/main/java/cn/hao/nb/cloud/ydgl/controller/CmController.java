@@ -1,16 +1,16 @@
-package cn.hao.nb.cloud.ydglMock.controller;
+package cn.hao.nb.cloud.ydgl.controller;
 
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EYdglDeviceType;
-import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
+import cn.hao.nb.cloud.ydgl.service.impl.CommonService;
 import cn.hao.nb.cloud.ydglExternalApi.entity.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.github.javafaker.Faker;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @Auther: hao
@@ -35,57 +34,21 @@ import java.util.Locale;
 @Slf4j
 @RestController
 @RequestMapping("/ydgl/cm")
-public class CmMockController {
+public class CmController {
 
     @Autowired
     IDUtil idUtil;
-
-    Faker faker = Faker.instance(new Locale("zh", "CN"));
-
-    @ApiOperation(value = "接口更新日志", notes = "接口更新日志")
-    @GetMapping("/controllerUpdateLog")
-    public Rv<List<String>> controllerUpdateLog() {
-        return Rv.getInstance(
-                Lists.newArrayList(
-                        "feat:2020年06月03日14:33:06  ".concat("注解暂时废弃的接口").concat("  "),
-                        "feat:2020年06月03日14:32:49  ".concat("需求响应接口和电能质量接口增加/ydgl的前缀").concat("  "),
-                        "feat:2020年06月02日17:46:31  ".concat(ECompanyRequestSuffix.deviceTree.toDesc()).concat("  "),
-                        "deprecated:2020年06月02日17:46:31  ".concat(ECompanyRequestSuffix.listDeviceByDeptIdAndType.toDesc()).concat("  "),
-                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.listDeviceByDeptIdAndType.toDesc()).concat("  "),
-                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.demandRespDailyMonitor.toDesc()).concat("  "),
-                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.demandRespResultFx.toDesc()).concat("  "),
-                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.guessMonthFee.toDesc()).concat("  "),
-                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.totalStatisticsLoadByTimeRange.toDesc()).concat("  返回值->实体"),
-                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.getLoadList.toDesc()).concat("  返回值->实体"),
-                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.statisticsElecConsumptionByMonth.toDesc()).concat("  返回值->实体"),
-                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.statisticsElecConsumptionByDay.toDesc()).concat("  返回值->实体"),
-                        "perf:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.totalStatisticsByDate.toDesc()).concat("  返回值->实体"),
-                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.statisticsLoadByDay.toDesc()).concat("  "),
-                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.statisticsLoadByMonth.toDesc()).concat("  "),
-                        "feat:2020年05月27日17:21:15  ".concat(ECompanyRequestSuffix.getUnitOutputRankByMonth.toDesc()).concat("  ")
-                )
-        );
-    }
+    @Autowired
+    CommonService commonService;
 
     @ApiOperation(value = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)", notes = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)\n涉及实体:ExternalDepartment")
     @GetMapping("/dept/loadAllDisDeptTreeByDeptId")
     public Rv<ExternalDepartment> loadAllDisDeptListByDeptId(
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) Long deptId) {
-        ExternalDepartment department = new ExternalDepartment();
-        department.setDeptId(CheckUtil.strIsEmpty(deptId) ? idUtil.nextId().toString() : deptId);
-        department.setDeptName("公司名称");
-        department.setParentDeptId(CheckUtil.strIsEmpty(deptId) ? "" : idUtil.nextId().toString());
-        ExternalDepartment child1 = new ExternalDepartment();
-        child1.setParentDeptId(department.getDeptId());
-        child1.setDeptName("公司名称");
-        child1.setDeptId(idUtil.nextId().toString());
-        department.setChildren(child1);
-        ExternalDepartment child2 = new ExternalDepartment();
-        child2.setParentDeptId(child1.getDeptId());
-        child2.setDeptName("公司名称");
-        child2.setDeptId(idUtil.nextId().toString());
-        child1.setChildren(child2);
-        return Rv.getInstance(department);
+        return commonService.sendYdglRequest(ECompanyRequestSuffix.loadDept,
+                Qd.create()
+                        .add("deptId", deptId)
+        );
     }
 
     @ApiOperation(value = "根据组织机构id获取设备列表", notes = "根据组织机构id获取设备列表" +
@@ -111,10 +74,9 @@ public class CmMockController {
     public Rv<List<DeviceInfo>> deviceTree(
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId
     ) {
-        return Rv.getInstance(Lists.newArrayList(
-                new DeviceInfo(Lists.newArrayList(new DeviceInfo(), new DeviceInfo())),
-                new DeviceInfo(Lists.newArrayList(new DeviceInfo(), new DeviceInfo()))
-        ));
+        return commonService.sendYdglRequest(ECompanyRequestSuffix.deviceTree,
+                Qd.create().add("deptId", deptId)
+        );
     }
 
     @ApiOperation(value = "按天统计概览数据", notes = "按天统计概览数据\n实体:TotalStatisiticsData")
@@ -123,8 +85,11 @@ public class CmMockController {
             @ApiParam(value = "统计时间", name = "statisticsDate", required = true) @RequestParam Date statisticsDate,
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId
     ) {
-        return Rv.getInstance(
-                new TotalStatisiticsData()
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.totalStatisticsByDate,
+                Qd.create()
+                        .add("statisticsDate", statisticsDate)
+                        .add("deptId", deptId)
         );
     }
 
@@ -150,14 +115,11 @@ public class CmMockController {
             @ApiParam(value = "月份", name = "month", required = true) @RequestParam Date month,
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) Long deptId
     ) {
-        return Rv.getInstance(
-                Lists.newArrayList(
-                        new UnitOutputItem(),
-                        new UnitOutputItem(),
-                        new UnitOutputItem(),
-                        new UnitOutputItem(),
-                        new UnitOutputItem()
-                )
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.getUnitOutputRankByMonth,
+                Qd.create()
+                        .add("month", month)
+                        .add("deptId", deptId)
         );
     }
 

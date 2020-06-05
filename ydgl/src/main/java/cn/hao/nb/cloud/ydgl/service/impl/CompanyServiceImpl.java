@@ -38,16 +38,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     RestTemplateUtil restTemplateUtil;
     @Autowired
     ICompanyRequestSuffixService requestSuffixService;
-
-    @Override
-    public String getRequestUrl(Long comId, ECompanyRequestSuffix requestSuffixKey) {
-        Company company = this.getById(comId);
-        if (CheckUtil.objIsEmpty(company))
-            throw NBException.create(EErrorCode.noData).plusMsg("company");
-        if (CheckUtil.strIsEmpty(company.getBaseUrl()))
-            throw NBException.create(EErrorCode.noData).plusMsg("company.baseUrl");
-        return company.getBaseUrl().concat(requestSuffixService.getRequestSuffix(comId, requestSuffixKey));
-    }
+    @Autowired
+    CommonService commonService;
 
     /**
      * 添加数据
@@ -80,12 +72,12 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     public boolean refreshComDept(Long comId) {
         if (CheckUtil.objIsEmpty(comId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("comId");
-        Rv resp = HttpUtil.httpGetRv(this.getRequestUrl(comId, ECompanyRequestSuffix.loadDept), Qd.create());
+        Rv resp = HttpUtil.httpGetRv(commonService.getRequestUrl(comId, ECompanyRequestSuffix.loadDept), Qd.create());
         if (resp.getCode() != 0)
             throw NBException.create(EErrorCode.apiErr, resp.getMsg()).plusMsg(resp.getCode() + "");
         if (CheckUtil.objIsNotEmpty(resp.getData())) {
             restTemplateUtil.restPostRv(EModuleRequestPrefix.auth, "/sysDept/refreshCompanyDeptByExternalDepartment",
-                    Qd.create().add("companyId", comId).add("refreshCompanyDeptByExternalDepartment", JSON.toJSONString(resp.getData())));
+                    Qd.create().add("companyId", comId).add("externalDeptJsonList", JSON.toJSONString(resp.getData())));
         }
         return true;
     }

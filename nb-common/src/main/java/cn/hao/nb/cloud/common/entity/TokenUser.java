@@ -56,6 +56,8 @@ public class TokenUser implements Serializable, UserDetails {
     private Integer isLocked;
     @ApiModelProperty(value = "解锁时间")
     private Date unlockTime;
+    @ApiModelProperty("公司id")
+    private Long companyId;
 
 
     @TableField(exist = false)

@@ -170,6 +170,12 @@
             <artifactId>aliyun-java-sdk-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>

@@ -1,16 +1,16 @@
-package cn.hao.nb.cloud.ydglMock.controller;
+package cn.hao.nb.cloud.ydgl.controller;
 
 import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
-import cn.hao.nb.cloud.ydglExternalApi.entity.LoadItem;
+import cn.hao.nb.cloud.ydgl.service.impl.CommonService;
 import cn.hao.nb.cloud.ydglExternalApi.entity.TimeRangeLoadData;
-import cn.hao.nb.cloud.ydglMock.ElecDesc;
-import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +30,9 @@ import java.util.Map;
 @RequestMapping("/ydgl/elecLoad")
 public class ElecLoadController {
 
+    @Autowired
+    CommonService commonService;
+
     @ApiOperation(value = "按照时间周期统计负荷", notes = "按照时间周期统计负荷\n实体:TimeRangeLoadData")
     @GetMapping("/totalStatisticsByTimeRange")
     public Rv<TimeRangeLoadData> totalStatisticsByTimeRange(
@@ -38,8 +41,13 @@ public class ElecLoadController {
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
-        return Rv.getInstance(
-                new TimeRangeLoadData()
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.totalStatisticsLoadByTimeRange,
+                Qd.create()
+                        .add("startTime", startTime)
+                        .add("endTime", endTime)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
         );
     }
 
@@ -55,14 +63,14 @@ public class ElecLoadController {
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
-        return Rv.getInstance(
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.getLoadList,
                 Qd.create()
-                        .add("loadList", Lists.newArrayList(
-                                new LoadItem(),
-                                new LoadItem()
-                        ))
-                        .add("baseDayLoad", ElecDesc.kWDesc("基准日"))
-
+                        .add("startTime", startTime)
+                        .add("endTime", endTime)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
+                        .add("collectionCycle", collectionCycle)
         );
     }
 
@@ -79,22 +87,13 @@ public class ElecLoadController {
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
-        return Rv.getInstance(
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.statisticsLoadByDay,
                 Qd.create()
-                        .add("loadStatistics", new TimeRangeLoadData())
-                        .add("currentList", Lists.newArrayList(
-                                new LoadItem(),
-                                new LoadItem(),
-                                new LoadItem(),
-                                new LoadItem()
-                        ))
-                        .add("lastList", Lists.newArrayList(
-                                new LoadItem(),
-                                new LoadItem(),
-                                new LoadItem(),
-                                new LoadItem()
-                        ))
-
+                        .add("collectionCycle", collectionCycle)
+                        .add("day", day)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
         );
     }
 
@@ -109,22 +108,12 @@ public class ElecLoadController {
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
-        return Rv.getInstance(
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.statisticsLoadByMonth,
                 Qd.create()
-                        .add("loadStatistics", new TimeRangeLoadData())
-                        .add("currentList", Lists.newArrayList(
-                                new TimeRangeLoadData(),
-                                new TimeRangeLoadData(),
-                                new TimeRangeLoadData(),
-                                new TimeRangeLoadData()
-                        ))
-                        .add("lastList", Lists.newArrayList(
-                                new TimeRangeLoadData(),
-                                new TimeRangeLoadData(),
-                                new TimeRangeLoadData(),
-                                new TimeRangeLoadData()
-                        ))
-
+                        .add("month", month)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
         );
     }
 }

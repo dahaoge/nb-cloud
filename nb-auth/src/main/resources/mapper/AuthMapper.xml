@@ -14,6 +14,7 @@
         <result column="salt" property="salt"/>
         <result column="is_locked" property="isLocked"/>
         <result column="unlock_time" property="unlockTime"/>
+
     </resultMap>
 
     <!-- 通用查询结果列 -->

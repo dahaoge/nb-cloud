@@ -55,7 +55,7 @@ public class TestController {
 //                        new ParameterizedTypeReference<Rv<Person>>(){},map).getBody();
 //        Rv result=http.postForEntity(post,new HttpEntity<MultiValueMap<String,Object>>(map,new HttpHeaders()),Rv.class).getBody();
         Map qd = Qd.create().add("personName", "pName").add("phone", "123");
-        Map qd1 = Qd.create().add("personName", "pName").add("phone", "1234");
+        Map qd1 = Qd.create().add("personName", "pName").add("phone", "1234").add("id", "aa");
         System.out.println(HttpUtil.httpPostRv(post, qd));
         ;
 

@@ -109,10 +109,22 @@ public class DeptController {
         return Rv.getInstance(iSysDeptService.userDeptTree(userId));
     }
 
+    @ApiOperation(value = "获取自己的组织机构树")
+    @GetMapping("/sysDept/getUserDeptTree")
+    public Rv userDeptTree() {
+        return Rv.getInstance(iSysDeptService.userDeptTree());
+    }
+
     @ApiOperation(value = "根据用户id获取组织机构")
     @GetMapping("/sysDept/listByUserId/{userId}")
     public Rv listDeptByUserId(@PathVariable Long userId) {
         return Rv.getInstance(iSysDeptService.listByUserId(userId));
+    }
+
+    @ApiOperation(value = "获取自己的组织列表")
+    @GetMapping("/sysDept/listByUser")
+    public Rv listDeptByUser() {
+        return Rv.getInstance(iSysDeptService.listByUser());
     }
 
     @ApiOperation(value = "添加用户所属组织机构", notes = "添加用户所属组织机构")

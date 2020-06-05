@@ -287,6 +287,16 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         return mapper.listByUserId(userId);
     }
 
+    @Override
+    public List<SysDept> listByUser() {
+        return this.listByUserId(UserUtil.getTokenUser(true).getUserId());
+    }
+
+    @Override
+    public List<SysDept> userDeptTree() {
+        return this.userDeptTree(UserUtil.getTokenUser(true).getUserId());
+    }
+
     private void recursiveGetDisDept(Long pId, List<SysDept> all) {
         List<SysDept> childrens = this.listDisDeptByParentId(pId);
         if (CheckUtil.collectionIsNotEmpty(childrens)) {

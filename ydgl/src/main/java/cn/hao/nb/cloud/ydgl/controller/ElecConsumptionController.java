@@ -1,12 +1,15 @@
-package cn.hao.nb.cloud.ydglMock.controller;
+package cn.hao.nb.cloud.ydgl.controller;
 
+import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
+import cn.hao.nb.cloud.ydgl.service.impl.CommonService;
 import cn.hao.nb.cloud.ydglExternalApi.entity.ElecConsumptionData;
-import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +29,9 @@ import java.util.List;
 @RequestMapping("/ydgl/elecConsumption")
 public class ElecConsumptionController {
 
+    @Autowired
+    CommonService commonService;
+
 
     @ApiOperation(value = "按照月份周期统计用电量", notes = "按照月份周期统计用电量\n实体:ElecConsumptionData" +
             "\ntime字段:yyyy-MM")
@@ -36,11 +42,14 @@ public class ElecConsumptionController {
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
-        List list = Lists.newArrayList();
-        for (int i = 1; i < 10; i++) {
-            list.add(new ElecConsumptionData());
-        }
-        return Rv.getInstance(list);
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.statisticsElecConsumptionByMonth,
+                Qd.create()
+                        .add("startTime", startTime)
+                        .add("endTime", endTime)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
+        );
     }
 
     @ApiOperation(value = "按照天统计用电量", notes = "按照天统计用电量\n实体:ElecConsumptionData" +
@@ -52,10 +61,13 @@ public class ElecConsumptionController {
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
-        List list = Lists.newArrayList();
-        for (int i = 1; i < 31; i++) {
-            list.add(new ElecConsumptionData());
-        }
-        return Rv.getInstance(list);
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.statisticsElecConsumptionByDay,
+                Qd.create()
+                        .add("startTime", startTime)
+                        .add("endTime", endTime)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
+        );
     }
 }
