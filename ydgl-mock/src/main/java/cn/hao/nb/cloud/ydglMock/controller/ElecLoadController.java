@@ -35,7 +35,7 @@ public class ElecLoadController {
     public Rv<TimeRangeLoadData> totalStatisticsByTimeRange(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return Rv.getInstance(
@@ -52,7 +52,7 @@ public class ElecLoadController {
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return Rv.getInstance(
@@ -76,7 +76,7 @@ public class ElecLoadController {
     public Rv<Map<String, Object>> statisticsByDay(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "时间", name = "day", required = true) @RequestParam Date day,
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return Rv.getInstance(
@@ -106,7 +106,7 @@ public class ElecLoadController {
     @GetMapping("/statisticsByMonth")
     public Rv<Map<String, Object>> statisticsByMonth(
             @ApiParam(value = "月度时间", name = "month", required = true) @RequestParam Date month,
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return Rv.getInstance(

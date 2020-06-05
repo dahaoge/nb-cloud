@@ -70,11 +70,11 @@ public class CmMockController {
     @ApiOperation(value = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)", notes = "根据节点id获取所有下级组织机构树(当节点id为空时为root节点)\n涉及实体:ExternalDepartment")
     @GetMapping("/dept/loadAllDisDeptTreeByDeptId")
     public Rv<ExternalDepartment> loadAllDisDeptListByDeptId(
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) Long deptId) {
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId) {
         ExternalDepartment department = new ExternalDepartment();
-        department.setDeptId(CheckUtil.strIsEmpty(deptId) ? idUtil.nextId().toString() : deptId);
+        department.setDeptId(CheckUtil.objIsEmpty(deptId) ? idUtil.nextId().toString() : deptId.toString());
         department.setDeptName("公司名称");
-        department.setParentDeptId(CheckUtil.strIsEmpty(deptId) ? "" : idUtil.nextId().toString());
+        department.setParentDeptId(CheckUtil.objIsEmpty(deptId) ? "" : idUtil.nextId().toString());
         ExternalDepartment child1 = new ExternalDepartment();
         child1.setParentDeptId(department.getDeptId());
         child1.setDeptName("公司名称");
@@ -93,7 +93,7 @@ public class CmMockController {
     @GetMapping("/device/listByDeptId")
     @Deprecated
     public Rv<List<DeviceInfo>> listDeviceByDeptIdAndType(
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备类型", name = "deviceType", required = false) @RequestParam(required = false) EYdglDeviceType deviceType,
             @ApiParam(value = "父级设备id", name = "parentDeviceId", required = false) @RequestParam(required = false) String parentDeviceId
     ) {
@@ -109,7 +109,7 @@ public class CmMockController {
             "\n实体:DeviceInfo")
     @GetMapping("/device/tree")
     public Rv<List<DeviceInfo>> deviceTree(
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId
     ) {
         return Rv.getInstance(Lists.newArrayList(
                 new DeviceInfo(Lists.newArrayList(new DeviceInfo(), new DeviceInfo())),
@@ -121,7 +121,7 @@ public class CmMockController {
     @GetMapping("/totalStatisticsByDate")
     public Rv<TotalStatisiticsData> totalStatisticsByDate(
             @ApiParam(value = "统计时间", name = "statisticsDate", required = true) @RequestParam Date statisticsDate,
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId
     ) {
         return Rv.getInstance(
                 new TotalStatisiticsData()
@@ -133,7 +133,7 @@ public class CmMockController {
     @Deprecated
     public Rv<List<DeviceAlarmMsg>> getDeviceAlarmMsg(
             Pg pg,
-            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
         IPage result = pg.page();
         result.setRecords(Lists.newArrayList(
@@ -148,7 +148,7 @@ public class CmMockController {
     @GetMapping("/getUnitOutputRankByMonth")
     public Rv<List<UnitOutputItem>> getUnitOutputRankByMonth(
             @ApiParam(value = "月份", name = "month", required = true) @RequestParam Date month,
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) Long deptId
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
     ) {
         return Rv.getInstance(
                 Lists.newArrayList(

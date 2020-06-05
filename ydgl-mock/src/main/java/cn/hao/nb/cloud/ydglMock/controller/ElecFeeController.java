@@ -36,7 +36,7 @@ public class ElecFeeController {
     public Rv<ElecBill> getElecBill(
             @ApiParam(value = "年份或月份时间", name = "time", required = true) @RequestParam Date time,
             @ApiParam(value = "年|月", name = "dateType", required = true) @RequestParam EDateType dateType,
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) Long deptId
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
     ) {
 //        return Rv.getInstance(
 //                new ElecBill()
@@ -50,7 +50,7 @@ public class ElecFeeController {
     @Deprecated
     public Rv<ElecYearFeeStatistics> avgElecFeeByYear(
             @ApiParam(value = "年份", name = "year", required = true) @RequestParam Date year,
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) Long deptId
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
     ) {
 //        return Rv.getInstance(new ElecYearFeeStatistics());
         throw NBException.create(EErrorCode.c404, "功能暂未开放");
@@ -61,7 +61,7 @@ public class ElecFeeController {
     @GetMapping("/guessMonthFee")
     public Rv<ElecMonthFeeGuess> guessMonthFee(
             @ApiParam(value = "月份", name = "month", required = true) @RequestParam Date month,
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) Long deptId
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam(required = false) String deptId
     ) {
         return Rv.getInstance(new ElecMonthFeeGuess());
     }

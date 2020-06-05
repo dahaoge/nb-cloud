@@ -29,7 +29,7 @@ public class DemandRespController {
             "\nDemandRespMonitor,DemandResp,LoadItem,DemandRespAlarm")
     @GetMapping("/dailyMonitor")
     public Rv<DemandRespMonitor> getDemandRespMonitorData(
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam String deptId,
             @ApiParam(value = "日期", name = "time", required = false) @RequestParam Date time) {
         return Rv.getInstance(DemandRespMonitor.createMockData());
     }
@@ -38,7 +38,7 @@ public class DemandRespController {
             "\nDemandRespStatistics,DemandRespResultStatisticItem,DemandRespDetailItem,DemandRespDetail")
     @GetMapping("/demandRespResultFx")
     public Rv<DemandRespStatistics> demandRespResultFx(
-            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam String deptId,
             @ApiParam(value = "年", name = "year", required = false) @RequestParam Date year) {
         return Rv.getInstance(DemandRespStatistics.createMockData());
     }
