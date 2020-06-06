@@ -8,7 +8,9 @@ import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.HttpUtil;
+import cn.hao.nb.cloud.common.util.RedisUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
+import cn.hao.nb.cloud.ydgl.constant.RedisKey;
 import cn.hao.nb.cloud.ydgl.entity.Company;
 import cn.hao.nb.cloud.ydgl.service.ICompanyRequestSuffixService;
 import cn.hao.nb.cloud.ydgl.service.ICompanyService;
@@ -27,6 +29,8 @@ public class CommonService {
     ICompanyService iCompanyService;
     @Autowired
     ICompanyRequestSuffixService iCompanyRequestSuffixService;
+    @Autowired
+    RedisUtil redisUtil;
 
 
     public String getRequestUrl(Long comId, ECompanyRequestSuffix requestSuffixKey) {
@@ -49,6 +53,14 @@ public class CommonService {
                     params.add("deptId", item.getExternalDeptId());
             });
         }
-        return HttpUtil.httpGetRv(this.getRequestUrl(tokenUser.getCompanyId(), requestSuffix), params);
+        String hash = "" + params.hashCode();
+        Rv result = (Rv) redisUtil.hget(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash);
+        if (CheckUtil.objIsNotEmpty(result))
+            return result;
+
+        result = HttpUtil.httpGetRv(this.getRequestUrl(tokenUser.getCompanyId(), requestSuffix), params);
+        if (CheckUtil.objIsNotEmpty(result))
+            redisUtil.hset(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash, result, requestSuffix.getRedisTime());
+        return result;
     }
 }

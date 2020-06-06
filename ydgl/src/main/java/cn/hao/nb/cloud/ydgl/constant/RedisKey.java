@@ -15,4 +15,6 @@ public interface RedisKey {
      * 公司请求后缀
      */
     public static final String REDIS_COMPANY_REQUEST_SUFFIX = "REDIS_COMPANY_REQUEST_SUFFIX";
+
+    public static final String REDIS_REQUEST_RESULT = "REDIS_REQUEST_RESULT_";
 }
