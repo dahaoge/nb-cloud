@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -67,7 +66,7 @@ public class TokenUser implements Serializable, UserDetails {
     @TableField(exist = false)
     private List<String> menuList;
     @TableField(exist = false)
-    private List<Map<String, Object>> authDeptList;
+    private List<MiniDept> authDeptList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

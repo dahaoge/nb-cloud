@@ -4,6 +4,7 @@ import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -30,7 +31,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Slf4j
 public class HttpUtil {
 
     public static RestTemplate getRestTemplate() {
@@ -76,8 +77,9 @@ public class HttpUtil {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-        HttpEntity httpEntity = new HttpEntity(headers);
-
+        HttpEntity httpEntity = new HttpEntity(null, headers);
+        log.info("url:{},params:{}", requestUrl, params);
+        log.info(preGetParams(requestUrl, params));
         ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(preGetParams(requestUrl, params), HttpMethod.GET, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
@@ -110,8 +112,8 @@ public class HttpUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
         HttpEntity httpEntity = new HttpEntity<MultiValueMap<String, Object>>(p, headers);
+        log.info("url:{},params:{}", requestUrl, params);
         ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(requestUrl, HttpMethod.POST, httpEntity, clazz);
-//        ResponseEntity responseEntity = HttpUtil.getRestTemplate().postForEntity(requestUrl, new HttpEntity<MultiValueMap<String, Object>>(p, new HttpHeaders()), clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
         return (T) responseEntity.getBody();

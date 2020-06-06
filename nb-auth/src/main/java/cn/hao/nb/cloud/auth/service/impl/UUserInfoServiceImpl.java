@@ -5,10 +5,7 @@ import cn.hao.nb.cloud.auth.mapper.AuthMapper;
 import cn.hao.nb.cloud.auth.mapper.UUserInfoMapper;
 import cn.hao.nb.cloud.auth.service.*;
 import cn.hao.nb.cloud.common.component.config.security.JwtTokenUtil;
-import cn.hao.nb.cloud.common.entity.NBException;
-import cn.hao.nb.cloud.common.entity.Pg;
-import cn.hao.nb.cloud.common.entity.Qd;
-import cn.hao.nb.cloud.common.entity.TokenUser;
+import cn.hao.nb.cloud.common.entity.*;
 import cn.hao.nb.cloud.common.penum.*;
 import cn.hao.nb.cloud.common.util.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -235,17 +232,12 @@ public class UUserInfoServiceImpl extends ServiceImpl<UUserInfoMapper, UUserInfo
             tokenUser.setMenuList(ListUtil.getPkList(authMapper.getUserMenus(tokenUser.getUserId()), SysMenu.MENU_CODE));
         }
         List<SysDept> depts = deptService.listByUserId(userId);
-        List<Map<String, Object>> deptMaps = Lists.newArrayList();
+        List<MiniDept> dd = Lists.newArrayList();
         if (CheckUtil.collectionIsNotEmpty(depts))
             depts.forEach(item -> {
-                deptMaps.add(
-                        Qd.create()
-                                .add("deptId", item.getDeptId())
-                                .add("deptName", item.getDeptName())
-                                .add("externalDeptId", item.getExternalDeptId())
-                );
+                dd.add(item.toMiniDept());
             });
-        tokenUser.setAuthDeptList(deptMaps);
+        tokenUser.setAuthDeptList(dd);
         result.add("tokenUser", tokenUser).add("token", jwtTokenUtil.generateToken(tokenUser, client));
         return result;
     }

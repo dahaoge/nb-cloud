@@ -1,5 +1,6 @@
 package cn.hao.nb.cloud.auth.entity;
 
+import cn.hao.nb.cloud.common.entity.MiniDept;
 import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.entity.RedisUser;
 import cn.hao.nb.cloud.common.penum.ESqlOrder;
@@ -84,6 +85,14 @@ public class SysDept implements Serializable {
 
     @TableField(exist = false)
     private List<SysDept> children;
+
+    public MiniDept toMiniDept() {
+        MiniDept miniDept = new MiniDept();
+        miniDept.setDeptId(this.getDeptId());
+        miniDept.setDeptName(this.getDeptName());
+        miniDept.setExternalDeptId(this.getExternalDeptId());
+        return miniDept;
+    }
 
     public static final String VERSION = "version";
     public static final String CREATE_BY = "create_by";

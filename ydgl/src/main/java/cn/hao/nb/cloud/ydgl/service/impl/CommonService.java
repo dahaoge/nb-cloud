@@ -45,8 +45,8 @@ public class CommonService {
             if (CheckUtil.collectionIsEmpty(tokenUser.getAuthDeptList()))
                 throw NBException.create(EErrorCode.authDenied, "请联系管理员添加授权的组织机构");
             tokenUser.getAuthDeptList().forEach(item -> {
-                if (params.get("deptId").equals(item.get("deptId")))
-                    params.add("deptId", item.get("externalDeptId"));
+                if (params.get("deptId").equals(item.getDeptId()))
+                    params.add("deptId", item.getExternalDeptId());
             });
         }
         return HttpUtil.httpGetRv(this.getRequestUrl(tokenUser.getCompanyId(), requestSuffix), params);

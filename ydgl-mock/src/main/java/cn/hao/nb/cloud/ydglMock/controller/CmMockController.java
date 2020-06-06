@@ -79,12 +79,12 @@ public class CmMockController {
         child1.setParentDeptId(department.getDeptId());
         child1.setDeptName("公司名称");
         child1.setDeptId(idUtil.nextId().toString());
-        department.setChildren(child1);
+        department.setChildren(Lists.newArrayList(child1));
         ExternalDepartment child2 = new ExternalDepartment();
         child2.setParentDeptId(child1.getDeptId());
         child2.setDeptName("公司名称");
         child2.setDeptId(idUtil.nextId().toString());
-        child1.setChildren(child2);
+        child1.setChildren(Lists.newArrayList(child2));
         return Rv.getInstance(department);
     }
 
