@@ -2,7 +2,6 @@ package cn.hao.nb.cloud.common.util;
 
 import cn.hao.nb.cloud.common.component.SpringUtil;
 import cn.hao.nb.cloud.common.entity.NBException;
-import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EModuleRequestPrefix;
@@ -45,8 +44,19 @@ public class RestTemplateUtil {
             throw NBException.create(EErrorCode.missingArg).plusMsg("requestUrl");
         if (CheckUtil.objIsEmpty(clazz))
             throw NBException.create(EErrorCode.missingArg).plusMsg("clazz");
-        ResponseEntity responseEntity = restTemplate.getForEntity(HttpUtil.preGetParams(this.getRequestUrl(moduleRequestPrefix, requestSuffix), params)
-                , clazz);
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpServletRequest request = SpringUtil.getRequest(true);
+        Enumeration headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String key = (String) headerNames.nextElement();
+            headers.add(key, request.getHeader(key));
+        }
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(null, headers);
+
+        String url = this.getRequestUrl(moduleRequestPrefix, requestSuffix);
+
+        ResponseEntity responseEntity = restTemplate.exchange(HttpUtil.preGetParams(url, params), HttpMethod.GET, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
         return (T) responseEntity.getBody();
@@ -60,7 +70,7 @@ public class RestTemplateUtil {
     }
 
     public <T> T restPost(EModuleRequestPrefix moduleRequestPrefix, String requestSuffix, Map<String, Object> params, Class<T> clazz) {
-        params = Qd.create().add("companyId", 1).add("externalDeptJsonList", "2");
+//        params = Qd.create().add("companyId", 1).add("externalDeptJsonList", "2");
         if (CheckUtil.objIsEmpty(moduleRequestPrefix, requestSuffix))
             throw NBException.create(EErrorCode.missingArg).plusMsg("requestUrl");
         if (CheckUtil.objIsEmpty(clazz))
@@ -84,10 +94,9 @@ public class RestTemplateUtil {
             String key = (String) headerNames.nextElement();
             headers.add(key, request.getHeader(key));
         }
-        HttpEntity httpEntity = new HttpEntity<MultiValueMap<String, Object>>(p, headers);
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(p, headers);
 
         String url = this.getRequestUrl(moduleRequestPrefix, requestSuffix);
-        log.info(url);
 
         ResponseEntity responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)

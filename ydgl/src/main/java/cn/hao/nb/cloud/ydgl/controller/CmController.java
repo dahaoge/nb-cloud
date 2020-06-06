@@ -74,7 +74,9 @@ public class CmController {
     public Rv<List<DeviceInfo>> deviceTree(
             @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId
     ) {
-        return commonService.sendYdglRequest(ECompanyRequestSuffix.deviceTree,
+        // TODO 切回新的
+        return commonService.sendYdglRequest(ECompanyRequestSuffix.listDeviceByDeptIdAndType,
+//        return commonService.sendYdglRequest(ECompanyRequestSuffix.deviceTree,
                 Qd.create().add("deptId", deptId)
         );
     }

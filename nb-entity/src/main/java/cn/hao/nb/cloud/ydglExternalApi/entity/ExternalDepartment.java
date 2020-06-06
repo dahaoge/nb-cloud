@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @Auther: hao
@@ -25,5 +26,5 @@ public class ExternalDepartment implements Serializable {
     @ApiModelProperty(value = "父级组织机构id")
     String parentDeptId;
     @ApiModelProperty(value = "子节点")
-    ExternalDepartment children;
+    List<ExternalDepartment> children;
 }

@@ -123,7 +123,7 @@ public class HttpUtil {
         List list = Lists.newArrayList();
         params.keySet().forEach(key -> {
             if (CheckUtil.objIsNotEmpty(params.get(key)))
-                list.add(key.toString().concat("=".concat((String) params.get(key))));
+                list.add(key.toString().concat("=".concat(params.get(key).toString())));
         });
         String result = url.concat("?".concat(ListUtil.join(list, "&")));
         return result;

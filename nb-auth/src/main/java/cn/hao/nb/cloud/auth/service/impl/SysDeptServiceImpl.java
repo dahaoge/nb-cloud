@@ -21,6 +21,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public SysDept refreshCompanyDeptByExternalDepartment(long companyId, String externalDeptJsonList) {
         if (CheckUtil.objIsEmpty(companyId, externalDeptJsonList))
             throw NBException.create(EErrorCode.missingArg);
@@ -114,12 +116,14 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     private void addChildByExternalDept(SysDept parent, ExternalDepartment externalParent) {
-        if (CheckUtil.objIsEmpty(parent, externalParent) || CheckUtil.objIsEmpty(externalParent.getChildren()))
+        if (CheckUtil.objIsEmpty(parent, externalParent) || CheckUtil.collectionIsEmpty(externalParent.getChildren()))
             return;
-        SysDept children = this.newFromExternalDept(externalParent.getChildren());
-        children.setPId(parent.getDeptId());
-        children.setCompanyId(parent.getCompanyId());
-        this.addChildByExternalDept(this.addData(children), externalParent.getChildren());
+        externalParent.getChildren().forEach(item -> {
+            SysDept children = this.newFromExternalDept(item);
+            children.setPId(parent.getDeptId());
+            children.setCompanyId(parent.getCompanyId());
+            this.addChildByExternalDept(this.addData(children), item);
+        });
     }
 
     /**
@@ -187,10 +191,11 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         if (CheckUtil.objIsEmpty(companyId))
             throw NBException.create(EErrorCode.missingArg).plusMsg("companyId");
         List<SysDept> depts = this.list(Qw.create().eq(SysDept.COMPANY_ID, companyId).select(SysDept.DEPT_ID));
-        if (CheckUtil.objIsNotEmpty(userDeptService.getOne(
-                Qw.create().in(UUserDept.DEPT_ID, ListUtil.getPkList(depts, SysDept.DEPT_ID)))))
-            throw NBException.create(EErrorCode.noData, "该公司下的组织机构已绑定了用户,请先将绑定的用户妥善处理后再删除组织机构信息");
-        return this.remove(Qw.create().eq(SysDept.COMPANY_ID, companyId));
+        if (CheckUtil.collectionIsEmpty(depts))
+            return true;
+        if (!userDeptService.delByDeptIds(ListUtil.getPkList(depts, UUserDept.DEPT_ID)) || !this.remove(Qw.create().eq(SysDept.COMPANY_ID, companyId)))
+            throw NBException.create(EErrorCode.noData, "删除历史数据失败");
+        return true;
     }
 
     /**

@@ -138,6 +138,26 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
         return this.removeById(id);
     }
 
+    @Override
+    public boolean delByDeptId(Long deptId) {
+        if (CheckUtil.objIsEmpty(deptId))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("delByDeptId.deptId");
+        return this.remove(
+                Qw.create()
+                        .eq(UUserDept.DEPT_ID, deptId)
+        );
+    }
+
+    @Override
+    public boolean delByDeptIds(List<Long> deptIds) {
+        if (CheckUtil.collectionIsEmpty(deptIds))
+            throw NBException.create(EErrorCode.missingArg).plusMsg("delByDeptIds.deptIds");
+        deptIds.forEach(item -> {
+            this.delByDeptId(item);
+        });
+        return true;
+    }
+
     /**
      * 获取详情
      *

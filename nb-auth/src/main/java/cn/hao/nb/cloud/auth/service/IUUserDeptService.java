@@ -52,6 +52,10 @@ public interface IUUserDeptService extends IService<UUserDept> {
      */
     boolean delData(Long id);
 
+    boolean delByDeptId(Long deptId);
+
+    boolean delByDeptIds(List<Long> deptIds);
+
     /**
      * 查询详情
      *
