@@ -25,7 +25,7 @@ public interface SysDeptMapper extends BaseMapper<SysDept> {
                     <String, Object>> pageMapData(Page page, SysDept.SearchParams searchParams);
 
     @Select("select * from sys_dept where deleted=0 and" +
-            " dept_id in (select dept_id from u_user_dept where deleted=0 and user_id=#{userId})")
+            " dept_id in (select dept_id from u_user_dept where deleted=0 and user_id=#{userId}) order by p_id asc")
     List<SysDept> listByUserId(@Param("userId") Long userId);
 
 }

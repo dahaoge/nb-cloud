@@ -19,4 +19,5 @@ public class MiniDept implements Serializable {
     Long deptId;
     String deptName;
     String externalDeptId;
+    Long pId;
 }

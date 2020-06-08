@@ -91,6 +91,7 @@ public class SysDept implements Serializable {
         miniDept.setDeptId(this.getDeptId());
         miniDept.setDeptName(this.getDeptName());
         miniDept.setExternalDeptId(this.getExternalDeptId());
+        miniDept.setPId(this.getPId());
         return miniDept;
     }
 
