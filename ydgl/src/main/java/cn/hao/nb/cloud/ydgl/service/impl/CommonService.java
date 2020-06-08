@@ -6,16 +6,15 @@ import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.entity.TokenUser;
 import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
-import cn.hao.nb.cloud.common.util.CheckUtil;
-import cn.hao.nb.cloud.common.util.HttpUtil;
-import cn.hao.nb.cloud.common.util.RedisUtil;
-import cn.hao.nb.cloud.common.util.UserUtil;
+import cn.hao.nb.cloud.common.util.*;
 import cn.hao.nb.cloud.ydgl.constant.RedisKey;
 import cn.hao.nb.cloud.ydgl.entity.Company;
 import cn.hao.nb.cloud.ydgl.service.ICompanyRequestSuffixService;
 import cn.hao.nb.cloud.ydgl.service.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * @Auther: hao
@@ -45,12 +44,20 @@ public class CommonService {
     public Rv sendYdglRequest(ECompanyRequestSuffix requestSuffix, Qd params) {
         TokenUser tokenUser = UserUtil.getTokenUser(true);
         // 统一将组织机构id改成外部组织机构id
-        if (CheckUtil.objIsNotEmpty(params) && CheckUtil.objIsNotEmpty(params.get("deptId"))) {
-            if (CheckUtil.collectionIsEmpty(tokenUser.getAuthDeptList()))
-                throw NBException.create(EErrorCode.authDenied, "请联系管理员添加授权的组织机构");
-            tokenUser.getAuthDeptList().forEach(item -> {
-                if (params.get("deptId").equals(item.getDeptId()))
-                    params.add("deptId", item.getExternalDeptId());
+        if (CheckUtil.objIsNotEmpty(params)) {
+            if (CheckUtil.objIsNotEmpty(params.get("deptId"))) {
+                if (CheckUtil.collectionIsEmpty(tokenUser.getAuthDeptList()))
+                    throw NBException.create(EErrorCode.authDenied, "请联系管理员添加授权的组织机构");
+                tokenUser.getAuthDeptList().forEach(item -> {
+                    if (params.get("deptId").equals(item.getDeptId()))
+                        params.add("deptId", item.getExternalDeptId());
+                });
+            }
+            params.keySet().forEach(key -> {
+                if (params.get(key) instanceof Date) {
+                    params.add(key, DateUtil.format((Date) params.get(key), "yyyy-MM-dd HH:mm:ss"));
+                }
+
             });
         }
         String hash = "" + params.hashCode();

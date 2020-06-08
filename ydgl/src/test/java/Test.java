@@ -1,6 +1,4 @@
-import com.google.common.collect.Lists;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import java.util.Date;
 
 
 /**
@@ -11,9 +9,7 @@ import org.springframework.util.MultiValueMap;
 public class Test {
 
     public static void main(String[] args) {
-        MultiValueMap map1 = new LinkedMultiValueMap<String, Object>();
-        System.out.println(MultiValueMap.class.isAssignableFrom(map1.getClass()));
-        System.out.println(MultiValueMap.class.isAssignableFrom(Lists.newArrayList().getClass()));
+        System.out.println(null instanceof Date);
     }
 
     public static boolean a() {
