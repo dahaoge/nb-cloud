@@ -3,6 +3,7 @@ package cn.hao.nb.cloud.auth.service.impl;
 import cn.hao.nb.cloud.auth.entity.UUserDept;
 import cn.hao.nb.cloud.auth.mapper.UUserDeptMapper;
 import cn.hao.nb.cloud.auth.service.IUUserDeptService;
+import cn.hao.nb.cloud.common.component.config.security.JwtTokenUtil;
 import cn.hao.nb.cloud.common.entity.NBException;
 import cn.hao.nb.cloud.common.entity.Pg;
 import cn.hao.nb.cloud.common.entity.Qw;
@@ -36,6 +37,8 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
     IDUtil idUtil;
     @Autowired
     UUserDeptMapper mapper;
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
     /**
      * 添加数据
@@ -57,6 +60,7 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
         data.setUpdateTime(null);
         data.setCreateTime(null);
         this.save(data);
+        jwtTokenUtil.delAllToken(data.getUserId().toString());
         return data;
     }
 
@@ -97,6 +101,7 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
+        jwtTokenUtil.delAllToken(data.getUserId().toString());
         return this.updateById(data);
     }
 
@@ -117,6 +122,7 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
         data.setDeleted(null);
         data.setUpdateTime(null);
         data.setCreateTime(null);
+        jwtTokenUtil.delAllToken(data.getUserId().toString());
         return this.update(data, Wrappers.<UUserDept>lambdaUpdate()
                 .set(UUserDept::getUpdateBy, data.getUpdateBy())
                 .set(UUserDept::getUserId, data.getUserId())
@@ -135,6 +141,10 @@ public class UUserDeptServiceImpl extends ServiceImpl<UUserDeptMapper, UUserDept
     public boolean delData(Long id) {
         if (CheckUtil.objIsEmpty(id))
             throw NBException.create(EErrorCode.missingArg);
+        UUserDept data = this.getById(id);
+        if (CheckUtil.objIsEmpty(data))
+            throw NBException.create(EErrorCode.noData);
+        jwtTokenUtil.delAllToken(data.getUserId().toString());
         return this.removeById(id);
     }
 
