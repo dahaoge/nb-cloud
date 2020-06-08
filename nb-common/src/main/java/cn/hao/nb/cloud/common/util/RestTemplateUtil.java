@@ -54,9 +54,9 @@ public class RestTemplateUtil {
         }
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(null, headers);
 
-        String url = this.getRequestUrl(moduleRequestPrefix, requestSuffix);
-
-        ResponseEntity responseEntity = restTemplate.exchange(HttpUtil.preGetParams(url, params), HttpMethod.GET, httpEntity, clazz);
+        String url = HttpUtil.preGetParams(this.getRequestUrl(moduleRequestPrefix, requestSuffix), params);
+        log.info(url);
+        ResponseEntity responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
         return (T) responseEntity.getBody();
@@ -97,6 +97,7 @@ public class RestTemplateUtil {
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(p, headers);
 
         String url = this.getRequestUrl(moduleRequestPrefix, requestSuffix);
+        log.info(url);
 
         ResponseEntity responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)

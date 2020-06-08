@@ -25,6 +25,9 @@ import javax.net.ssl.SSLContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -78,9 +81,9 @@ public class HttpUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
         HttpEntity httpEntity = new HttpEntity(null, headers);
-        log.info("url:{},params:{}", requestUrl, params);
-        log.info(preGetParams(requestUrl, params));
-        ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(preGetParams(requestUrl, params), HttpMethod.GET, httpEntity, clazz);
+        requestUrl = HttpUtil.preGetParams(requestUrl, params);
+        log.info(requestUrl);
+        ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(requestUrl, HttpMethod.GET, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
         return (T) responseEntity.getBody();
@@ -112,7 +115,7 @@ public class HttpUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
         HttpEntity httpEntity = new HttpEntity<MultiValueMap<String, Object>>(p, headers);
-        log.info("url:{},params:{}", requestUrl, params);
+        log.info(requestUrl);
         ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(requestUrl, HttpMethod.POST, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
@@ -124,8 +127,16 @@ public class HttpUtil {
             return url;
         List list = Lists.newArrayList();
         params.keySet().forEach(key -> {
-            if (CheckUtil.objIsNotEmpty(params.get(key)))
-                list.add(key.toString().concat("=".concat(params.get(key).toString())));
+            if (params.get(key) instanceof Date) {
+                params.put(key, DateUtil.format((Date) params.get(key), "yyyy-MM-dd HH:mm:ss"));
+            }
+            if (CheckUtil.objIsNotEmpty(params.get(key))) {
+                try {
+                    list.add(key.toString().concat("=".concat(URLEncoder.encode(params.get(key).toString(), "UTF-8"))));
+                } catch (UnsupportedEncodingException e) {
+                    throw NBException.create(EErrorCode.c500, "url编码失败");
+                }
+            }
         });
         String result = url.concat("?".concat(ListUtil.join(list, "&")));
         return result;

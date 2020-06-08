@@ -1,13 +1,17 @@
 package cn.hao.nb.cloud.ydgl.controller;
 
 import cn.hao.nb.cloud.common.entity.NBException;
+import cn.hao.nb.cloud.common.entity.Qd;
 import cn.hao.nb.cloud.common.entity.Rv;
+import cn.hao.nb.cloud.common.penum.ECompanyRequestSuffix;
 import cn.hao.nb.cloud.common.penum.EDateType;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
+import cn.hao.nb.cloud.ydgl.service.impl.CommonService;
 import cn.hao.nb.cloud.ydglExternalApi.entity.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,10 +26,12 @@ import java.util.Date;
 @RestController("/ydgl/powerQuality")
 public class PowerQualityController {
 
+    @Autowired
+    CommonService commonService;
+
     @ApiOperation(value = "用电监控---电流", notes = "用电监控---电流\n" +
             "实体:monitorData,CurrentItem")
     @GetMapping("/monitor/elecCurrent")
-    @Deprecated
     public Rv<MonitorData<CurrentItem>> electricCurrentMonitor(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
@@ -33,10 +39,15 @@ public class PowerQualityController {
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
 
-//        return Rv.getInstance(
-//                MonitorData.create(new CurrentItem(), Lists.newArrayList(new CurrentItem(), new CurrentItem()))
-//        );
-        throw NBException.create(EErrorCode.c404, "功能暂未开放");
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.powerQualityElectricCurrentMonitor,
+                Qd.create()
+                        .add("collectionCycle", collectionCycle)
+                        .add("startTime", startTime)
+                        .add("endTime", endTime)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
+        );
     }
 
     @ApiOperation(value = "用电监控---电压", notes = "用电监控---电压\ndata:{current:'当前电压',timeRange:'按照时间区间和采集密度获取的列表数据'}\n" +
@@ -49,10 +60,16 @@ public class PowerQualityController {
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
-//        return Rv.getInstance(
-//                MonitorData.create(new VoltageItem(), Lists.newArrayList(new VoltageItem(), new VoltageItem()))
-//        );
-        throw NBException.create(EErrorCode.c404, "功能暂未开放");
+
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.powerQualityElectricVoltageMonitor,
+                Qd.create()
+                        .add("collectionCycle", collectionCycle)
+                        .add("startTime", startTime)
+                        .add("endTime", endTime)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
+        );
     }
 
     @ApiOperation(value = "用电监控---示数", notes = "用电监控---示数\ndata:{current:'当前电压',timeRange:'按照时间区间和采集密度获取的列表数据'}")
@@ -64,10 +81,16 @@ public class PowerQualityController {
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
             @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
-//        return Rv.getInstance(
-//                MonitorData.create(new KWhItem(), Lists.newArrayList(new KWhItem(), new KWhItem()))
-//        );
-        throw NBException.create(EErrorCode.c404, "功能暂未开放");
+
+        return commonService.sendYdglRequest(
+                ECompanyRequestSuffix.powerQualityElectricKWHMonitor,
+                Qd.create()
+                        .add("collectionCycle", collectionCycle)
+                        .add("startTime", startTime)
+                        .add("endTime", endTime)
+                        .add("deptId", deptId)
+                        .add("deviceId", deviceId)
+        );
     }
 
     @ApiOperation(value = "电能质量---基本检测", notes = "电能质量---基本检测\n" +

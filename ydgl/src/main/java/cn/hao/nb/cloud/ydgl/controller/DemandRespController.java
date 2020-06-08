@@ -37,12 +37,12 @@ public class DemandRespController {
     @GetMapping("/dailyMonitor")
     public Rv<DemandRespMonitor> getDemandRespMonitorData(
             @ApiParam(value = "组织机构id", name = "deptId", required = false) @RequestParam Long deptId,
-            @ApiParam(value = "日期", name = "time", required = false) @RequestParam Date time) {
+            @ApiParam(value = "日期", name = "day", required = false) @RequestParam Date day) {
         return commonService.sendYdglRequest(
                 ECompanyRequestSuffix.demandRespDailyMonitor,
                 Qd.create()
                         .add("deptId", deptId)
-                        .add("time", time)
+                        .add("time", day)
         );
     }
 

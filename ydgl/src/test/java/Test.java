@@ -1,4 +1,4 @@
-import java.util.Date;
+import java.net.URLEncoder;
 
 
 /**
@@ -8,8 +8,9 @@ import java.util.Date;
  */
 public class Test {
 
-    public static void main(String[] args) {
-        System.out.println(null instanceof Date);
+    public static void main(String[] args) throws Exception {
+        String url = "deptId=1&time=2020-01-01 01:01:01";
+        System.out.println(URLEncoder.encode(url, "UTF-8"));
     }
 
     public static boolean a() {

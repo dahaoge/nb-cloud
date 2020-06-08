@@ -32,11 +32,11 @@ public enum ECompanyRequestSuffix implements PEnum<String> {
     getElecBill("年度或月度电费账单", "/ydgl/elecFee/getElecBill", 300L),
     @Deprecated
     avgElecFeeByYear("按年统计各月份平均电价", "/ydgl/elecFee/avgElecFeeByYear", 300L),
-    @Deprecated
+//    @Deprecated
     powerQualityElectricCurrentMonitor("用电监控---电流", "/ydgl/powerQuality/monitor/elecCurrent", 300L),
-    @Deprecated
+    //    @Deprecated
     powerQualityElectricVoltageMonitor("用电监控---电压", "/ydgl/powerQuality/monitor/voltage", 300L),
-    @Deprecated
+    //    @Deprecated
     powerQualityElectricKWHMonitor("用电监控---示数", "/ydgl/powerQuality/monitor/kwh", 300L),
     @Deprecated
     powerQualityElectricBasicMonitor("电能质量---基本检测", "/ydgl/powerQuality/monitor/basic", 300L),
