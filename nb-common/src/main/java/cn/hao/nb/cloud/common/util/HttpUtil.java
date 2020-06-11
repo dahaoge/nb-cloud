@@ -68,7 +68,7 @@ public class HttpUtil {
     public static Rv httpGetRv(String requestUrl, Map<String, Object> params) {
         Rv resp = HttpUtil.httpGet(requestUrl, params, Rv.class);
         if (EErrorCode.success.getValue() != resp.getCode())
-            throw NBException.create(EErrorCode.apiErr, resp.getMsg()).plusMsg("errorCode:" + resp.getCode());
+            throw NBException.create(EErrorCode.apiRstError, "厂家服务报错").plusMsg("errorCode:" + resp.getCode());
         return resp;
     }
 

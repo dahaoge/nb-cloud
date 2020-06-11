@@ -71,6 +71,7 @@ public class ElecLoadController {
             "实体:LoadItem\n" +
             "loadStatistics:当日负荷统计(TimeRangeLoadData)\n" +
             "currentList:当日负荷列表(LoadItem)\n" +
+            "baseDayLoad:基准日负荷\n" +
             "lastList:昨日负荷列表(LoadItem)")
     @GetMapping("/statisticsByDay")
     public Rv<Map<String, Object>> statisticsByDay(
@@ -94,7 +95,7 @@ public class ElecLoadController {
                                 new LoadItem(),
                                 new LoadItem()
                         ))
-
+                        .add("baseDayLoad", ElecDesc.kWDesc("基准日"))
         );
     }
 

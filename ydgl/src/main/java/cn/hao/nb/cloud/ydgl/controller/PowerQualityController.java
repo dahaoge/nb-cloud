@@ -9,10 +9,13 @@ import cn.hao.nb.cloud.common.penum.EErrorCode;
 import cn.hao.nb.cloud.common.penum.EYdglDataCollectionCycle;
 import cn.hao.nb.cloud.ydgl.service.impl.CommonService;
 import cn.hao.nb.cloud.ydglExternalApi.entity.*;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +26,10 @@ import java.util.Date;
  * @Date: 2020/4/20 20:00
  * @Description:
  */
-@RestController("/ydgl/powerQuality")
+@Api(description = "用电负荷接口")
+@Slf4j
+@RestController
+@RequestMapping("/ydgl/powerQuality")
 public class PowerQualityController {
 
     @Autowired

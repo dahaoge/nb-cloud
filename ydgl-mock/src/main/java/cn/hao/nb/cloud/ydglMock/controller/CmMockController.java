@@ -47,6 +47,7 @@ public class CmMockController {
     public Rv<List<String>> controllerUpdateLog() {
         return Rv.getInstance(
                 Lists.newArrayList(
+                        "feat:2020年06月11日16:57:18  ".concat(ECompanyRequestSuffix.statisticsLoadByDay.toDesc()).concat("  增加基准日负荷"),
                         "feat:2020年06月03日14:33:06  ".concat("注解暂时废弃的接口").concat("  "),
                         "feat:2020年06月03日14:32:49  ".concat("需求响应接口和电能质量接口增加/ydgl的前缀").concat("  "),
                         "feat:2020年06月02日17:46:31  ".concat(ECompanyRequestSuffix.deviceTree.toDesc()).concat("  "),
