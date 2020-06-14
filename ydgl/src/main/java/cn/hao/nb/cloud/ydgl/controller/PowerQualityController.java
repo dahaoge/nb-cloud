@@ -59,7 +59,6 @@ public class PowerQualityController {
     @ApiOperation(value = "用电监控---电压", notes = "用电监控---电压\ndata:{current:'当前电压',timeRange:'按照时间区间和采集密度获取的列表数据'}\n" +
             "实体:VoltageItem")
     @GetMapping("/monitor/voltage")
-    @Deprecated
     public Rv<MonitorData<VoltageItem>> electricVoltageMonitor(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
@@ -80,7 +79,6 @@ public class PowerQualityController {
 
     @ApiOperation(value = "用电监控---示数", notes = "用电监控---示数\ndata:{current:'当前电压',timeRange:'按照时间区间和采集密度获取的列表数据'}")
     @GetMapping("/monitor/kwh")
-    @Deprecated
     public Rv<MonitorData<KWhItem>> electricKWHMonitor(
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,

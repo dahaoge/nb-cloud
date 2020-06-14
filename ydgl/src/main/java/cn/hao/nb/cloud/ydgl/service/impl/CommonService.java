@@ -61,8 +61,13 @@ public class CommonService {
             return result;
 
         result = HttpUtil.httpGetRv(this.getRequestUrl(tokenUser.getCompanyId(), requestSuffix), params);
-        if (CheckUtil.objIsNotEmpty(result))
-            redisUtil.hset(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash, result, requestSuffix.getRedisTime());
+        if (CheckUtil.objIsNotEmpty(result)) {
+            if (ECompanyRequestSuffix.deviceTree == requestSuffix || ECompanyRequestSuffix.loadDept == requestSuffix)
+                redisUtil.hset(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash, result, requestSuffix.getRedisTime());
+//            else
+// TODO 打开缓存
+//                redisUtil.hset(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash, result, 300);
+        }
         return result;
     }
 }

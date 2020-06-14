@@ -54,8 +54,8 @@ public class HttpUtil {
             CloseableHttpClient httpClient = httpClientBuilder.build();
             factory = new HttpComponentsClientHttpRequestFactory();
             factory.setHttpClient(httpClient);
-            factory.setConnectTimeout(15000);
-            factory.setReadTimeout(5000);
+            factory.setConnectTimeout(1500000);
+            factory.setReadTimeout(500000);
             HttpUtil.clientHttpRequestFactory = factory;
         }
 
@@ -82,7 +82,7 @@ public class HttpUtil {
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
         HttpEntity httpEntity = new HttpEntity(null, headers);
         requestUrl = HttpUtil.preGetParams(requestUrl, params);
-        log.info(requestUrl);
+        log.info("\n\033[1;93;32m【  " + requestUrl + "  】\033[m");
         ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(requestUrl, HttpMethod.GET, httpEntity, clazz);
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
