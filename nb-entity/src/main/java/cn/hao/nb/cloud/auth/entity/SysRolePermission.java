@@ -106,4 +106,14 @@ public class SysRolePermission implements Serializable {
 
     public static final String PERMISSION_CODE = "permission_code";
 
+    public static Qw<SysRolePermission> select(Qw<SysRolePermission> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysRolePermission.ROLE_CODE,
+                SysRolePermission.PERMISSION_CODE
+        );
+        return qw;
+    }
+
 }

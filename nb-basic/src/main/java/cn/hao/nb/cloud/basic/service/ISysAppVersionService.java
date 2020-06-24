@@ -2,6 +2,7 @@ package cn.hao.nb.cloud.basic.service;
 
 import cn.hao.nb.cloud.basic.entity.SysAppVersion;
 import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.common.entity.Rv;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -17,6 +18,21 @@ import java.util.Map;
  * @since 2019-12-28
  */
 public interface ISysAppVersionService extends IService<SysAppVersion> {
+
+    /**
+     * 获取当前版本
+     *
+     * @return
+     */
+    public Rv getCurrentVersionRv(SysAppVersion oldVersion);
+
+    /**
+     * 获取当前版本
+     *
+     * @return
+     */
+    public SysAppVersion getCurrentVersion(SysAppVersion oldVersion);
+
     /**
      * 添加数据
      *

@@ -39,7 +39,7 @@ public class ElecConsumptionController {
     public Rv<List<ElecConsumptionData>> statisticsByMonth(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return commonService.sendYdglRequest(
@@ -58,7 +58,7 @@ public class ElecConsumptionController {
     public Rv<List<ElecConsumptionData>> statisticsByDay(
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
-            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构Id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备id", name = "deviceId", required = false) @RequestParam(required = false) String deviceId
     ) {
         return commonService.sendYdglRequest(

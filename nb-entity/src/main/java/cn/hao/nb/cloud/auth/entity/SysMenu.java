@@ -150,4 +150,19 @@ public class SysMenu implements Serializable {
 
     public static final String MENU_TYPE = "menu_type";
 
+    public static Qw<SysMenu> select(Qw<SysMenu> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysMenu.PARENT_MENU_CODE,
+                SysMenu.MENU_CODE,
+                SysMenu.MENU_NAME,
+                SysMenu.MENU_PATH,
+                SysMenu.MENU_INDEX,
+                SysMenu.MENU_ICON,
+                SysMenu.MENU_TYPE
+        );
+        return qw;
+    }
+
 }

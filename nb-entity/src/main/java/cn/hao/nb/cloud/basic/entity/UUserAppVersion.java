@@ -1,4 +1,4 @@
-package cn.hao.nb.cloud.auth.entity;
+package cn.hao.nb.cloud.basic.entity;
 
 import cn.hao.nb.cloud.common.entity.Qw;
 import cn.hao.nb.cloud.common.entity.RedisUser;
@@ -16,37 +16,42 @@ import java.util.Date;
 
 /**
  * <p>
- * 用户角色
+ * 用户app版本
  * </p>
  *
  * @author hao@179314039@qq.com
- * @since 2019-12-09
+ * @since 2020-06-14
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value = "UUserRole对象", description = "用户角色 ")
-public class UUserRole implements Serializable {
+@ApiModel(value = "UUserAppVersion对象", description = "用户app版本")
+public class UUserAppVersion implements Serializable {
+
+
+    public static SearchParams getSearchParamInstance() {
+        return new UUserAppVersion().new SearchParams();
+    }
 
     @Data
     public class SearchParams {
 
-        Long userId;
-        String roleCode;
 
         @ApiModelProperty(value = "排序字段")
-        private String sort = "update_time";
+        private String sort = UUserAppVersion.UPDATE_TIME;
 
         @ApiModelProperty(value = "排序方式,可选值:ASC/DESC")
         private ESqlOrder order = ESqlOrder.DESC;
 
-        public Qw<UUserRole> preWrapper(Qw<UUserRole> qw) {
+        public Qw<UUserAppVersion> preWrapper(Qw<UUserAppVersion> qw) {
             if (CheckUtil.objIsEmpty(qw))
                 qw = Qw.create();
-            if (CheckUtil.objIsNotEmpty(this.getUserId()))
-                qw.eq(UUserRole.USER_ID, this.getUserId());
-            if (CheckUtil.objIsNotEmpty(this.getRoleCode()))
-                qw.eq(UUserRole.ROLE_CODE, this.getRoleCode());
+
+            if (CheckUtil.strIsEmpty(this.getSort()))
+                this.setSort(SysDict.UPDATE_TIME);
+            if (CheckUtil.objIsEmpty(this.getOrder()))
+                this.setOrder(ESqlOrder.DESC);
+
             if (ESqlOrder.DESC.equals(this.getOrder()))
                 qw.orderByDesc(this.getSort());
             else
@@ -69,11 +74,13 @@ public class UUserRole implements Serializable {
     @Version
     private Integer version;
 
+    @ApiModelProperty(value = "创建人")
     private Long createBy;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "更新人")
     private Long updateBy;
 
     @ApiModelProperty(value = "更新时间")
@@ -83,18 +90,27 @@ public class UUserRole implements Serializable {
     @TableLogic
     private Integer deleted = 0;
 
-    @TableId(value = "ur_id", type = IdType.INPUT)
-    private Long urId;
+    @ApiModelProperty(value = "ID")
+    @TableId(value = "user_app_id", type = IdType.INPUT)
+    private Long userAppId;
 
+    @ApiModelProperty(value = "用户id")
     private Long userId;
 
-    @TableField(exist = false)
-    private RedisUser userInfo;
+    @ApiModelProperty(value = "app")
+    private String app;
 
-    private String roleCode;
+    @ApiModelProperty(value = "APP平台")
+    private String appPlatform;
 
-    @TableField(exist = false)
-    private SysRole role;
+    @ApiModelProperty(value = "版本")
+    private String appVersion;
+
+    @ApiModelProperty(value = "版本类型")
+    private String appVersionType;
+
+    @ApiModelProperty(value = "编号")
+    private Integer versionNum;
 
 
     public static final String VERSION = "version";
@@ -109,20 +125,32 @@ public class UUserRole implements Serializable {
 
     public static final String DELETED = "deleted";
 
-    public static final String UR_ID = "ur_id";
+    public static final String USER_APP_ID = "user_app_id";
 
     public static final String USER_ID = "user_id";
 
-    public static final String ROLE_CODE = "role_code";
+    public static final String APP = "app";
 
-    public static Qw<UUserRole> select(Qw<UUserRole> qw) {
+    public static final String APP_PLATFORM = "app_platform";
+
+    public static final String APP_VERSION = "app_version";
+
+    public static final String APP_VERSION_TYPE = "app_version_type";
+
+    public static final String VERSION_NUM = "version_num";
+
+
+    public static Qw<UUserAppVersion> select(Qw<UUserAppVersion> qw) {
         if (CheckUtil.objIsEmpty(qw))
             qw = Qw.create();
         qw.select(
-                UUserRole.USER_ID,
-                UUserRole.ROLE_CODE
+                UUserAppVersion.USER_ID,
+                UUserAppVersion.APP,
+                UUserAppVersion.APP_PLATFORM,
+                UUserAppVersion.APP_VERSION,
+                UUserAppVersion.APP_VERSION_TYPE,
+                UUserAppVersion.VERSION_NUM
         );
         return qw;
     }
-
 }

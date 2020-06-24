@@ -107,4 +107,16 @@ public class SysDept implements Serializable {
     public static final String EXTERNAL_DEPT_ID = "external_dept_id";
     public static final String COMPANY_ID = "company_id";
 
+
+    public static Qw<SysDept> select(Qw<SysDept> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysDept.DEPT_NAME,
+                SysDept.P_ID,
+                SysDept.EXTERNAL_DEPT_ID,
+                SysDept.COMPANY_ID
+        );
+        return qw;
+    }
 }

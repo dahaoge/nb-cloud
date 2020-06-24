@@ -95,4 +95,16 @@ public class ULoginChannel implements Serializable {
     public static final String LOGIN_ID = "login_id";
     public static final String LOGIN_CHANNEL_SCOPE = "login_channel_scope";
 
+    public static Qw<ULoginChannel> select(Qw<ULoginChannel> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                ULoginChannel.USER_ID,
+                ULoginChannel.LOGIN_TYPE,
+                ULoginChannel.LOGIN_ID,
+                ULoginChannel.LOGIN_CHANNEL_SCOPE
+        );
+        return qw;
+    }
+
 }

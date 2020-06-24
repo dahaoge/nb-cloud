@@ -116,4 +116,14 @@ public class SysRoleMenu implements Serializable {
 
     public static final String MENU_CODE = "menu_code";
 
+    public static Qw<SysRoleMenu> select(Qw<SysRoleMenu> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysRoleMenu.ROLE_CODE,
+                SysRoleMenu.MENU_CODE
+        );
+        return qw;
+    }
+
 }

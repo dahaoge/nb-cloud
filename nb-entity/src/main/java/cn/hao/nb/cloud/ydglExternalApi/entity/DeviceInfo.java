@@ -29,6 +29,8 @@ public class DeviceInfo implements Serializable {
     EYdglDeviceType deviceType;
     @ApiModelProperty("子设备列表")
     List<DeviceInfo> childrens;
+    @ApiModelProperty("所属组织机构id")
+    String deptId;
 
     public DeviceInfo() {
     }

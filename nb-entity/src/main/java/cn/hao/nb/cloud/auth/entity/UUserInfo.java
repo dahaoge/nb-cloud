@@ -159,4 +159,27 @@ public class UUserInfo implements Serializable {
     public static final String WECHAT_APP_OPENID = "wechat_app_openid";
     public static final String COMPANY_ID = "company_id";
 
+    public static Qw<UUserInfo> select(Qw<UUserInfo> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                UUserInfo.USER_NAME,
+                UUserInfo.PHONE,
+                UUserInfo.ICNUM,
+                UUserInfo.ICON,
+                UUserInfo.LOGIN_ID,
+                UUserInfo.LOGIN_PWD,
+                UUserInfo.SALT,
+                UUserInfo.IS_LOCKED,
+                UUserInfo.UNLOCK_TIME,
+                UUserInfo.USER_TYPE,
+                UUserInfo.WECHAT_MP_OPENID,
+                UUserInfo.WECHAT_UNIONID,
+                UUserInfo.WECHAT_PN_OPENID,
+                UUserInfo.WECHAT_APP_OPENID,
+                UUserInfo.COMPANY_ID
+        );
+        return qw;
+    }
+
 }

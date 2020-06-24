@@ -164,6 +164,23 @@ private RedisUser updateUserMap;
         public static final String ${field.name?upper_case} = "${field.name}";
 
     </#list>
+
+    public static Qw<${entity}> select(Qw<${entity}> qw){
+    if (CheckUtil.objIsEmpty(qw))
+    qw = Qw.create();
+    qw.select(
+    <#list table.fields as field>
+        <#if !field.keyFlag && "version" != field.name && "create_by" != field.name && "create_time" != field.name && "update_time" != field.name && "deleted" != field.name&& "update_by" != field.name>
+            <#if field_has_next>
+                ${entity}.${field.name?upper_case},
+            <#else>
+                ${entity}.${field.name?upper_case}
+            </#if>
+        </#if>
+    </#list>
+    );
+    return qw;
+    }
 </#if>
 <#if activeRecord>
     @Override

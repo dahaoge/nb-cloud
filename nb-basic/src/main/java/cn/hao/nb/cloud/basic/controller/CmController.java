@@ -1,5 +1,7 @@
 package cn.hao.nb.cloud.basic.controller;
 
+import cn.hao.nb.cloud.basic.entity.SysAppVersion;
+import cn.hao.nb.cloud.basic.service.ISysAppVersionService;
 import cn.hao.nb.cloud.basic.service.ISysDictService;
 import cn.hao.nb.cloud.common.entity.Rv;
 import cn.hao.nb.cloud.common.util.PEnumUtil;
@@ -27,7 +29,15 @@ public class CmController {
     PEnumUtil enumUtil;
     @Autowired
     ISysDictService dictService;
+    @Autowired
+    ISysAppVersionService iSysAppVersionService;
 
+    @ApiOperation(value = "app更新", notes = "app更新")
+    @GetMapping("/getCurrentVersion")
+    @ResponseBody
+    public Rv getCurrentVersion(SysAppVersion appVersion) {
+        return Rv.getInstance(iSysAppVersionService.getCurrentVersion(appVersion));
+    }
 
     @ApiOperation(value = "获取所有枚举", notes = "获取所有枚举")
     @GetMapping("/getAllEnum")

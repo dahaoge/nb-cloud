@@ -193,4 +193,27 @@ public class SysTags implements Serializable {
 
     public static final String WEB_STYLE_ACTIVE = "web_style_active";
 
+    public static Qw<SysTags> select(Qw<SysTags> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysTags.TAG_CODE,
+                SysTags.TAG_LABEL,
+                SysTags.TAG_TARGET,
+                SysTags.TAG_TYPE,
+                SysTags.TAG_ICON,
+                SysTags.TAG_ICON_ACTIVE,
+                SysTags.TAG_INDEX,
+                SysTags.TAG_GROUP,
+                SysTags.TAG_GROUP_NAME,
+                SysTags.APP_STYLE_NORMAL,
+                SysTags.APP_STYLE_ACTIVE,
+                SysTags.MINI_APP_STYLE_NORMAL,
+                SysTags.MINI_APP_STYLE_ACTIVE,
+                SysTags.WEB_STYLE_NORMAL,
+                SysTags.WEB_STYLE_ACTIVE
+        );
+        return qw;
+    }
+
 }

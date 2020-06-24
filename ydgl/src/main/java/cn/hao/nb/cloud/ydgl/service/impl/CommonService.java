@@ -50,7 +50,7 @@ public class CommonService {
                 if (CheckUtil.collectionIsEmpty(tokenUser.getAuthDeptList()))
                     throw NBException.create(EErrorCode.authDenied, "请联系管理员添加授权的组织机构");
                 tokenUser.getAuthDeptList().forEach(item -> {
-                    if (params.get("deptId").equals(item.getDeptId()))
+                    if (params.get("deptId").equals(item.getDeptId().toString()))
                         params.add("deptId", item.getExternalDeptId());
                 });
             }
@@ -62,10 +62,10 @@ public class CommonService {
 
         result = HttpUtil.httpGetRv(this.getRequestUrl(tokenUser.getCompanyId(), requestSuffix), params);
         if (CheckUtil.objIsNotEmpty(result)) {
-            if (ECompanyRequestSuffix.deviceTree == requestSuffix || ECompanyRequestSuffix.loadDept == requestSuffix)
-                redisUtil.hset(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash, result, requestSuffix.getRedisTime());
+            redisUtil.hset(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash, result, requestSuffix.getRedisTime());
+//            if (ECompanyRequestSuffix.deviceTree == requestSuffix || ECompanyRequestSuffix.loadDept == requestSuffix)
+//                redisUtil.hset(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash, result, requestSuffix.getRedisTime());
 //            else
-// TODO 打开缓存
 //                redisUtil.hset(RedisKey.REDIS_REQUEST_RESULT.concat(requestSuffix.getValue()), hash, result, 300);
         }
         return result;

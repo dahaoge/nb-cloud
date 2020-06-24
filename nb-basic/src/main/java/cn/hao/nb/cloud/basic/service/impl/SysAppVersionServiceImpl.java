@@ -1,11 +1,14 @@
 package cn.hao.nb.cloud.basic.service.impl;
 
 import cn.hao.nb.cloud.basic.entity.SysAppVersion;
+import cn.hao.nb.cloud.basic.entity.UUserAppVersion;
+import cn.hao.nb.cloud.basic.entity.customEntity.AppUpdateRv;
 import cn.hao.nb.cloud.basic.mapper.SysAppVersionMapper;
 import cn.hao.nb.cloud.basic.service.ISysAppVersionService;
-import cn.hao.nb.cloud.common.entity.NBException;
-import cn.hao.nb.cloud.common.entity.Pg;
+import cn.hao.nb.cloud.basic.service.IUUserAppVersionService;
+import cn.hao.nb.cloud.common.entity.*;
 import cn.hao.nb.cloud.common.penum.EErrorCode;
+import cn.hao.nb.cloud.common.penum.EYn;
 import cn.hao.nb.cloud.common.util.CheckUtil;
 import cn.hao.nb.cloud.common.util.IDUtil;
 import cn.hao.nb.cloud.common.util.UserUtil;
@@ -13,8 +16,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +38,88 @@ public class SysAppVersionServiceImpl extends ServiceImpl<SysAppVersionMapper, S
     IDUtil idUtil;
     @Autowired
     SysAppVersionMapper mapper;
+    @Autowired
+    IUUserAppVersionService userAppVersionService;
+    @Value("${global.appDownloadUrl}")
+    String appDownloadUrl;
+
+    @Override
+    public Rv getCurrentVersionRv(SysAppVersion oldVersion) {
+        if (CheckUtil.objIsEmpty(oldVersion) || CheckUtil.objIsEmpty(oldVersion.getVersionNum(), oldVersion.getAppPlatform(), oldVersion.getApp(), oldVersion.getAppVersionType(), oldVersion.getAppVersion()))
+            return null;
+        TokenUser tokenUser = UserUtil.getTokenUser();
+        UUserAppVersion temp = null;
+        if (CheckUtil.objIsNotEmpty(tokenUser))
+            temp = userAppVersionService.getByUserId(tokenUser.getUserId());
+        if (CheckUtil.objIsEmpty(temp) && CheckUtil.objIsNotEmpty(tokenUser)) {
+            temp = new UUserAppVersion();
+            this.setUserAppVersionProps(temp, oldVersion);
+            temp.setUserId(UserUtil.getTokenUser().getUserId());
+            userAppVersionService.addData(temp);
+        } else if (!oldVersion.getVersionNum().equals(temp.getVersionNum()) && CheckUtil.objIsNotEmpty(oldVersion.getVersionNum())) {
+            this.setUserAppVersionProps(temp, oldVersion);
+            userAppVersionService.incrementModifyData(temp);
+        }
+        Qw qw = Qw.create().le(SysAppVersion.VERSION_START_TIME, new Date())
+                .eq(SysAppVersion.HAS_PUBLISHED, EYn.y.getValue())
+                .gt(SysAppVersion.VERSION_NUM, oldVersion.getVersionNum())
+                .eq(SysAppVersion.APP_PLATFORM, oldVersion.getAppPlatform())
+                .eq(SysAppVersion.APP, oldVersion.getApp())
+                .eq(SysAppVersion.APP_VERSION_TYPE, oldVersion.getAppVersionType());
+        qw.orderByDesc(SysAppVersion.VERSION_START_TIME);
+        SysAppVersion cVersion = this.getOne(qw);
+        if (CheckUtil.objIsEmpty(cVersion))
+            return null;
+        List<SysAppVersion> versions = this.list(qw);
+        cVersion.setIsMust(versions.stream().filter(item -> {
+            return EYn.y.getValue().equals(item.getIsMust());
+        }).count() > 0 ? 1 : 0);
+        cVersion.setDownLoadUrl(appDownloadUrl.concat(cVersion.getDownloadUrlHash()));
+        return Rv.getInstance(AppUpdateRv.toAppUpdateRv(cVersion)).add("appVersionDetail", cVersion);
+    }
+
+    @Override
+    public SysAppVersion getCurrentVersion(SysAppVersion oldVersion) {
+        if (CheckUtil.objIsEmpty(oldVersion) || CheckUtil.objIsEmpty(oldVersion.getVersionNum(), oldVersion.getAppPlatform(), oldVersion.getApp(), oldVersion.getAppVersionType(), oldVersion.getAppVersion()))
+            return null;
+        TokenUser tokenUser = UserUtil.getTokenUser();
+        UUserAppVersion temp = null;
+        if (CheckUtil.objIsNotEmpty(tokenUser))
+            temp = userAppVersionService.getByUserId(tokenUser.getUserId());
+        if (CheckUtil.objIsEmpty(temp) && CheckUtil.objIsNotEmpty(tokenUser)) {
+            temp = new UUserAppVersion();
+            this.setUserAppVersionProps(temp, oldVersion);
+            temp.setUserId(UserUtil.getTokenUser().getUserId());
+            userAppVersionService.addData(temp);
+        } else if (!oldVersion.getVersionNum().equals(temp.getVersionNum()) && CheckUtil.objIsNotEmpty(oldVersion.getVersionNum())) {
+            this.setUserAppVersionProps(temp, oldVersion);
+            userAppVersionService.incrementModifyData(temp);
+        }
+        Qw qw = Qw.create().le(SysAppVersion.VERSION_START_TIME, new Date())
+                .eq(SysAppVersion.HAS_PUBLISHED, EYn.y.getValue())
+                .gt(SysAppVersion.VERSION_NUM, oldVersion.getVersionNum())
+                .eq(SysAppVersion.APP_PLATFORM, oldVersion.getAppPlatform())
+                .eq(SysAppVersion.APP, oldVersion.getApp())
+                .eq(SysAppVersion.APP_VERSION_TYPE, oldVersion.getAppVersionType());
+        qw.orderByDesc(SysAppVersion.VERSION_START_TIME);
+        SysAppVersion cVersion = this.getOne(qw);
+        if (CheckUtil.objIsEmpty(cVersion))
+            return null;
+        List<SysAppVersion> versions = this.list(qw);
+        cVersion.setIsMust(versions.stream().filter(item -> {
+            return EYn.y.getValue().equals(item.getIsMust());
+        }).count() > 0 ? 1 : 0);
+        cVersion.setDownLoadUrl(appDownloadUrl.concat(cVersion.getDownloadUrlHash()));
+        return cVersion;
+    }
+
+    private void setUserAppVersionProps(UUserAppVersion temp, SysAppVersion oldVersion) {
+        temp.setAppVersion(oldVersion.getAppVersion());
+        temp.setVersionNum(oldVersion.getVersionNum());
+        temp.setAppPlatform(oldVersion.getAppPlatform());
+        temp.setApp(oldVersion.getApp());
+        temp.setAppVersionType(oldVersion.getAppVersionType());
+    }
 
     /**
      * 添加数据

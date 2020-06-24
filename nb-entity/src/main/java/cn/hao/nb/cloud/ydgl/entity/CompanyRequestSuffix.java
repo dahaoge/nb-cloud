@@ -132,4 +132,15 @@ public class CompanyRequestSuffix implements Serializable {
 
     public static final String REQUEST_SUFFIX = "request_suffix";
 
+    public static Qw<CompanyRequestSuffix> select(Qw<CompanyRequestSuffix> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                CompanyRequestSuffix.COM_ID,
+                CompanyRequestSuffix.ENUM_KEY,
+                CompanyRequestSuffix.REQUEST_SUFFIX
+        );
+        return qw;
+    }
+
 }

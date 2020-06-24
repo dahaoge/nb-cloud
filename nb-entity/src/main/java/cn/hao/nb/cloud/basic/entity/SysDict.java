@@ -142,4 +142,17 @@ public class SysDict implements Serializable {
 
     public static final String DICT_INDEX = "dict_index";
 
+    public static Qw<SysDict> select(Qw<SysDict> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysDict.DICT_TYPE,
+                SysDict.DICT_CODE,
+                SysDict.DICT_LABEL,
+                SysDict.DICT_DESC,
+                SysDict.DICT_INDEX
+        );
+        return qw;
+    }
+
 }

@@ -113,4 +113,14 @@ public class SysRole implements Serializable {
 
     public static final String ROLE_NAME = "role_name";
 
+    public static Qw<SysRole> select(Qw<SysRole> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysRole.ROLE_CODE,
+                SysRole.ROLE_NAME
+        );
+        return qw;
+    }
+
 }

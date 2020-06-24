@@ -110,4 +110,14 @@ public class SysPermission implements Serializable {
 
     public static final String PERMISSION_NAME = "permission_name";
 
+    public static Qw<SysPermission> select(Qw<SysPermission> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysPermission.PERMISSION_CODE,
+                SysPermission.PERMISSION_NAME
+        );
+        return qw;
+    }
+
 }

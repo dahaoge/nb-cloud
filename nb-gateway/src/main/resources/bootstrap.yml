@@ -16,6 +16,8 @@ spring:
           #            refresh: false
           - data-id: nb-redis.yaml
             refresh: false
+          - data-id: global.yaml
+            refresh: true
         shared-dataids: security-public.yaml
         file-extension: yaml
     gateway:

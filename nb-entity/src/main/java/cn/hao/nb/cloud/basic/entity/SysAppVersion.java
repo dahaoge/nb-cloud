@@ -109,6 +109,9 @@ public class SysAppVersion implements Serializable {
 
     private String downloadUrlHash;
 
+    @TableField(exist = false)
+    String downLoadUrl;
+
     private Integer hasPublished;
 
     @ApiModelProperty(value = "版本编号")
@@ -158,5 +161,28 @@ public class SysAppVersion implements Serializable {
     public static final String HAS_PUBLISHED = "has_published";
 
     public static final String VERSION_NUM = "version_num";
+
+    public static Qw<SysAppVersion> select(Qw<SysAppVersion> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                SysAppVersion.APP,
+                SysAppVersion.APP_PLATFORM,
+                SysAppVersion.APP_DOWNLOAD_CHANNEL,
+                SysAppVersion.APP_VERSION_TYPE,
+                SysAppVersion.APP_VERSION,
+                SysAppVersion.IS_MUST,
+                SysAppVersion.APP_VERSION_NAME,
+                SysAppVersion.VERSION_DESC,
+                SysAppVersion.UPDATE_DESC,
+                SysAppVersion.VERSION_START_TIME,
+                SysAppVersion.PAY_LOCK,
+                SysAppVersion.APP_SIZE,
+                SysAppVersion.DOWNLOAD_URL_HASH,
+                SysAppVersion.HAS_PUBLISHED,
+                SysAppVersion.VERSION_NUM
+        );
+        return qw;
+    }
 
 }

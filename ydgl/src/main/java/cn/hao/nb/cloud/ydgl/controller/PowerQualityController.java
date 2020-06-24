@@ -42,7 +42,7 @@ public class PowerQualityController {
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
-            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
 
         return commonService.sendYdglRequest(
@@ -63,7 +63,7 @@ public class PowerQualityController {
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
-            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
 
         return commonService.sendYdglRequest(
@@ -83,7 +83,7 @@ public class PowerQualityController {
             @ApiParam(value = "取点密度", name = "collectionCycle", required = true) @RequestParam EYdglDataCollectionCycle collectionCycle,
             @ApiParam(value = "开始时间", name = "startTime", required = true) @RequestParam Date startTime,
             @ApiParam(value = "结束时间", name = "endTime", required = true) @RequestParam Date endTime,
-            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
 
         return commonService.sendYdglRequest(
@@ -102,7 +102,7 @@ public class PowerQualityController {
     @GetMapping("/monitor/basic")
     @Deprecated
     public Rv<ElecBasicQuality> electricBasicMonitor(
-            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
 //        return Rv.getInstance(
 //                new ElecBasicQuality()
@@ -115,7 +115,7 @@ public class PowerQualityController {
     @GetMapping("/monitor/distortion")
     @Deprecated
     public Rv<ValtageJb> electricDistortionMonitor(
-            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
 //        return Rv.getInstance(
 //                new ValtageJb()
@@ -127,7 +127,7 @@ public class PowerQualityController {
     @GetMapping("/monitor/imbalance")
     @Deprecated
     public Rv electricImbalance(
-            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId) {
         throw NBException.create(EErrorCode.noData, "暂时未采集该项目数据");
     }
@@ -136,7 +136,7 @@ public class PowerQualityController {
     @GetMapping("/statistics")
     @Deprecated
     public Rv<VoltageDeviationStatistics> statistics(
-            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam Long deptId,
+            @ApiParam(value = "组织机构id", name = "deptId", required = true) @RequestParam String deptId,
             @ApiParam(value = "设备Id", name = "deviceId") @RequestParam(required = false) String deviceId,
             @ApiParam(value = "统计时间", name = "time", required = true) @RequestParam Date time,
             @ApiParam(value = "月|日", name = "dateType", required = true) @RequestParam EDateType dateType

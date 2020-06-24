@@ -87,4 +87,14 @@ public class UUserDept implements Serializable {
     public static final String USER_ID = "user_id";
     public static final String DEPT_ID = "dept_id";
 
+    public static Qw<UUserDept> select(Qw<UUserDept> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                UUserDept.USER_ID,
+                UUserDept.DEPT_ID
+        );
+        return qw;
+    }
+
 }

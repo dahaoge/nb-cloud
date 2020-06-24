@@ -67,6 +67,7 @@ public class HttpUtil {
 
     public static Rv httpGetRv(String requestUrl, Map<String, Object> params) {
         Rv resp = HttpUtil.httpGet(requestUrl, params, Rv.class);
+        log.info("\n\033[1;93;32m【  responseRv : " + resp.getCode() + "  】\033[m");
         if (EErrorCode.success.getValue() != resp.getCode())
             throw NBException.create(EErrorCode.apiRstError, "厂家服务报错").plusMsg("errorCode:" + resp.getCode());
         return resp;
@@ -84,6 +85,7 @@ public class HttpUtil {
         requestUrl = HttpUtil.preGetParams(requestUrl, params);
         log.info("\n\033[1;93;32m【  " + requestUrl + "  】\033[m");
         ResponseEntity responseEntity = HttpUtil.getRestTemplate().exchange(requestUrl, HttpMethod.GET, httpEntity, clazz);
+        log.info("\n\033[1;93;32m【  response : " + responseEntity.getStatusCodeValue() + "  】\033[m");
         if (responseEntity.getStatusCodeValue() != 200)
             throw NBException.create(EErrorCode.apiErr, "调用第三方服务失败").plusMsg(responseEntity.getStatusCodeValue() + "");
         return (T) responseEntity.getBody();

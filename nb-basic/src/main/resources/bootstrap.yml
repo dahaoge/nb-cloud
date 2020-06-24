@@ -20,6 +20,8 @@ spring:
             refresh: false
           - data-id: nb-server-default.yaml
             refresh: false
+          - data-id: global.yaml
+            refresh: true
         shared-dataids: security-public.yaml
         file-extension: yaml
 logging:

@@ -118,4 +118,15 @@ public class Company implements Serializable {
 
     public static final String BASE_URL = "base_url";
 
+    public static Qw<Company> select(Qw<Company> qw) {
+        if (CheckUtil.objIsEmpty(qw))
+            qw = Qw.create();
+        qw.select(
+                Company.COM_NAME,
+                Company.ROOT_DEPT,
+                Company.BASE_URL
+        );
+        return qw;
+    }
+
 }
